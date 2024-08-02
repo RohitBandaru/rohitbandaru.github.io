@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: d/al-folio/sitemap.xml
+Sitemap: https://rohitbandaru.github.io/al-folio/sitemap.xml
