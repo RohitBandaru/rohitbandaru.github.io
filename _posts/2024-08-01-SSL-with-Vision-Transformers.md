@@ -2,7 +2,7 @@
 layout: post
 title: SSL with Vision Transformers
 tags: self-supervised-learning transformer
-image: assets/img/blog/ssl-vit/Screenshot_2024-04-07_at_2.46.27_PM.png
+thumbnail: assets/img/blog/ssl-vit/Untitled.png
 toc:
   sidebar: left
 --- 

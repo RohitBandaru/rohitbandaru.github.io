@@ -2,7 +2,7 @@
 layout: post
 title: Domain Adaptation
 tags: computer-vision
-image: ../../../images/domain_adaptation/framework.png
+thumbnail: assets/img/blog/domain_adaptation/framework.png
 toc:
   sidebar: left
 ---

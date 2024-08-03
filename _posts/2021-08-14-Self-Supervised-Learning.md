@@ -2,7 +2,7 @@
 layout: post
 title: Self-Supervised Learning  -  Getting more out of data
 tags: computer-vision self-supervised-learning 
-image: assets/img/self_supervised_learning/simclr_arch.png
+thumbnail: assets/img/blog/self_supervised_learning/byol.png
 toc:
   sidebar: left
 ---

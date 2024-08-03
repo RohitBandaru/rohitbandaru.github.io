@@ -2,7 +2,7 @@
 layout: post
 title: Knowledge Distillation as Self-Supervised Learning
 tags: paper-review self-supervised-learning knowledge-distillation computer-vision
-image: ../../../images/distillation_ssl/seed2.png
+thumbnail: assets/img/blog/distillation_ssl/seed2.png
 toc:
   sidebar: left
 ---

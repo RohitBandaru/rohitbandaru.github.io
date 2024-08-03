@@ -2,7 +2,7 @@
 layout: post
 title: Scaling Deep Learning
 tags: applied-ml
-image: assets/img/blog/scaling_ml/data_parallelism_(2).png
+thumbnail: assets/img/blog/scaling_ml/data_parallelism_(2).png
 toc:
   sidebar: left
 ---

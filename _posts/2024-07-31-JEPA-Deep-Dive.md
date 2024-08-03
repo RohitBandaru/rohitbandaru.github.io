@@ -2,7 +2,7 @@
 layout: post
 title: Deep Dive into Yann LeCun’s JEPA
 tags: self-supervised-learning ai
-image: ../../../images/jepa/Screenshot_2024-02-04_at_11.12.37_PM.png
+thumbnail: assets/img/blog/jepa/Screenshot_2024-02-04_at_11.12.37_PM.png
 toc:
   beginning: true
   sidebar: left

@@ -2,7 +2,7 @@
 layout: post
 title: Pruning Neural Networks
 tags: applied-ml
-image: ../../../images/pruning/weights_vs_neurons.png
+thumbnail: assets/img/blog/pruning/weights_vs_neurons.png
 toc:
   sidebar: left
 ---
