@@ -4,7 +4,6 @@ title: about
 permalink: /about/
 nav: true
 navorder: 1
-subtitle: Machine Learning Person
 
 profile:
   align: right
