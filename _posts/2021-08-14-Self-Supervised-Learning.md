@@ -2,7 +2,7 @@
 layout: post
 title: Self-Supervised Learning  -  Getting more out of data
 tags: computer-vision self-supervised-learning 
-image: ../../../images/self_supervised_learning/simclr_arch.png
+image: assets/img/self_supervised_learning/simclr_arch.png
 toc:
   sidebar: left
 ---
@@ -42,9 +42,9 @@ In research, there are comparisons between training on ImageNet images and label
 
 Self-supervised learning has been long applied in NLP, but as Yann LeCun and Ishan Misra point [out](https://ai.facebook.com/blog/self-supervised-learning-the-dark-matter-of-intelligence/), it is much harder to apply to vision. In NLP, language models are often trained with self supervision. Given a some text, you can mask a word and try to predict it given the rest of the text. There is a limited vocabulary, so you can assign a probability to each word. This is the basis of many popular NLP methods.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/nlp.png" description="Predicting masked words in NLP"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/nlp.png" caption="Predicting masked words in NLP" class="img-fluid mx-auto d-block" width=400 %}
 
-{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/image_patch.png" description="Predicting patches of an image is much harder."%}
+{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/image_patch.png" caption="Predicting patches of an image is much harder." class="img-fluid mx-auto d-block" width=300 %}
 
 The analogue for vision is to mask a patch of an image and try to fill it in. However, because there is an intractable number of possible ways to fill in an image, you can't compute a probability for each one. There can also be a large number of possible solutions. For example, in the image above, there is many facial expressions the dog could have. The NLP approach is straight forward but cannot be directly applied to vision.
 
@@ -110,7 +110,7 @@ SimCLR is a method from Google Brain which takes a different approach for self-s
 
 However, the problem with just comparing within the same image is collapse. The network would learn the trivial solution of a constant vector for all representations (ex: a vector of all zeros). This would maximize the similarity between augmentations but obviously not contain any useful images. We need negative samples to minimize similarity with. In SimCLR, the negative samples are augmentations of other images from the same training batch. The assumption made here is that the other images are unrelated to the current image and the representations should be far apart.
 
-{% include image.html width=500 url="../../../images/self_supervised_learning/simclr_arch.png" description="The architecture of SimCLR. Diagram by Author, but dog images from SimCLR paper"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/simclr_arch.png" description="The architecture of SimCLR. Diagram by Author, but dog images from SimCLR paper" width=500%}
 
 Why do we need a projection head? It would not change the architecture much by optimizing the similarity losses on the representations themselves. The encoder may even include the same fully connected layers that would have been in the projection head. The projection head allows for a more complex and nonlinear similarity relationship between the encodings. Without it, the representations would have to have a high cosine similarity. This may restrict the expressivity of the vectors. The projection head can also ignore some information in the representations. For example, SimCLR may train to make the representations invariant to rotations. The rotation angle may be encoded in the representation but ignored by the projection head. If the rotation is encoded in the first 5 values of the vector, the projection MLP may have zero weights for those values. This may be desirable in a variant of the architecture in which the self-supervised learning happens simultaneously with a downstream task. The SimCLR architecture itself has no reason to include unnecessary information in the representation. It is unclear whether having "extra" information in the representation is desirable or not.
 
@@ -128,7 +128,7 @@ The loss is referred to as NT-Xent (the normalized temperature-scaled cross entr
 
 ## Scaling
 
-{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/scaling.png" description="Performance of different self-supervised learning algorithms compared with supervised learning using ResNet50" width=500 source="https://arxiv.org/abs/2002.05709"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/scaling.png" description="Performance of different self-supervised learning algorithms compared with supervised learning using ResNet50 https://arxiv.org/abs/2002.05709" width=500 %}
 
 Self-supervised learning is often evaluated on ImageNet classification. The projection head is replaced with a linear layer. The network is then trained to classify ImageNet with the encoder weights frozen. The encodings learned with self-supervision must be useful enough for a linear layer to classify them.
 
@@ -162,7 +162,7 @@ The main problem with DeepCluster is that it requires periodically clustering th
 
 ## [SwAV](https://arxiv.org/abs/2006.09882)
 
-{% include image.html width=500 url="../../../images/self_supervised_learning/swav.png" description="SwAV" source="https://arxiv.org/abs/2006.07733"%}
+{% include figure.liquid  url="../../../images/self_supervised_learning/swav.png" description="SwAV" description="https://arxiv.org/abs/2006.07733" width=500 %}
 
 SwAV extends on DeepCluster to be online, while also taking inspiration from contrastive SSL methods. Two augmentations of an image are passed to an encoder. These representations are then assigned prototypes. There are K prototypes, which are vectors of the same representation as the encoding.
 
