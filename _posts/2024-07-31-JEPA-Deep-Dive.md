@@ -244,15 +244,15 @@ The state of the world varies only slightly between time steps. Rather than rege
 
 1. The world model outputs query value pairs: $$(q[i], v[i])$$
 2. The world model retrieves a value from memory using the query
-    1. $$\mathrm{Mem}(q) = \sum_jc_jv_j$$
-        1. The value retrieved from memory is a weighted sum of all values.
-    2. $$\tilde{c}_j = \mathrm{Match}(k_j,q)$$
-        1. Measures dissimilarity between the key and query.
-    3. $$c = \mathrm{Normalize}(\tilde{c})$$
-        1. This is often a softmax.
-    4. $$v_j = \mathrm{Update}(r,v_j,c_j)$$
-        1. Value is updated using the current value and new value.
-        2. The update function can be $$cr+(1-c)v$$
+    - $$\mathrm{Mem}(q) = \sum_jc_jv_j$$
+        - The value retrieved from memory is a weighted sum of all values.
+    - $$\tilde{c}_j = \mathrm{Match}(k_j,q)$$
+        - Measures dissimilarity between the key and query.
+    - $$c = \mathrm{Normalize}(\tilde{c})$$
+        - This is often a softmax.
+    - $$v_j = \mathrm{Update}(r,v_j,c_j)$$
+        - Value is updated using the current value and new value.
+        - The update function can be $$cr+(1-c)v$$
 
 # Data Streams
 
