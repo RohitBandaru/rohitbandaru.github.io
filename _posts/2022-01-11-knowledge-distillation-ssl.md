@@ -63,7 +63,7 @@ In supervised learning for classification, the labels are hard targets or one-ho
 
 {% include figure.liquid loading="eager" path="assets/img/blog/distillation_ssl/soft_vs_hard.png" description="Shiba Inu dogs are known to have cat-like characteristics, soft labels can encode this by assigning some probability to the cat class." width=600 %}
 
-The soft targets encode more information than hard targets. Hinton describes this as ["dark knowledge"](https://www.youtube.com/watch?v=EK61htlw8hY). For example, from a soft target you can tell which class is the second most likely or the relative probabilities between two classes. This information is not available in a hard target.
+The soft targets encode more information than hard targets. Hinton describes this as "dark knowledge". For example, from a soft target you can tell which class is the second most likely or the relative probabilities between two classes. This information is not available in a hard target.
 
 $$
 \begin{equation}

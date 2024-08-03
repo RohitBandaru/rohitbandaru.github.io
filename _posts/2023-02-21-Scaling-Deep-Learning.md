@@ -44,7 +44,7 @@ To see how GPU performance relates to speed, I timed the training steps of a Res
 
 {% include figure.liquid loading="eager" path="assets/img/blog/scaling_ml/Untitled.png" description=""%}
 
-We see that the throughput (examples per ms) is maximized at the largest possible batch size. We also see that for batch sizes of less than 2^4 or 16, the throughput is lower. GPUs are inefficient with small batches due to overhead. CPUs perform better in some settings. The takeaway is that we want to maximize the GPU utilization by fitting the largest possible batch. Some libraries have the functionality to search for the largest possible batch size given a GPU and dataset ([example](https://www.notion.so/Chapter-1-ce7db7795e0a40c4bff18c03b70bed70)). In the flat region, GPU step time increases linearly with batch size.
+We see that the throughput (examples per ms) is maximized at the largest possible batch size. We also see that for batch sizes of less than 2^4 or 16, the throughput is lower. GPUs are inefficient with small batches due to overhead. CPUs perform better in some settings. The takeaway is that we want to maximize the GPU utilization by fitting the largest possible batch. Some libraries have the functionality to search for the largest possible batch size given a GPU and dataset. In the flat region, GPU step time increases linearly with batch size.
 
 ## Optimal Mini Batch Size
 
