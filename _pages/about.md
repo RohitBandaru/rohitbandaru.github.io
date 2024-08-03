@@ -1,7 +1,9 @@
 ---
 layout: about
 title: about
-permalink: /
+permalink: /about/
+nav: true
+navorder: 1
 subtitle: Machine Learning Person
 
 profile:
