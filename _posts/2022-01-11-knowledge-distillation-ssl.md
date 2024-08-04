@@ -119,7 +119,7 @@ In self-supervised learning, a supervised objective is formed from the input rat
 
 The cross-entropy loss is used like the contrastive InfoNCE loss in SSL. The student vector is pushed towards the teacher vector and away from the vectors in the queue. However, some of the negative vectors are closer than others. The student network is also trained to match this information. This is where the dark knowledge of KD is applied.
 
-Unlike the InfoNCE loss, there are no hard positive and negative examples in this objective. The teacher network creates a soft probability distribution. Each example is assigned a continuous score between 0 and 1 that indicates how positive the example is. SEED can be viewed as a *soft contrastive learning* method.
+Unlike the InfoNCE loss, there are no hard positive and negative examples in this objective. The teacher network creates a soft probability distribution. Each example is assigned a continuous score between 0 and 1 that indicates how positive the example is. SEED can be viewed as a _soft contrastive learning_ method.
 
 $$
 \begin{align}

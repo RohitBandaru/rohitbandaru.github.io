@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Self-Supervised Learning  -  Getting more out of data
-tags: computer-vision self-supervised-learning 
+tags: computer-vision self-supervised-learning
 thumbnail: assets/img/blog/self_supervised_learning/byol.png
 toc:
   sidebar: left
@@ -102,7 +102,7 @@ To apply this to vision, the image is split up into 7x7 patches (with 50% overla
 
 Why do we need the autoregressive model? We could optimize the InfoNCE loss using the 7x7 encodings. The self supervised task here is predicting the next context vector given a sequence of context vectors. This is similar to predicting the next patch of an image given all the previous patches. But rather predict the patch, which as we discussed is too difficult, we just predict a lower dimensional vector. Without this autoregressive constraint, we are just optimizing for generating unique embeddings for each patch and ignoring the relation between the patches. The InfoNCE loss is just ensuring that the predictions are correct.
 
-Why not just mask out the current context / observation? The architecture for this may be a masked fully connected layer that learns the context vector for each observation, while excluding the connection to the observation itself. Or there could be two PixelCNNs, one from the left and one from the right. We can then concatenate these two context vectors and possibly add additional neural network layers on top of it. Both methods would be more computationally expensive and complex, but likely still feasible. This would be bidirectional model for images similar to [BERT](https://arxiv.org/abs/1810.04805).  This idea may be explored in other research papers or, it may be an open idea to try.
+Why not just mask out the current context / observation? The architecture for this may be a masked fully connected layer that learns the context vector for each observation, while excluding the connection to the observation itself. Or there could be two PixelCNNs, one from the left and one from the right. We can then concatenate these two context vectors and possibly add additional neural network layers on top of it. Both methods would be more computationally expensive and complex, but likely still feasible. This would be bidirectional model for images similar to [BERT](https://arxiv.org/abs/1810.04805). This idea may be explored in other research papers or, it may be an open idea to try.
 
 ## [SimCLR](https://arxiv.org/abs/2002.05709)
 

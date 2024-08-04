@@ -5,7 +5,7 @@ tags: self-supervised-learning transformer
 thumbnail: assets/img/blog/ssl-vit/Untitled.png
 toc:
   sidebar: left
---- 
+---
 
 In recent years, self-supervised learning (SSL) has emerged as a powerful paradigm in computer vision, allowing models to learn meaningful representations from unlabeled data. The prior work in this field focuses on using CNN architectures such as ResNet on this task. However, as evidenced by the success of self supervised language models, transformers are a natural fit for self supervised training. We will cover a set of recent papers that apply transformers for self supervised visual learning.
 
@@ -34,11 +34,11 @@ These changes result in a self-distillation approach that proves particularly ef
 {% include figure.liquid loading="eager" path="assets/img/blog/ssl-vit/Screenshot_2024-04-20_at_7.39.25_PM.png" class="img-fluid rounded z-depth-1" width=400 %}
 
 1. Two views of an image $$x$$, $$x_1$$ and $$x_2$$ are generated through data augmentations.
-    1. A multi crop strategy is used in which two large global views are generated along with a set of smaller cropped local views. The teacher only processes global views, while the student processes all views, with the constraint that the loss is not trying to match the same views to each other. This method was introduced in the [SwAV](https://scholar.google.com/scholar_url?url=https://proceedings.neurips.cc/paper_files/paper/2020/file/70feb62b69f16e0238f741fab228fec2-Paper.pdf&hl=en&sa=T&oi=gsr-r-gga&ct=res&cd=0&d=13209348926291080860&ei=QYYkZu2RB5SCy9YP29Cc0AY&scisig=AFWwaea44-zuGhikZl27njOvnygp) paper, and helps the model learn local to global correspondences. Restricting the teacher to only global views also encourages the encoders to output global representations.
-    2. Are position embeddings used?
+   1. A multi crop strategy is used in which two large global views are generated along with a set of smaller cropped local views. The teacher only processes global views, while the student processes all views, with the constraint that the loss is not trying to match the same views to each other. This method was introduced in the [SwAV](https://scholar.google.com/scholar_url?url=https://proceedings.neurips.cc/paper_files/paper/2020/file/70feb62b69f16e0238f741fab228fec2-Paper.pdf&hl=en&sa=T&oi=gsr-r-gga&ct=res&cd=0&d=13209348926291080860&ei=QYYkZu2RB5SCy9YP29Cc0AY&scisig=AFWwaea44-zuGhikZl27njOvnygp) paper, and helps the model learn local to global correspondences. Restricting the teacher to only global views also encourages the encoders to output global representations.
+   2. Are position embeddings used?
 2. The views are passed to their respective encoder (teacher/student)
 3. The teacher encoding is “centered”.
-    1. Perhaps centering allows this method to work without having the predictor layer. The center is a exponential moving average of the teacher encoding (of both views). This vector is subtracted from the teacher’s encoding before the softmax. A temperature is also applied with the softmax to achieve a “sharpening”. These methods help the teacher avoid collapse. Centering ensures that a single component of the vector doesn’t dominate. Sharpening ensures that it doesn’t collapse to a uniform vector.
+   1. Perhaps centering allows this method to work without having the predictor layer. The center is a exponential moving average of the teacher encoding (of both views). This vector is subtracted from the teacher’s encoding before the softmax. A temperature is also applied with the softmax to achieve a “sharpening”. These methods help the teacher avoid collapse. Centering ensures that a single component of the vector doesn’t dominate. Sharpening ensures that it doesn’t collapse to a uniform vector.
 4. Softmax is applied to each encoding. The student is trained with a cross entropy loss to match the teacher. The teachers weights are updated as an exponential moving average of the student.
 
 This paper compares the performance of DINO with ResNet and ViT architectures against [SOTA SSL methods](https://rohitbandaru.github.io/blog/blog/2024/SSL-with-Vision-Transformers/) such as [BYOL](https://arxiv.org/abs/2006.07733), MoCov2, and SwAV. The combination os DINO and ViT has the most significant advantage. Interestingly, it is 6.6% better than ViT with BYOL training on linear ImageNet evaluation, despite minor differences in the methods. The SSL methods that are used for comparison were developed for CNN architectures, which put them at a disadvantage. DINO is designed for transformers, but what about it makes it work better with transformers? One possible explanation is that transformers handle different resolutions of images better. Higher resolution images results in more image patches generated in the transformer. The computation also scales quadratically in the attention operations with respect to the number of patches. For ResNet, the computation increases linearly.
@@ -62,25 +62,25 @@ The teacher model predicts representations from unmasked input, while the studen
 Instead of training a multimodal model, independent models are trained on different modalities. Data2VecAudio, Data2VecText, and Data2VecVision are developed. The learning objective remains the same, but the generation of embeddings and masking strategies differ.
 
 1. Encoding of inputs into embeddings:
-    1. Text is tokenized, and learned embeddings for each token are retrieved.
-    2. Images are divided into 16x16 patches and linearly projected into an embedding.
-    3. Audio is encoded by a 1D convolutional neural network with multiple layers. A 16 kHz waveform is mapped to a 50 Hz representation. This means a sequence of 320 integers is mapped to a single representation.
-        1. Unlike images, a multiple-layer network is used for audio, likely due to the absence of a Fourier transform.
+   1. Text is tokenized, and learned embeddings for each token are retrieved.
+   2. Images are divided into 16x16 patches and linearly projected into an embedding.
+   3. Audio is encoded by a 1D convolutional neural network with multiple layers. A 16 kHz waveform is mapped to a 50 Hz representation. This means a sequence of 320 integers is mapped to a single representation.
+      1. Unlike images, a multiple-layer network is used for audio, likely due to the absence of a Fourier transform.
 2. Masking:
-    1. Some of the student input embeddings are replaced by the MASK token embedding.
-        1. Text: Random tokens are masked.
-        2. Images: Embeddings corresponding to rectangular blocks are masked.
-        3. Audio: Continuous spans of embeddings are masked.
+   1. Some of the student input embeddings are replaced by the MASK token embedding.
+      1. Text: Random tokens are masked.
+      2. Images: Embeddings corresponding to rectangular blocks are masked.
+      3. Audio: Continuous spans of embeddings are masked.
 3. Addition of position encoding.
 4. Both the teacher and student transformer models receive the input.
 5. Representations at different layers are distilled from the teacher to the student. Outputs from the masked tokens of the top $$K$$ transformer blocks are normalized and averaged into a single vector.
 6. A regression loss (Smooth L1) is applied to the averaged vectors of each network.
-    1. The loss transitions from a squared loss to an L2 loss when the error margin goes below the hyperparameter $$\beta$$. The L2 loss is only applied when the student and teacher predictions are close. This loss is designed to be less sensitive to outliers.
+   1. The loss transitions from a squared loss to an L2 loss when the error margin goes below the hyperparameter $$\beta$$. The L2 loss is only applied when the student and teacher predictions are close. This loss is designed to be less sensitive to outliers.
 
 {% include figure.liquid loading="eager" path="assets/img/blog/ssl-vit/Screenshot_2024-04-07_at_2.46.27_PM.png" width=500 description=""%}
 
 7. The students weights are updated with SGD. The teacher’s weights are updated as a EMA of the students weights: $$\Delta \leftarrow \tau \Delta + (1-\tau)\theta$$
-    1. $$\Delta$$ represents the teacher’s parameters, while $$\theta$$ represents the student’s parameters.
+   1. $$\Delta$$ represents the teacher’s parameters, while $$\theta$$ represents the student’s parameters.
 
 {% include figure.liquid loading="eager" path="assets/img/blog/ssl-vit/Untitled.png" width=500 description=""%}
 
@@ -110,7 +110,7 @@ This paper uses a simple autoencoder architecture to learn image representations
 2. Using a mask ratio (75%-95%), patches are selected randomly without replacement.
 3. The unmasked patches are inputted into the encoder. Note that the mask tokens do not get processed by the encoder (difference from BERT). The encoder uses a vanilla ViT architecture, where the unmasked patches are linearly projected into token embeddings which get processed by transformer blocks. The output is a ViT processed embedding for each unmasked patch. Each patch has an added position embedding.
 4. The encoded tokens and the masked tokens are combined as an input to the decoder. The mask tokens map to a learned embedding. This embedding will be the same at all positions because it is not transformed by the encoder. At this stage position embeddings are added to the full set.
-    1. Note that for unmasked tokens, position embeddings are added twice, once before the encoder and once before the decoder.
+   1. Note that for unmasked tokens, position embeddings are added twice, once before the encoder and once before the decoder.
 5. The decoder reconstructs the unmasked image from the set of patch embeddings. The decoder is trained by a mean squared error loss with respect to the unmasked input image.
 
 This architecture builds on the vision transformer. An alternative is to use CNNs. This would involve directly setting pixels in the input image to zero, learn a vector representation, and then decode it back to the image. The reason this fails is that it aims to globally decode an image. With transformers you first predict representations of the masked patches, and then decode into the image patch. This breaks it down into two easier problems. Also with CNNs, you can’t explicitly encode masked regions like you can with a ViT. Having a mask token more explicitly indicates the mask.

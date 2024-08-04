@@ -8,20 +8,20 @@ toc:
   sidebar: left
 ---
 
-In the AI research community, Yann LeCun has a  unique and often controversial perspective. As of 2024, LLMs and Generative AI are the main focus areas of the field of AI. We’ve all been impressed by the performance of LLMs in various contexts, and generative systems like OpenAI’s [Sora](https://openai.com/sora). However, it is not clear where these advances fit in the long term goal of achieving and surpassing human level intelligence, which many call AGI.
+In the AI research community, Yann LeCun has a unique and often controversial perspective. As of 2024, LLMs and Generative AI are the main focus areas of the field of AI. We’ve all been impressed by the performance of LLMs in various contexts, and generative systems like OpenAI’s [Sora](https://openai.com/sora). However, it is not clear where these advances fit in the long term goal of achieving and surpassing human level intelligence, which many call AGI.
 
-In his position paper [A Path Towards Autonomous Machine Intelligence](https://openreview.net/pdf?id=BZ5a1r-kVsf) and his many recent talks  (linked below), Yann presents an alternative framework for achieving artificial intelligence. He also proposes a new architecture for a predictive world model: Joint Embedding Predictive Architecture (JEPA).
+In his position paper [A Path Towards Autonomous Machine Intelligence](https://openreview.net/pdf?id=BZ5a1r-kVsf) and his many recent talks (linked below), Yann presents an alternative framework for achieving artificial intelligence. He also proposes a new architecture for a predictive world model: Joint Embedding Predictive Architecture (JEPA).
 
-This blog post will dive deep into Yann’s vision for AI, the JEPA architecture, current research, and energy based models. We will go deep into the technical aspects of these ideas, as well as give my opinions, along with interesting references. I will also cover recent research advances such as *V-JEPA*
+This blog post will dive deep into Yann’s vision for AI, the JEPA architecture, current research, and energy based models. We will go deep into the technical aspects of these ideas, as well as give my opinions, along with interesting references. I will also cover recent research advances such as _V-JEPA_
 
 This is a long post, feel free to jump to the sections about JEPA, I-JEPA, and V-JEPA.
 
 ### Relevant Talks by Yann LeCun
 
-[*From Machine Learning to Autonomous Intelligence*](https://drive.google.com/file/d/1RVYBVi_bWyz-4sZSsu4rSWzDwQBLsvHL/view)
+[_From Machine Learning to Autonomous Intelligence_](https://drive.google.com/file/d/1RVYBVi_bWyz-4sZSsu4rSWzDwQBLsvHL/view)
 {% include youtube.html id='VRzvpV9DZ8Y' %}
 
-[*Objective-Driven AI: Towards Machines that can Learn, Reason, and Plan”*](https://www.ece.uw.edu/wp-content/uploads/2024/01/lecun-20240124-uw-lyttle.pdf)
+[_Objective-Driven AI: Towards Machines that can Learn, Reason, and Plan”_](https://www.ece.uw.edu/wp-content/uploads/2024/01/lecun-20240124-uw-lyttle.pdf)
 
 {% include youtube.html id='d_bdU3LsLzE' %}
 
@@ -178,7 +178,7 @@ In order to train a world model, Yann LeCun proposes an SSL energy based model (
 
 {% include figure.liquid loading="eager" path="assets/img/blog/jepa/Screenshot_2024-02-19_at_1.04.13_PM.png" width=300 class="image-fluid mx-auto d-block" description=""%}
 
-$$x$$ and $$y$$ can be considered videos, where  $$y$$  follows x. EBMs learn an energy function $$F(x,y)$$ that take low values when $$x$$ and $$y$$ are compatible and high if not. Compatible in this context means that $$y$$ is a plausible continuation of $$x$$.
+$$x$$ and $$y$$ can be considered videos, where $$y$$ follows x. EBMs learn an energy function $$F(x,y)$$ that take low values when $$x$$ and $$y$$ are compatible and high if not. Compatible in this context means that $$y$$ is a plausible continuation of $$x$$.
 
 This is different from generative models in that $$y$$ is not directly predicted from $$x$$. There is a large space of values of $$y$$ that can follow $$x$$. Predicting exactly what will happen is an intractable problem. However, it is feasible to understand what is possible and what is not. Being good at this task requires an understanding of the world and common sense. A value of $$y$$ that defies the laws of physics should result in a high energy value.
 
@@ -244,15 +244,15 @@ The state of the world varies only slightly between time steps. Rather than rege
 
 1. The world model outputs query value pairs: $$(q[i], v[i])$$
 2. The world model retrieves a value from memory using the query
-    - $$\mathrm{Mem}(q) = \sum_jc_jv_j$$
-        - The value retrieved from memory is a weighted sum of all values.
-    - $$\tilde{c}_j = \mathrm{Match}(k_j,q)$$
-        - Measures dissimilarity between the key and query.
-    - $$c = \mathrm{Normalize}(\tilde{c})$$
-        - This is often a softmax.
-    - $$v_j = \mathrm{Update}(r,v_j,c_j)$$
-        - Value is updated using the current value and new value.
-        - The update function can be $$cr+(1-c)v$$
+   - $$\mathrm{Mem}(q) = \sum_jc_jv_j$$
+     - The value retrieved from memory is a weighted sum of all values.
+   - $$\tilde{c}_j = \mathrm{Match}(k_j,q)$$
+     - Measures dissimilarity between the key and query.
+   - $$c = \mathrm{Normalize}(\tilde{c})$$
+     - This is often a softmax.
+   - $$v_j = \mathrm{Update}(r,v_j,c_j)$$
+     - Value is updated using the current value and new value.
+     - The update function can be $$cr+(1-c)v$$
 
 # Data Streams
 
@@ -298,7 +298,7 @@ Compared to other image SSL approaches, I-JEPA takes advantage of the flexibilit
 
 {% include figure.liquid loading="eager" path="assets/img/blog/jepa/Screenshot_2024-04-06_at_5.39.36_PM.png" class="image-fluid mx-auto d-block" description=""%}
 
-The input image is split into $$N$$ non-overlapping patches and fed into a target encoder $$f_{\theta}$$ to compute patch representations.  $$s_y = \{s_{y1} … s_{yN}\}$$
+The input image is split into $$N$$ non-overlapping patches and fed into a target encoder $$f_{\theta}$$ to compute patch representations. $$s_y = \{s_{y1} … s_{yN}\}$$
 
 $$M$$ possibly overlapping blocks are sampled from these representations. These blocks are basically larger sections of the image that contain multiple patches.
 
@@ -315,13 +315,14 @@ V-JEPA is an extension of I-JEPA to videos. This is done by treating videos are 
 1. A clip of 64 frames (~2.1 seconds of video at 30 frames per second) is extracted from the video and resized to 16 × 224 × 224 × 3.
 2. The clip is split into $$L$$ spatiotemporal patches of size 16x16x2 (2 is the number of consecutive frames.
 3. A random mask is calculated for the context. This is a 2D that is similar to the mask in I-JEPA. This mask is then repeated across the time dimension. This repetition is necessary because the videos are short and there would be too much redundancy for the same patch at different time steps. This redundancy would make the learning task too easy. This masking creates a context image, while the target is the original image.
-    1. 2 masks are sampled: one short range and one long range. The short range mask covers less area in the image and is more discontinuous. These masks are constructed by different configurations of overlapping blocks, as done in I-JEPA.
 
-        ![Short-range (left), long-range (right)](../../../images/jepa/Screenshot_2024-07-21_at_12.43.47_PM.png" class="image-fluid mx-auto d-block" description=""%}
+   1. 2 masks are sampled: one short range and one long range. The short range mask covers less area in the image and is more discontinuous. These masks are constructed by different configurations of overlapping blocks, as done in I-JEPA.
 
-        Short-range (left), long-range (right)
+      ![Short-range (left), long-range (right)](../../../images/jepa/Screenshot_2024-07-21_at_12.43.47_PM.png" class="image-fluid mx-auto d-block" description=""%}
 
-        The target encoder only needs to run once, even is there are multiple masks for the context. Having multiple masks leads to more efficient training.
+      Short-range (left), long-range (right)
+
+      The target encoder only needs to run once, even is there are multiple masks for the context. Having multiple masks leads to more efficient training.
 
 4. The tokens are processed by a transformer encoder (linear projection of patches + multiple transformer blocks). The masked out patches do not need to be processed. There is a separate encoder for the target and context. The target encoder is an EMA of the context encoder (same as I-JEPA).
 5. The predictor predicts the representations of the masked tokens by the unmasked tokens processed by the context encoder. The loss is the L1 distance between the representations of these masked tokens (from the target encoder, and the context encoder + predictor).
