@@ -128,7 +128,7 @@ The loss is referred to as NT-Xent (the normalized temperature-scaled cross entr
 
 ## Scaling
 
-{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/scaling.png" description="Performance of different self-supervised learning algorithms compared with supervised learning using ResNet50 https://arxiv.org/abs/2002.05709" alt="SSL scaling" width=500 %}
+{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/scaling.png" description="Performance of different self-supervised learning algorithms compared with supervised learning using ResNet50" source="https://arxiv.org/abs/2002.05709" alt="SSL scaling" width=500 %}
 
 Self-supervised learning is often evaluated on ImageNet classification. The projection head is replaced with a linear layer. The network is then trained to classify ImageNet with the encoder weights frozen. The encodings learned with self-supervision must be useful enough for a linear layer to classify them.
 
@@ -140,13 +140,13 @@ One issue with SimCLR is its reliance on huge batch sizes. The best results come
 
 BYOL is a paper from Deepmind that aims to remove the need for negative samples. There are two networks: a target network and an online network. The target network's weights are an exponential moving average of the online encoder. Similar to SimCLR, augmented versions of an image are passed through the encoders. Unlike SimCLR, the loss does not use negative examples so there is no need for large batch sizes. There is a projection head on top of the online encoder. The online encoder is used for downstream tasks.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/byol.png" caption="BYOL architecture" alt="BYOL architecture"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/byol.png" caption="BYOL architecture" alt="BYOL architecture" source="https://arxiv.org/abs/2006.07733"%}
 
 Bootstrapping is a poorly defined word used in machine learning. It can mean simultaneously optimizing two objectives that depend on each. In BYOL, that refers to the two encoders.
 
 BYOL is able to learn useful representations without collapse because only the parameters of the online encoder are optimized. The online encoder can't learn to output a constant because it is following the representations of the target encoder. The bootstrapping ensures that the trivial solution is avoided.
 
-BYOL is a non-contrastive method of SSL. However one criticism of BYOL is that batch normalization causes implicit contrastive learning by leaking information between batch elements. However, in a [follow up paper](https://arxiv.org/pdf/2010.10241.pdf), the authors show that replacing batch normalization with group normalization and weight standardization leads to comparable performance.
+BYOL is a non-contrastive method of SSL. However one criticism of BYOL is that batch normalization causes implicit contrastive learning by leaking information between batch elements. However, in a [follow up paper](https://arxiv.org/abs/2010.10241), the authors show that replacing batch normalization with group normalization and weight standardization leads to comparable performance.
 
 # Clustering
 
@@ -154,7 +154,7 @@ Clustering is an important class of unsupervised learning algorithms. Although m
 
 ## [DeepCluster](https://arxiv.org/abs/1807.05520)
 
-{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/deepcluster.png" caption="DeepCluster algorithm" alt="DeepCluster Algorithm"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/deepcluster.png" caption="DeepCluster architecture" alt="DeepCluster Algorithm" source="https://arxiv.org/abs/1807.05520"%}
 
 DeepCluster trains a neural network in two alternating steps: clustering and classification. In the clustering step, each image is assigned a cluster as a pseudolabel by clustering the feature vectors from the network. K-means is used for clustering. There are $$k$$ clusters of the same dimension as the feature vectors. The network is then trained to predict the clusters from the images. After training on this classification objective, the features improve. The dataset is reclustered with better clusters. This iterative training procedure improves the clusters and the representations.
 
@@ -162,7 +162,7 @@ The main problem with DeepCluster is that it requires periodically clustering th
 
 ## [SwAV](https://arxiv.org/abs/2006.09882)
 
-{% include figure.liquid  path="assets/img/blog/self_supervised_learning/swav.png" caption="SwAV" alt="SwAV" width=500 %}
+{% include figure.liquid  path="assets/img/blog/self_supervised_learning/swav.png" caption="SwAV" alt="SwAV" width=500 source="https://arxiv.org/abs/2006.09882"%}
 
 SwAV extends on DeepCluster to be online, while also taking inspiration from contrastive SSL methods. Two augmentations of an image are passed to an encoder. These representations are then assigned prototypes. There are K prototypes, which are vectors of the same representation as the encoding.
 

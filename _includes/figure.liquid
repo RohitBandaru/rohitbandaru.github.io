@@ -72,7 +72,10 @@
     >
   </picture>
 
-  {% if include.caption %}
-    <figcaption class="caption">{{ include.caption }}</figcaption>
+  {% if include.caption or include.source %}
+    <figcaption class="caption">
+      {% if include.caption %} {{ include.caption }} {% endif %}
+      {% if include.source %} <a href="{{ include.source }}"> Source </a> {% endif %}
+      </figcaption>
   {% endif %}
 </figure>

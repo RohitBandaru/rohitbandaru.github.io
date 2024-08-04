@@ -34,7 +34,7 @@ Recent years have seen tremendous excitement around Large Language Models (LLMs)
 However, these models face significant limitations:
 
 1. Factuality / Hallucinations: When uncertain, models often generate plausible-sounding but false information. They're optimized for probabilistic likelihood, not factual accuracy.
-2. Limited Reasoning: While techniques like [Chain of Thought](https://arxiv.org/pdf/2201.11903.pdf) prompting improve LLM’s ability to reason, they're restricted to solving the selected type of problem and approaches to solving them without improving generalized reasoning abilities.
+2. Limited Reasoning: While techniques like [Chain of Thought](https://arxiv.org/abs/2201.11903) prompting improve LLM’s ability to reason, they're restricted to solving the selected type of problem and approaches to solving them without improving generalized reasoning abilities.
 3. Lack of Planning: LLMs predict one step at a time, lacking effective long-term planning crucial for tasks requiring sustained goal-oriented behavior.
 
 Despite impressive advancements, the challenge of autonomous driving illustrates the gap between current AI and human-level intelligence. As LeCun notes, humans can learn driving basics in about 20 hours. In contrast, self-driving car development has consumed billions of dollars, extensive data collection, and decades of effort, yet still hasn't achieved human-level performance.
@@ -55,13 +55,13 @@ Humans acquire basic understanding of the world during early infancy, but we're 
 
 Understanding the extent to which babies acquire common sense during infancy is crucial for AI development. If common sense is largely innate, focus should be on massive datasets mimicking evolutionary timescales. If it's primarily learned, priority should be given to models that excel at quick learning from limited data.
 
-A baby's experience, while not comparable to evolutionary timescales, still represents a substantial dataset. If a baby is awake for [8 hours](https://intuitiveparentingdc.com/blog/2018/7/6/developmentally-appropriate-sleep-expectations-birth-to-age-5) a day, in four months they have seen about 960 hours of data. This data is also augmented by other sensory signals and dense biological supervision (pain, hunger, emotions). This is around the same length as the [Kinetics 400](https://arxiv.org/pdf/1705.06950.pdf) video dataset. This is still dwarfed by the millions of hours of video that self driving cars are using.
+A baby's experience, while not comparable to evolutionary timescales, still represents a substantial dataset. If a baby is awake for [8 hours](https://intuitiveparentingdc.com/blog/2018/7/6/developmentally-appropriate-sleep-expectations-birth-to-age-5) a day, in four months they have seen about 960 hours of data. This data is also augmented by other sensory signals and dense biological supervision (pain, hunger, emotions). This is around the same length as the [Kinetics 400](https://arxiv.org/abs/1705.06950) video dataset. This is still dwarfed by the millions of hours of video that self driving cars are using.
 
 This Nature [paper](https://www.nature.com/articles/s42256-024-00802-0) by Orhan and Lake explores learning from infant-perspective data. They demonstrate that computer vision models can be trained on noisy, less diverse datasets collected from infant headcams. These egocentric datasets are far noisier and less diverse than standard image/video datasets, but AI models without strong inductive biases can learn from them.
 
 Emmanuel Dupoux's diagram, presented by Yann LeCun, suggests that babies often understand concepts like object permanence, solidity, and biological motion by around four months. While presented as quick learning, it's important to note the significant amount of data processing that occurs during this time.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/dupoux.png" class="image-fluid mx-auto d-block" alt="Dupoux diagram on cognitive development"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/dupoux.png" class="image-fluid mx-auto d-block" alt="Dupoux diagram on cognitive development" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
 
 We don't yet know precisely how much data AI systems would need to learn the same concepts as babies. It's likely that the data efficiency gap is relatively small for basic concepts that babies learn. For instance, object permanence could probably be learned from 960 hours of video data. However, it becomes evident that this gap grows substantially with age and with the complexity of the knowledge being assessed. The challenges in developing fully autonomous vehicles clearly demonstrate how large this data efficiency gap can become.
 
@@ -104,7 +104,7 @@ Yann proposes a high level architecture for building an AI system that is aimed 
 
 We will then explore the various challenges that must be addressed to construct such an architecture. Currently, this is merely a theoretical architecture. Building certain components remains an open problem, and assembling all the modules will pose an additional challenge.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/jepa_brain.png" width=400 class="image-fluid mx-auto d-block" caption="High Level View of LeCun's Architecture for Intelligence" alt="High Level View of LeCun's Architecture for Intelligence"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/jepa_brain.png" width=400 class="image-fluid mx-auto d-block" caption="High Level View of LeCun's Architecture for Intelligence" alt="High Level View of LeCun's Architecture for Intelligence" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
 
 This architecture contains different proposed components. We will explain these components and their relationships.
 
@@ -176,7 +176,7 @@ In JEPA, the purpose of the world model is to predict future representations of 
 
 In order to train a world model, Yann LeCun proposes an SSL energy based model (EBM).
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/ebm.png" width=300 class="image-fluid mx-auto d-block" alt="ebm"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/ebm.png" width=300 class="image-fluid mx-auto d-block" alt="ebm" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
 
 $$x$$ and $$y$$ can be considered videos, where $$y$$ follows x. EBMs learn an energy function $$F(x,y)$$ that take low values when $$x$$ and $$y$$ are compatible and high if not. Compatible in this context means that $$y$$ is a plausible continuation of $$x$$.
 
@@ -196,7 +196,7 @@ The EBM collapses when all pairs have the same low energy. This can happen when 
 
 The paper describes a high data density region. This refers to $$(x, y)$$ pairs that are commonly seen in the real data distribution. We want to lower energy in this region, but keep it high outside of it. Collapse is when the energy is low inside and outside of this region which makes the EBM useless.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/regularized_ebm.png" width=400 class="image-fluid mx-auto d-block" alt="regularized ebm"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/regularized_ebm.png" width=400 class="image-fluid mx-auto d-block" alt="regularized ebm" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
 
 There are two training methods used to prevent collapse.
 
@@ -214,7 +214,7 @@ Encoder invariance: This means that $$s_y$$ will be the same for different value
 
 Latent variable predictor: Varying $$z$$ will lead to different plausible predictions of $$s_y$$.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/lv_jepa.png" width=400 class="image-fluid mx-auto d-block" alt="JEPA with a latent variable"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/lv_jepa.png" width=400 class="image-fluid mx-auto d-block" alt="JEPA with a latent variable" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
 
 There are four criteria that can be used to train this architecture without contrastive loss:
 
@@ -227,7 +227,7 @@ There are four criteria that can be used to train this architecture without cont
 
 There is a trade off between information loss in the encoding and the predictability of the encodings. If a representation contains most of the information of the input, it would be hard to predict. A more abstract and higher level representation would be lower in dimension and more predictable. Higher dimension representations are also more suitable for longer term predictions.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/hjepa.png" width=500 class="image-fluid mx-auto d-block" alt="H-JEPA"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/hjepa.png" width=500 class="image-fluid mx-auto d-block" alt="H-JEPA" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
 
 H-JEPA (Hierarchical JEPA) enhances JEPA's abstraction capabilities by splitting the architecture into two parts. The first JEPA handles low-level representations for short-term predictions, while the second operates at a higher abstraction level for longer-term forecasts.
 This two-tier structure, though innovative, is arbitrary. True intelligence requires multiple levels of abstraction. However, it is not clear how many levels of abstraction are needed. We may even need variable levels of abstraction. Different situations have different levels of complexity.
@@ -278,13 +278,13 @@ Perception is used to generate an initial representation of the state of the wor
 
 The action sequence is optimized with respect to the objects. There will be a lot of flexibility in designing the objects to get the system to behave in the way we want.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/objective_driven_ai.png" class="image-fluid mx-auto d-block" alt="Objective Driven AI"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/objective_driven_ai.png" class="image-fluid mx-auto d-block" alt="Objective Driven AI" source="https://www.ece.uw.edu/wp-content/uploads/2024/01/lecun-20240124-uw-lyttle.pdf"%}
 
 The system can also be extended to achieve hierarchal planning. The higher levels of planning produce a state that will serve as an objective for the lower level. This state can be considered as a subgoal that is necessary to achieve the higher level goal. We can have unique objectives and guardrails for each level of planning.
 
 Latent variables are also introduced to represent the uncertainty in predictions of future states. The latent variables at the higher levels can be thought as imaginary higher level actions. However, only the lower level actions can actually be directly executed.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/h_objective_driven_ai.png" class="image-fluid mx-auto d-block" alt="Hierarchal Objective Driven AI"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/h_objective_driven_ai.png" class="image-fluid mx-auto d-block" alt="Hierarchal Objective Driven AI" source="https://www.ece.uw.edu/wp-content/uploads/2024/01/lecun-20240124-uw-lyttle.pdf"%}
 
 # Towards Implementing JEPA
 
@@ -292,11 +292,11 @@ The JEPA paper is a position paper that describes a vision for AI that may take 
 
 These are essentially self supervised pretraining methods. When comparing against other works, these papers cite training speed as their advantage. They can achieve strong downstream performance with fewer pretraining epochs.
 
-## I-JEPA: [Self-Supervised Learning from Images with a Joint-Embedding Predictive Architecture](https://arxiv.org/pdf/2301.08243.pdf)
+## I-JEPA: [Self-Supervised Learning from Images with a Joint-Embedding Predictive Architecture](https://arxiv.org/abs/2301.08243)
 
 Compared to other image SSL approaches, I-JEPA takes advantage of the flexibility of the transformer architecture. ViT is used because it can handle an arbitrary amount of patches in an image, without requiring a strict shape in the input like CNNs
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/ijepa.png" class="image-fluid mx-auto d-block" alt="I-JEPA"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/ijepa.png" class="image-fluid mx-auto d-block" alt="I-JEPA" source="https://arxiv.org/abs/2301.08243" %}
 
 The input image is split into $$N$$ non-overlapping patches and fed into a target encoder $$f_{\theta}$$ to compute patch representations. $$s_y = \{s_{y1} … s_{yN}\}$$
 
@@ -318,12 +318,12 @@ V-JEPA is an extension of I-JEPA to videos. This is done by treating videos are 
 
    1. 2 masks are sampled: one short range and one long range. The short range mask covers less area in the image and is more discontinuous. These masks are constructed by different configurations of overlapping blocks, as done in I-JEPA. The target encoder only needs to run once, even is there are multiple masks for the context. Having multiple masks leads to more efficient training.
 
-   {% include figure.liquid loading="eager" path="assets/img/blog/jepa/vjepa_masking.png" class="image-fluid mx-auto d-block" caption="Short-range (left), long-range (right)" alt="V-JEPA masking"%}
+   {% include figure.liquid loading="eager" path="assets/img/blog/jepa/vjepa_masking.png" class="image-fluid mx-auto d-block" caption="Short-range (left), long-range (right)" alt="V-JEPA masking" source="https://ai.meta.com/research/publications/revisiting-feature-prediction-for-learning-visual-representations-from-video/"%}
 
 4. The tokens are processed by a transformer encoder (linear projection of patches + multiple transformer blocks). The masked out patches do not need to be processed. There is a separate encoder for the target and context. The target encoder is an EMA of the context encoder (same as I-JEPA).
 5. The predictor predicts the representations of the masked tokens by the unmasked tokens processed by the context encoder. The loss is the L1 distance between the representations of these masked tokens (from the target encoder, and the context encoder + predictor).
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/vjepa.png" class="image-fluid mx-auto d-block" caption="Very similar to I-JEPA but with an added temporal dimension." alt="V-JEPA Architecture" %}
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/vjepa.png" class="image-fluid mx-auto d-block" caption="Very similar to I-JEPA but with an added temporal dimension." alt="V-JEPA Architecture" source="https://ai.meta.com/research/publications/revisiting-feature-prediction-for-learning-visual-representations-from-video/"%}
 
 Very similar to I-JEPA but with an added temporal dimension.
 
@@ -335,17 +335,17 @@ V-JEPA processes small sequences of frames. These short videos are essentially i
 
 V-JEPA is a very interesting model that may be the start of a highly important line of research.
 
-## MC-JEPA: [A Joint-Embedding Predictive Architecture for Self-Supervised Learning of Motion and Content Features](https://arxiv.org/pdf/2307.12698.pdf)
+## MC-JEPA: [A Joint-Embedding Predictive Architecture for Self-Supervised Learning of Motion and Content Features](https://arxiv.org/abs/2307.12698)
 
 This is an extension of JEPA to include motion information. It uses an optical flow objective to learn motion from videos, and uses general SSL to learn about the content of the images/videos. Optical flow is estimating the direction in which pixels move between two consecutive frames of a video.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/mcjepa_architecture.png" class="image-fluid mx-auto d-block" alt="MC-JEPA"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/mcjepa_architecture.png" class="image-fluid mx-auto d-block" alt="MC-JEPA" source="https://arxiv.org/abs/2307.12698"%}
 
 The details of this dense flow estimation are out of the scope of this blog post. Flow estimation and content feature learning are combined as a multitask learning objective. Images are sampled for content learning, while consecutive frames are sampled from videos for flow estimation. The encoder is shared for both tasks. This is a JEPA architecture because the representations from one frame are warped to match the representations from the next frame. The same encoder is used to process both frames.
 
 The architecture for flow estimation is hierarchal. This may be the first instantiation of an H-JEPA architecture. This architecture is based on [PWC-Net](https://openaccess.thecvf.com/content_cvpr_2018/papers/Sun_PWC-Net_CNNs_for_CVPR_2018_paper.pdf). Each level is a different resolution.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/mcjepa_full_architecture.png" class="image-fluid mx-auto d-block" alt="MC JEPA full architecture"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/mcjepa_full_architecture.png" class="image-fluid mx-auto d-block" alt="MC JEPA full architecture" source="https://arxiv.org/abs/2307.12698"%}
 
 The image features are sampled from ImageNet, while a video dataset is used for flow estimation. It is also possible to use frames from video as images for content learning.
 
