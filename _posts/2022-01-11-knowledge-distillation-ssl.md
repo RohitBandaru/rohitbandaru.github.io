@@ -15,7 +15,7 @@ Self-supervised learning is a form of unsupervised learning. Self-supervision re
 
 In computer vision, it is very common to pretrain a neural network on ImageNet classification. This is an example of supervised pretraining. This network can then be fine-tuned for various downstream tasks, such as semantic segmentation, object detection, or even medical image classification. Supervised pretraining has been a standard practice in computer vision.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/distillation_ssl/sl_vs_ssl.png" description="Self-supervised vs Supervised Pretraining" width=400 %}
+{% include figure.liquid loading="eager" path="assets/img/blog/distillation_ssl/sl_vs_ssl.png" alt="Self-supervised vs Supervised Pretraining" caption="Self-supervised vs Supervised Pretraining" width=400 %}
 
 Self-supervised learning provides an alternative to supervised pretraining with two main benefits:
 
@@ -43,7 +43,7 @@ $$
 
 [MoCo](https://arxiv.org/abs/1911.05722) (momentum contrast) by He et al. implements contrastive SSL by keeping a queue of examples. The queue allows for a large number of negative examples to be used in the contrastive loss The momentum encoder is trained at the same time as the encoder in a bootstrapped fashion. They must have identical architectures for the momentum update to occur.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/distillation_ssl/moco.png" description="MoCo training" width=700 %}
+{% include figure.liquid loading="eager" path="assets/img/blog/distillation_ssl/moco.png" description="MoCo training" alt="MoCo training" width=700 %}
 
 With a queue of representations encoded by the momentum encoder, the main encoder is trained to contrast the representations. $$q$$ is the query or the representation from the encoder. $$k_+$$ is the corresponding representation from the momentum encoder. The loss aims to push $$q$$ towards $$k_+$$ and away from all other representations $$k$$ in the queue which serve as negative examples.
 
@@ -61,7 +61,7 @@ In knowledge distillation ([Hinton et al.](https://arxiv.org/abs/1503.02531), [B
 
 In supervised learning for classification, the labels are hard targets or one-hot encoded vectors. All of the probability is assigned to one class, and all other classes have a value of zero. The teacher model will have a softmax layer which will return a soft target. The soft target will assign some probability to other classes. Knowledge distillation uses the teacher network to produce these soft targets and uses them to train the student model.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/distillation_ssl/soft_vs_hard.png" description="Shiba Inu dogs are known to have cat-like characteristics, soft labels can encode this by assigning some probability to the cat class." width=600 %}
+{% include figure.liquid loading="eager" path="assets/img/blog/distillation_ssl/soft_vs_hard.png" caption="Shiba Inu dogs are known to have cat-like characteristics, soft labels can encode this by assigning some probability to the cat class." alt="dark knowledge" width=600 %}
 
 The soft targets encode more information than hard targets. Hinton describes this as "dark knowledge". For example, from a soft target you can tell which class is the second most likely or the relative probabilities between two classes. This information is not available in a hard target.
 
@@ -73,7 +73,7 @@ $$
 
 The soft targets can be made softer by increasing the temperature of the softmax. The temperature $$T$$ is typically set to 1. However, in knowledge distillation higher temperatures can yield better results as it increases the magnitude of the non-max values.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/distillation_ssl/kd.png" description="Knowledge Distillation" width=700 %}
+{% include figure.liquid loading="eager" path="assets/img/blog/distillation_ssl/kd.png" caption="Knowledge Distillation" alt="Knowledge Distillation" width=700 %}
 
 1. A teacher model is trained for high accuracy. This can be a large neural network or an ensemble.
 
@@ -101,7 +101,7 @@ This will allow knowledge distillation to occur before the downstream task. The 
 
 ## Method
 
-{% include figure.liquid loading="eager" path="assets/img/blog/distillation_ssl/seed.png" description="SEED" source="https://arxiv.org/abs/2101.04731" %}
+{% include figure.liquid loading="eager" path="assets/img/blog/distillation_ssl/seed.png" caption="SEED" alt="SEED" source="https://arxiv.org/abs/2101.04731" %}
 
 1. Train the teacher, independent of the student network. Any of the recent state-of-the-art SSL methods or even supervised models (ResNet trained on ImageNet classification) can be used here. The only requirement is that the model must produce image representations. The teacher networks weights are then frozen.
 
@@ -141,13 +141,13 @@ Referring to the formula for cross-entropy. $$\textbf{p}^T(..)$$ corresponds to 
 
 SEED is trained very similarly to MoCo. The differences are the lack of momentum weight updates and the soft contrastive loss.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/distillation_ssl/seed2.png" description="SEED training" width=700%}
+{% include figure.liquid loading="eager" path="assets/img/blog/distillation_ssl/seed2.png" caption="SEED training" alt="SEED training" width=700%}
 
 # Self-supervised vs Supervised Knowledge Distillation
 
 SEED or self-supervised distillation in general does not aim to replace supervised knowledge distillation. The authors report their best results when training models with both self-supervised and supervised knowledge distillation.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/distillation_ssl/s_vs_sl_kd.png" description="Self-supervised KD with Supervised KD" width=900%}
+{% include figure.liquid loading="eager" path="assets/img/blog/distillation_ssl/s_vs_sl_kd.png" caption="Self-supervised KD with Supervised KD" alt="Self-supervised KD with Supervised KD" width=900%}
 
 SEED allows for more effective self-supervised training of smaller models. It is better to train a large model with SSL and distill it to a small model than to train the small model directly. After SEED pretraining, the model can be fine-tuned with supervised knowledge distillation with the downstream task. In this step, the student is initialized from the self-supervised KD trained model, instead of initializing from scratch.
 

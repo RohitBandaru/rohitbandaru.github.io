@@ -23,7 +23,7 @@ This is done by setting individual parameters to zero and making the network spa
 
 This would make the network architecture itself smaller, while aiming to keep the accuracy of the initial larger network.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/pruning/weights_vs_neurons.png" description="Visualization of pruning weights/synapses vs nodes/neurons" source="https://arxiv.org/abs/1506.02626"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/pruning/weights_vs_neurons.png" caption="Visualization of pruning weights/synapses vs nodes/neurons" alt="pruning weights vs nodes" source="https://arxiv.org/abs/1506.02626"%}
 
 Weight-based pruning is more popular as it is easier to do without hurting the performance of the network. However, it requires sparse computations to be effective. This requires hardware support and a certain amount of sparsity to be efficient.
 Pruning nodes will allow dense computation which is more optimized. This allows the network to be run normally without sparse computation. This dense computation is more often better supported on hardware. However, removing entire neurons can more easily hurt the accuracy of the neural network.
@@ -44,7 +44,7 @@ Ideally in a neural network, all the neurons have unique parameters and output a
 
 A major consideration in pruning is where to put it in the training/testing machine learning timeline. If you are using a weight magnitude-based pruning approach, as described in the previous section, you would want to prune after training. However, after pruning, you may observe that the model performance has suffered. This can be fixed by fine-tuning, meaning retraining the model after pruning to restore accuracy.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/pruning/pruning_flow.png" description="Flow of iterative pruning" source="https://arxiv.org/pdf/1611.06440.pdf" width=300%}
+{% include figure.liquid loading="eager" path="assets/img/blog/pruning/pruning_flow.png" description="Flow of iterative pruning" alt="flow of iterative pruning" source="https://arxiv.org/pdf/1611.06440.pdf" width=300%}
 
 The usage of pruning can change depending on the application and methods used. Sometimes fine-tuning or multiple iterations of pruning are not necessary. This depends on how much of the network is pruned.
 

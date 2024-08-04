@@ -28,7 +28,7 @@ These methods can be applied to many ML problems. However, a common application 
 
 The most common approaches to the domain adaptation method follow an adversarial approach. For some context, I would suggest reading about [Generative Adversarial Networks (GANs)](https://towardsdatascience.com/understanding-generative-adversarial-networks-gans-cd6e4651a29).
 
-{% include figure.liquid loading="eager" path="assets/img/blog/domain_adaptation/framework.png" description="Framework for Adversarial Domain Adaptation"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/domain_adaptation/framework.png" caption="Framework for Adversarial Domain Adaptation" alt="Framework for Adversarial Domain Adaptation" %}
 
 There are two encoders, which learn to produce a vector representation of each input. There is a classifier to classify the inputs and a discriminator that is trained to differentiate between the datasets. The goal is to eliminate differences in the domain from the encodings. This is similar to the GAN objective in that we want the encoders to fool the discriminator by generating encodings that are difficult to differentiate. However, this needs to be done such that the classifier is also effective for both datasets. The same classifier can then be applied to both datasets.
 
@@ -38,7 +38,7 @@ The key difference between the many algorithms is what the discriminator is and 
 
 ## [ADDA](https://arxiv.org/abs/1702.05464)
 
-{% include figure.liquid loading="eager" path="assets/img/blog/domain_adaptation/adda.png" description="The steps of ADDA" source="https://arxiv.org/abs/1702.05464"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/domain_adaptation/adda.png" caption="The steps of ADDA" alt="The steps of ADDA"%}
 
 Adversarial Discriminative Domain Adaptation (ADDA) applies a simple approach to discriminative DA. There is only one encoder shared between the source and target datasets. The networks are trained in two steps.
 
@@ -50,18 +50,18 @@ One major shortcoming of this approach is that the classification performance ca
 
 ## [DANN](https://arxiv.org/abs/1505.07818)
 
-{% include figure.liquid loading="eager" path="assets/img/blog/domain_adaptation/dann.png" description="DANN" source="https://arxiv.org/abs/1505.07818"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/domain_adaptation/dann.png" caption="DANN" alt="DANN" %}
 Domain-Adversarial Training of Neural Networks (DANN) is very similar to ADDA. Rather than have a separate adaptation step, the domain discriminator is trained alongside the classier. A gradient reversal layer is used because the domain discriminator and the classier have adversarial loss functions. This allows classification and discrimination to be trained together and avoid the network from forgetting the task.
 
 # Image Translation
 
 Another approach to addressing the domain gap is to convert examples from one domain to another. An example of this is transforming street-view digits (SVHN) to look like handwritten MNIST (digits). After this translation, you can apply an MNIST trained image classifier. The architectures are more complex because, in addition to the main task (image classification), the networks must translate images to and from the source and target domains.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/domain_adaptation/translation.png" description="Example of translating a street view image (SVHN) to a handwritten image (MNIST)" %}
+{% include figure.liquid loading="eager" path="assets/img/blog/domain_adaptation/translation.png" description="Example of translating a street view image (SVHN) to a handwritten image (MNIST)" alt="SVHN DA"%}
 
 ## [Image to Image translation](https://arxiv.org/abs/1712.00479)
 
-{% include figure.liquid loading="eager" path="assets/img/blog/domain_adaptation/i2i.png" description="I2I network and losses" source="https://arxiv.org/abs/1712.00479"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/domain_adaptation/i2i.png" description="I2I network and losses" alt="I2I"%}
 
 Like the adversarial methods Image to Image Translation (I2I) aims to learn a domain invariant encoding (Z) for the images. There are six networks in this architecture: the source encoder, source decoder, target encoder, target decoder, domain discriminator, and task network (ex: classifier). The decoders aim to reconstruct the images from the encoding. This also includes adversarial learning with the domain discriminator.
 
@@ -81,7 +81,7 @@ The network is trained on a weighted combination of six different losses. The pa
 
 ## [CyCADA](https://arxiv.org/abs/1711.03213)
 
-{% include figure.liquid loading="eager" path="assets/img/blog/domain_adaptation/cycada.png" description="CyCADA networks and losses" source="https://arxiv.org/abs/1711.03213"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/domain_adaptation/cycada.png" description="CyCADA networks and losses" alt="CyCADA" %}
 
 CyCADA is similar to I2I. Many of the I2I losses and networks have counterparts here. The main difference is that the target images are not translated to the source domain. Also, the GAN losses can be applied to both the images and the encodings.
 

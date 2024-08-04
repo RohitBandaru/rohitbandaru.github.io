@@ -42,9 +42,9 @@ In research, there are comparisons between training on ImageNet images and label
 
 Self-supervised learning has been long applied in NLP, but as Yann LeCun and Ishan Misra point [out](https://ai.facebook.com/blog/self-supervised-learning-the-dark-matter-of-intelligence/), it is much harder to apply to vision. In NLP, language models are often trained with self supervision. Given a some text, you can mask a word and try to predict it given the rest of the text. There is a limited vocabulary, so you can assign a probability to each word. This is the basis of many popular NLP methods.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/nlp.png" caption="Predicting masked words in NLP" class="img-fluid mx-auto d-block" width=400 %}
+{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/nlp.png" caption="Predicting masked words in NLP" class="img-fluid mx-auto d-block" alt="Predicting masked words in NLP" width=400 %}
 
-{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/image_patch.png" caption="Predicting patches of an image is much harder." class="img-fluid mx-auto d-block" width=300 %}
+{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/image_patch.png" caption="Predicting patches of an image is much harder." class="img-fluid mx-auto d-block" alt="Image SSL with patches" width=300 %}
 
 The analogue for vision is to mask a patch of an image and try to fill it in. However, because there is an intractable number of possible ways to fill in an image, you can't compute a probability for each one. There can also be a large number of possible solutions. For example, in the image above, there is many facial expressions the dog could have. The NLP approach is straight forward but cannot be directly applied to vision.
 
@@ -52,7 +52,7 @@ The analogue for vision is to mask a patch of an image and try to fill it in. Ho
 
 The earlier approaches to self-supervised learning focused on training the network on a pretext task. This task would not require labels in the label. The labels will be made up through the task. In [RotNet](https://arxiv.org/abs/2012.01985), each image is rotated by 0, 90, 180, or 270 degrees, and a network is trained to predict the rotation. In [Jigsaw](https://arxiv.org/abs/1603.09246), the image is split up into patches and scrambled like a jigsaw puzzle. A network is then trained to solve the puzzle by predicting the permutation.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/rotnet.png" description="RotNet, SSL by predicting rotations" source="https://arxiv.org/abs/1803.07728"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/rotnet.png" description="RotNet, SSL by predicting rotations" alt="RotNet, SSL by predicting rotations" source="https://arxiv.org/abs/1803.07728"%}
 
 The problem with pretext task-based SSL is the same as supervised learning. There can be shortcuts to achieve high accuracy on the task. There have been attempts to avoid this. For example, in Jigsaw, each path is randomly cropped, so the task can't be solved by simply lining up edges. However, the limitations still exist regardless, so more recent research has focused on contrastive learning.
 
@@ -76,7 +76,7 @@ $$
 
 The prediction of an observation in the sequence depends only on the previous observations. This similar to predicting the future from the past in a time series. In CPC, the autoregressive model is used to generate context vectors from the encodings $$z_t$$. Context vector $$c_t$$ is a function of encodings $$z_{\leq t}$$, but not any encoding after $$z_t$$. Note that the autoregressive model is trying to predict the encodings of the observations, but not the observations themselves. The architecture of this autoregressive model depends on the application.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/cpc.png" description="CPC applied to audio, \(g_{enc}\) is the encoder, \(g_{ar}\) is the autoregressive model" source="https://arxiv.org/abs/1807.03748"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/cpc.png" caption="CPC applied to audio, \(g_{enc}\) is the encoder, \(g_{ar}\) is the autoregressive model" alt="CPC" source="https://arxiv.org/abs/1807.03748"%}
 
 With these two models, we can generate an encoding of the data and context vectors. These vectors can be used as representations of the data. But how are these models trained? The self-supervised task is essentially predicting the input from the context. For example, given $$c_t$$, we want to be able to go backwards and identify that it was generated from $$x_t/z_t$$. The models are trained on a contrastive InfoNCE loss.
 
@@ -110,7 +110,7 @@ SimCLR is a method from Google Brain which takes a different approach for self-s
 
 However, the problem with just comparing within the same image is collapse. The network would learn the trivial solution of a constant vector for all representations (ex: a vector of all zeros). This would maximize the similarity between augmentations but obviously not contain any useful images. We need negative samples to minimize similarity with. In SimCLR, the negative samples are augmentations of other images from the same training batch. The assumption made here is that the other images are unrelated to the current image and the representations should be far apart.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/simclr_arch.png" description="The architecture of SimCLR. Diagram by Author, but dog images from SimCLR paper" width=500%}
+{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/simclr_arch.png" caption="The architecture of SimCLR. Diagram by Author, but dog images from SimCLR paper" alt="SimCLR architecture" width=500%}
 
 Why do we need a projection head? It would not change the architecture much by optimizing the similarity losses on the representations themselves. The encoder may even include the same fully connected layers that would have been in the projection head. The projection head allows for a more complex and nonlinear similarity relationship between the encodings. Without it, the representations would have to have a high cosine similarity. This may restrict the expressivity of the vectors. The projection head can also ignore some information in the representations. For example, SimCLR may train to make the representations invariant to rotations. The rotation angle may be encoded in the representation but ignored by the projection head. If the rotation is encoded in the first 5 values of the vector, the projection MLP may have zero weights for those values. This may be desirable in a variant of the architecture in which the self-supervised learning happens simultaneously with a downstream task. The SimCLR architecture itself has no reason to include unnecessary information in the representation. It is unclear whether having "extra" information in the representation is desirable or not.
 
@@ -128,7 +128,7 @@ The loss is referred to as NT-Xent (the normalized temperature-scaled cross entr
 
 ## Scaling
 
-{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/scaling.png" description="Performance of different self-supervised learning algorithms compared with supervised learning using ResNet50 https://arxiv.org/abs/2002.05709" width=500 %}
+{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/scaling.png" description="Performance of different self-supervised learning algorithms compared with supervised learning using ResNet50 https://arxiv.org/abs/2002.05709" alt="SSL scaling" width=500 %}
 
 Self-supervised learning is often evaluated on ImageNet classification. The projection head is replaced with a linear layer. The network is then trained to classify ImageNet with the encoder weights frozen. The encodings learned with self-supervision must be useful enough for a linear layer to classify them.
 
@@ -140,7 +140,7 @@ One issue with SimCLR is its reliance on huge batch sizes. The best results come
 
 BYOL is a paper from Deepmind that aims to remove the need for negative samples. There are two networks: a target network and an online network. The target network's weights are an exponential moving average of the online encoder. Similar to SimCLR, augmented versions of an image are passed through the encoders. Unlike SimCLR, the loss does not use negative examples so there is no need for large batch sizes. There is a projection head on top of the online encoder. The online encoder is used for downstream tasks.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/byol.png" description="BYOL architecture" source="https://arxiv.org/abs/2006.07733"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/byol.png" caption="BYOL architecture" alt="BYOL architecture"%}
 
 Bootstrapping is a poorly defined word used in machine learning. It can mean simultaneously optimizing two objectives that depend on each. In BYOL, that refers to the two encoders.
 
@@ -154,7 +154,7 @@ Clustering is an important class of unsupervised learning algorithms. Although m
 
 ## [DeepCluster](https://arxiv.org/abs/1807.05520)
 
-{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/deepcluster.png" description="DeepCluster algorithm" source="https://arxiv.org/abs/2006.07733"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/self_supervised_learning/deepcluster.png" caption="DeepCluster algorithm" alt="DeepCluster Algorithm"%}
 
 DeepCluster trains a neural network in two alternating steps: clustering and classification. In the clustering step, each image is assigned a cluster as a pseudolabel by clustering the feature vectors from the network. K-means is used for clustering. There are $$k$$ clusters of the same dimension as the feature vectors. The network is then trained to predict the clusters from the images. After training on this classification objective, the features improve. The dataset is reclustered with better clusters. This iterative training procedure improves the clusters and the representations.
 
@@ -162,7 +162,7 @@ The main problem with DeepCluster is that it requires periodically clustering th
 
 ## [SwAV](https://arxiv.org/abs/2006.09882)
 
-{% include figure.liquid  url="../../../images/self_supervised_learning/swav.png" description="SwAV" description="https://arxiv.org/abs/2006.07733" width=500 %}
+{% include figure.liquid  path="assets/img/blog/self_supervised_learning/swav.png" caption="SwAV" alt="SwAV" width=500 %}
 
 SwAV extends on DeepCluster to be online, while also taking inspiration from contrastive SSL methods. Two augmentations of an image are passed to an encoder. These representations are then assigned prototypes. There are K prototypes, which are vectors of the same representation as the encoding.
 
