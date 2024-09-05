@@ -16,7 +16,7 @@ For many computer vision problems, it is a common practice to pretrain the model
 
 In order to make it easy to directly interact with SSL, I wrote a Colab notebook showing a few algorithms. This notebook demonstrates transfer learning on CPC, SwAV, and SimCLR pretrained models on the CIFAR10 classification task. This uses PyTorch Lightning's implementations of these algorithms.
 
-{% include colab_link.html url="https://colab.research.google.com/drive/1PDCTe5dIQgYyiuLQw3WGyCuT03gX1qZR?usp=sharing"%}
+{% include colab_link.liquid url="https://colab.research.google.com/drive/1PDCTe5dIQgYyiuLQw3WGyCuT03gX1qZR?usp=sharing"%}
 
 We are experimenting with the simple example of pretraining on ImageNet and evaluating on CIFAR10 classification. SSL can be effective on other datasets and learning tasks (object detection, segmentation, etc.), but these won't be the focus of this post.
 

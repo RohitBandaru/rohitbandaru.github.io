@@ -19,11 +19,11 @@ This is a long post, feel free to jump to the sections about JEPA, I-JEPA, and V
 ### Relevant Talks by Yann LeCun
 
 [_From Machine Learning to Autonomous Intelligence_](https://drive.google.com/file/d/1RVYBVi_bWyz-4sZSsu4rSWzDwQBLsvHL/view)
-{% include youtube.html id='VRzvpV9DZ8Y' %}
+{% include youtube.liquid id='VRzvpV9DZ8Y' %}
 
 [_Objective-Driven AI: Towards Machines that can Learn, Reason, and Plan”_](https://www.ece.uw.edu/wp-content/uploads/2024/01/lecun-20240124-uw-lyttle.pdf)
 
-{% include youtube.html id='d_bdU3LsLzE' %}
+{% include youtube.liquid id='d_bdU3LsLzE' %}
 
 # Problems with Current AI
 
