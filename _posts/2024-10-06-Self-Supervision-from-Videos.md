@@ -2,7 +2,7 @@
 layout: post
 title: Self-Supervision from Videos
 tags: computer-vision self-supervised-learning
-thumbnail: assets/img/blog/self_supervised_learning/byol.png
+thumbnail: assets/img/blog/video-ssl/videomae.png
 toc:
   sidebar: left
 ---
