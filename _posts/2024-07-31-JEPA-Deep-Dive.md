@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Deep Dive into Yann LeCun’s JEPA
-tags: self-supervised-learning ai
+tags: self-supervised-learning ai computer-vision
 thumbnail: assets/img/blog/jepa/jepa_brain.png
 toc:
   beginning: true
@@ -324,8 +324,6 @@ V-JEPA is an extension of I-JEPA to videos. This is done by treating videos are 
 5. The predictor predicts the representations of the masked tokens by the unmasked tokens processed by the context encoder. The loss is the L1 distance between the representations of these masked tokens (from the target encoder, and the context encoder + predictor).
 
 {% include figure.liquid loading="eager" path="assets/img/blog/jepa/vjepa.png" class="image-fluid mx-auto d-block" caption="Very similar to I-JEPA but with an added temporal dimension." alt="V-JEPA Architecture" source="https://ai.meta.com/research/publications/revisiting-feature-prediction-for-learning-visual-representations-from-video/"%}
-
-Very similar to I-JEPA but with an added temporal dimension.
 
 This is predicting gaps in short videos. It does not predict across time. Human learning is across the time dimension.
 
