@@ -1,7 +1,7 @@
 ---
 layout: post
 title: SSL with Vision Transformers
-tags: self-supervised-learning transformer
+tags: self-supervised-learning transformer computer-vision
 thumbnail: assets/img/blog/ssl-vit/data2vec_architecture.png
 toc:
   sidebar: left

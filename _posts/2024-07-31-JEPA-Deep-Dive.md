@@ -12,7 +12,7 @@ In the AI research community, Yann LeCun has a unique and often controversial pe
 
 In his position paper [A Path Towards Autonomous Machine Intelligence](https://openreview.net/pdf?id=BZ5a1r-kVsf) and his many recent talks (linked below), Yann presents an alternative framework for achieving artificial intelligence. He also proposes a new architecture for a predictive world model: Joint Embedding Predictive Architecture (JEPA).
 
-This blog post will dive deep into Yann’s vision for AI, the JEPA architecture, current research, and energy based models. We will go deep into the technical aspects of these ideas, as well as give my opinions, along with interesting references. I will also cover recent research advances such as _V-JEPA_
+This blog post will dive deep into Yann’s vision for AI, the JEPA architecture, current research, and energy-based models. We will go deep into the technical aspects of these ideas, as well as give my opinions, along with interesting references. I will also cover recent research advances such as _V-JEPA_
 
 This is a long post, feel free to jump to the sections about JEPA, I-JEPA, and V-JEPA.
 
@@ -51,9 +51,9 @@ Common sense can also be viewed as a collection of world models. These models en
 
 ### How Humans Learn
 
-Humans acquire basic understanding of the world during early infancy, but we're also born with some innate knowledge. The brain isn't randomly initialized; it's evolved, pre-trained, and fine-tuned throughout life. This differs significantly from artificial neural networks, which start with random initializations and have far weaker inductive biases than humans or animals. Life is generally pre-programmed to behave in a certain way from birth. More intelligent life is able to learn more and not purely rely on innate knowledge.
+Humans acquire a basic understanding of the world during early infancy, but we're also born with some innate knowledge. The brain isn't randomly initialized; it's evolved, pre-trained, and fine-tuned throughout life. This differs significantly from artificial neural networks, which start with random initializations and have far weaker inductive biases than humans or animals. Life is generally pre-programmed to behave in a certain way from birth. More intelligent life is able to learn more and not purely rely on innate knowledge.
 
-Understanding the extent to which babies acquire common sense during infancy is crucial for AI development. If common sense is largely innate, focus should be on massive datasets mimicking evolutionary timescales. If it's primarily learned, priority should be given to models that excel at quick learning from limited data.
+Understanding the extent to which babies acquire common sense during infancy is crucial for AI development. If common sense is largely innate, the focus should be on massive datasets mimicking evolutionary timescales. If it's primarily learned, priority should be given to models that excel at quick learning from limited data.
 
 A baby's experience, while not comparable to evolutionary timescales, still represents a substantial dataset. If a baby is awake for [8 hours](https://intuitiveparentingdc.com/blog/2018/7/6/developmentally-appropriate-sleep-expectations-birth-to-age-5) a day, in four months they have seen about 960 hours of data. This data is also augmented by other sensory signals and dense biological supervision (pain, hunger, emotions). This is around the same length as the [Kinetics 400](https://arxiv.org/abs/1705.06950) video dataset. This is still dwarfed by the millions of hours of video that self driving cars are using.
 
@@ -94,11 +94,11 @@ Humans interpret language within the context of shared reality. It functions as 
 
 Currently, it does seem that language models are more capable than vision models. Language models currently outperform visual models due to information density, data requirements, and data availability.
 
-In a given data point there is a certain amount of explicit information in the form of bits. But then there is relevant information that is useful. For example if you take an image of the park, a lot of bits are used to represent the position of every blade of grass. But that is not useful in most scenarios. Language is very compressed. While there are some filler words that don’t add much [information](https://www.youtube.com/watch?v=VvPaEsuz-tY&ab_channel=Argonaut57), the ratio of knowledge to bits is high. However for images, most of the bits are not useful. This means you needs orders of magnitude more bits of data to learn equivalent knowledge. Video models are further behind because you need another order of magnitude more bits, since consecutive frames in video are mostly redundant.
+In a given data point there is a certain amount of explicit information in the form of bits. But then there is relevant information that is useful. For , if you take an image of the park, a lot of bits are used to represent the position of every blade of grass. But that is not useful in most scenarios. Language is very compressed. While there are some filler words that don’t add much [information](https://www.youtube.com/watch?v=VvPaEsuz-tY&ab_channel=Argonaut57), the ratio of knowledge to bits is high. However, for images, most of the bits are not useful. This means you need orders of magnitude more bits of data to learn equivalent knowledge. Video models are further behind because you need another order of magnitude more bits since consecutive frames in video are mostly redundant.
 
 While language-based AI leads, scenarios exist where visual learning could catch up. One scenario in which visual learning could overtake language is that we will have a large number of robots / autonomous vehicles interacting with the world while collecting visual data. Language will be data constrained with the rate of new text generation limiting scaling. In a world with a lot of robots, the knowledge gained from the visual world and the size of the available datasets may exceed that of text. However, this is all very speculative. We don’t know how important vision or grounding is for intelligence.
 
-# A Framework for Building Human Level AI
+# A Framework for Building Human-Level AI
 
 Yann proposes a high level architecture for building an AI system that is aimed at addressing the problems we outlined. This is a design for an intelligent agent that can perceive the world,
 
@@ -116,7 +116,7 @@ This architecture contains different proposed components. We will explain these 
 
 **Cost module**: Measures the level of discomfort as energy. This energy is the sum of the intrinsic cost module and the trainable critic module.
 
-**Intrinsic cost**: Computes a cost given the current state of the world and predicted future states. This cost can be imagined as hunger, pain, or general discomfort. This cost can be hard wired in AI agents, as done with rewards in RL.
+**Intrinsic cost**: Computes a cost given the current state of the world and predicted future states. This cost can be imagined as hunger, pain, or general discomfort. This cost can be hardwired in AI agents, as done with rewards in RL.
 
 **Trainable Critic**: Predicts future intrinsic energy. It has the same input as the intrinsic cost. This estimate is dependent on the intrinsic cost and cannot be hardwired. It is trained from past states and subsequent intrinsic cost, retrieved from memory.
 
@@ -130,15 +130,15 @@ The actor proposes an optimal action or sequence of actions.
 
 If the world model and cost are well behaved, gradient based optimization can be used to determine an optimal action sequence. If actions are discrete then dynamic programming methods such as beam search can be used.
 
-There are two different modes in the actor. These align with Kahneman’s System 1 and 2, that we mentioned earlier.
+There are two different modes in the actor. These align with Kahneman’s System 1 and 2, which we mentioned earlier.
 
-**Mode 1 Reactive Behavior**: A policy module that computes an action from the state generated by perception and short term memory. This module acts fast and produces simple decisions. A world model is needed to estimate the cost of an action. Without a world model the agent would have to perturb their actions which is not feasible. The world model can be adjusted after observing the next state.
+**Mode 1 Reactive Behavior**: A policy module that computes an action from the state generated by perception and short-term memory. This module acts fast and produces simple decisions. A world model is needed to estimate the cost of an action. Without a world model the agent would have to perturb their actions which is not feasible. The world model can be adjusted after observing the next state.
 
-**Mode 2 Reasoning and Planning**: A sequence of actions along with predicted corresponding states is generated. From this sequence of states, a cost can be computed. Planning is done by optimizing the action sequence to minimize total cost. The action sequence is then sent to the effectors which execute at least the beginning of the sequence. The states and costs are stored in short term memory. The sequence can be optimized through gradients since the cost and world model are differentiable. Dynamic programming can also be used. Planning in this setup is essentially inference time cost optimization.
+**Mode 2 Reasoning and Planning**: A sequence of actions along with predicted corresponding states is generated. From this sequence of states, a cost can be computed. Planning is done by optimizing the action sequence to minimize total cost. The action sequence is then sent to the effectors which execute at least the beginning of the sequence. The states and costs are stored in short-term memory. The sequence can be optimized through gradients since the cost and world model are differentiable. Dynamic programming can also be used. Planning in this setup is essentially inference time cost optimization.
 
-Agents may have multiple policy modules executing mode 1. In this design, the agent only has one world model, so mode 2 can only be run once. However, AIs could be designed to have multiple world models and mode 2 processes at the same time. This is similar to having multiple thoughts at the same time. However this would be very complicated in that the different modules would have to coordinate with the effectors and other modules to avoid conflicts. Also, this may be why humans don’t think like this.
+Agents may have multiple policy modules executing mode 1. In this design, the agent only has one world model, so mode 2 can only be run once. However, AIs could be designed to have multiple world models and mode 2 processes at the same time. This is similar to having multiple thoughts at the same time. However, this would be very complicated in that the different modules would have to coordinate with the effectors and other modules to avoid conflicts. Also, this may be why humans don’t think like this.
 
-Policy modules can be learned to approximate actions from mode 2 reasoning. This is the process of learning a new skill. In humans system 2 thinking can be done through system 1 after enough learning. For example, in chess, inexperienced players plan steps explicitly and simulate outcomes. Experienced players can instantly recognize patterns and make optimal moves.
+Policy modules can be learned to approximate actions from mode 2 reasoning. This is the process of learning a new skill. In humans, system 2 thinking can be done through system 1 after enough learning. For example, in chess, inexperienced players plan steps explicitly and simulate outcomes. Experienced players can instantly recognize patterns and make optimal moves.
 
 # Cost
 
@@ -156,11 +156,11 @@ $$
 
 The IC being immutable prevents the agent from drifting towards bad behaviors. It constrains the behavior of the agent.
 
-$$\mathrm{TC}$$ or the critic is trained to predict future intrinsic cost values. The intrinsic cost only considers the current state. The critic can be trained to predict the future cost so the agent can minimize cost in the future. The short term memory stores triplets of (time, state, intrinsic energy): $$(\tau, s_{\tau}, IC(s_{\tau}))$$. The critic can be trained to predict a cost of a future state or a discounted sum of future intrinsic costs. For example the loss function of the critic could be $$\|\|\mathrm{IC}(s_{\tau+\delta}) - \mathrm{TC}(s_{\tau})\|\|^2$$. This formulation trains the critic to predict the intrinsic cost of a state $$\delta$$ steps in the future. $$\mathrm{IC}(s_{\tau+\delta})$$ can be replaced with other targets that can be extracted from the sequence of triplets. However, it cannot depend on the future trainable cost itself.
+$$\mathrm{TC}$$ or the critic is trained to predict future intrinsic cost values. The intrinsic cost only considers the current state. The critic can be trained to predict the future cost so the agent can minimize cost in the future. The short term memory stores triplets of (time, state, intrinsic energy): $$(\tau, s_{\tau}, IC(s_{\tau}))$$. The critic can be trained to predict the cost of a future state or a discounted sum of future intrinsic costs. For , the loss function of the critic could be $$\|\|\mathrm{IC}(s_{\tau+\delta}) - \mathrm{TC}(s_{\tau})\|\|^2$$. This formulation trains the critic to predict the intrinsic cost of a state $$\delta$$ steps in the future. $$\mathrm{IC}(s_{\tau+\delta})$$ can be replaced with other targets that can be extracted from the sequence of triplets. However, it cannot depend on the future trainable cost itself.
 
 # Configurator
 
-The configurator controls the other components of the system. If these components are implemented as transformers, they can be easily configured by adding tokens. The configurator would inject tokens to steer these components in certain directions. For example it may influence certain types of actions from the actor, or for perception to focus on certain properties.
+The configurator controls the other components of the system. If these components are implemented as transformers, they can be easily configured by adding tokens. The configurator would inject tokens to steer these components in certain directions. For example, it may influence certain types of actions from the actor, or for perception to focus on certain properties.
 
 The configurator is also responsible for setting the weights of the cost terms. This will allow for the agent to focus on different subgoals at different times. The unanswered question is how the configurator can learn to decompose a complex task into subgoals.
 
@@ -168,13 +168,13 @@ The configurator is also responsible for setting the weights of the cost terms. 
 
 In JEPA, the purpose of the world model is to predict future representations of the state of the world. There are three main issues
 
-1. Diversity of the state sequences it is able to observe when training
+1. Diversity of the state sequences the model is able to observe during training
 2. The world isn’t fully predictable, so the model has to predict multiple plausible state representations following an action
 3. Predictions must be made at different time scales and abstractions
 
-## Self Supervised Learning / Energy Based Models
+## Self-Supervised Learning / Energy-Based Models
 
-In order to train a world model, Yann LeCun proposes an SSL energy based model (EBM).
+In order to train a world model, Yann LeCun proposes an SSL energy-based model (EBM).
 
 {% include figure.liquid loading="eager" path="assets/img/blog/jepa/ebm.png" width=300 class="image-fluid mx-auto d-block" alt="ebm" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
 
@@ -186,7 +186,7 @@ However, planning requires predictions of future states. Although $$y$$ can’t 
 
 The encoder will be trained such that the representations are maximally informative about each other, and that $$s_y$$ can easily be predicted from $$s_x$$. We can make predictions on this representation to enable planning.
 
-A latent variable can be introduced to handle uncertainty. A latent variable is just an arbitrary random variable. It is source of randomness that is transformed to a useful distribution. Here we want to map the latent variable to the large space of possible values $$s_y$$ can take.
+A latent variable can be introduced to handle uncertainty. A latent variable is just an arbitrary random variable. It is the source of randomness that is transformed to a useful distribution. Here we want to map the latent variable to the large space of possible values $$s_y$$ can take.
 
 A latent-variable EBM (LVEBM) is represented as $$E_w(x, y, z)$$.
 
@@ -202,7 +202,7 @@ There are two training methods used to prevent collapse.
 
 Contrastive methods: Collapse is avoided by increasing the energy with respect to negative examples. It requires some method to generate examples to contrast against. The number of contrastive examples needed grows exponentially with respect to the dimension of the representation.
 
-Regularized methods: In these methods the loss is regularized to minimize the space in $$y$$ where the energies are lowered. These are less likely to be affected by the curse of dimensionality. Contrastive architectures can be regularized. For example, the latent dimension can be constrained.
+Regularized methods: In these methods, the loss is regularized to minimize the space in $$y$$ where the energies are lowered. These are less likely to be affected by the curse of dimensionality. Contrastive architectures can be regularized. For example, the latent dimension can be constrained.
 
 ## Joint Embedding Predictive Architecture
 
@@ -240,7 +240,7 @@ This kind of search would be different in JEPA-1 or without H-JEPA because the l
 
 The world is unpredictable but the agent itself is predictable to the agent. This may motivate a model of self (ego model) that does not have a latent variable.
 
-The state of the world varies only slightly between time steps. Rather than regenerating, it can be updated in memory. With this architecture, the world model will only output the change in the state. This can be implemented with an attention like mechanism.
+The state of the world varies only slightly between time steps. Rather than regenerating, it can be updated in memory. With this architecture, the world model will only output the change in the state. This can be implemented with an attention-like mechanism.
 
 1. The world model outputs query value pairs: $$(q[i], v[i])$$
 2. The world model retrieves a value from memory using the query
@@ -256,7 +256,7 @@ The state of the world varies only slightly between time steps. Rather than rege
 
 # Data Streams
 
-In building a world model, we have to consider the fundemental differences in the type of data that humans and AI models process. Yann lists 5 modes of information gathering that an agent can use to learn its world model.
+In building a world model, we have to consider the fundamental differences in the type of data that humans and AI models process. Yann lists 5 modes of information gathering that an agent can use to learn its world model.
 
 1. Passive observation: sensor stream without control
 2. Action foveation: The agent can direct attention within the data stream
@@ -264,15 +264,15 @@ In building a world model, we have to consider the fundemental differences in th
 4. Active Egomotion: The sensors can be configured, for example moving a camera
 5. Active Agency: Sensory streams that are influenced by the agent’s actions
 
-Current AI methods largely focus on passive observation. Others modes may be needed to reach intelligence.
+Current AI methods largely focus on passive observation. Other modes may be needed to reach intelligence.
 
 AI is trained on internet data. Internet data is not experienced by the agent. Humans train on data that they experience. This is a fundamental difference. This is also why autonomous cars need so much training data. The AI driving systems don’t have other datasets that they have experienced. For example, if they trained on a large dataset of just walking around, they would need less driving data.
 
-How can we get a large scale dataset from the perspective of an agent. It won’t reach the scale of internet datasets. A present day example is autonomous car datasets. AV companies have large fleets of vehicles on the road collecting data. These are active data streams.
+It is challenging to create large-scale datasets from the perspective of an agent, especially reaching the scale of internet datasets. A present-day example is autonomous car datasets. AV companies have large fleets of vehicles on the road collecting data. These are active data streams.
 
 # Objective Driven AI
 
-The components of this architecture can be out together to build an intelligent system that follows human defined objectives.
+The components of this architecture can be put together to build an intelligent system that follows human defined objectives.
 
 Perception is used to generate an initial representation of the state of the world. The actor proposes a sequence of actions. The world model then predicts the state reached if the action sequence is executed. This state is then used in the objectives. The task objective defines what we want the system to do. This could be a task or particular problem. The guardrail objective makes sure the system accomplishes the task without any unwanted behavior. These guardrails would be designed for safety.
 
@@ -288,7 +288,7 @@ Latent variables are also introduced to represent the uncertainty in predictions
 
 # Towards Implementing JEPA
 
-The JEPA paper is a position paper that describes a vision for AI that may take decades to materialize. However, since its publication in the summer of 2022, there have been a few steps in advancing the architecture. These papers particularly explore training of JEPAs. They do not explore the other components such as planning. These JEPAs are first steps to creating a world model.
+The JEPA paper is a position paper that describes a vision for AI that may take decades to materialize. However, since its publication in the summer of 2022, there have been a few steps in advancing the architecture. These papers particularly explore the training of JEPAs. They do not explore the other components such as planning. These JEPAs are the first steps to creating a world model.
 
 These are essentially self supervised pretraining methods. When comparing against other works, these papers cite training speed as their advantage. They can achieve strong downstream performance with fewer pretraining epochs.
 
@@ -306,7 +306,7 @@ Context is generated by sampling a block (larger than the target blocks). When p
 
 This architecture avoids collapse by having exponential moving average weights in the target encoder. This is the same approach used in data2vec and BYOL.
 
-The main hyperparameters introduced by this work is the scale and aspect ratio of the target and context blocks. Generally a small context is used to make this task difficult, which would force the model to learn higher level and more useful features.
+The main hyperparameters introduced by this work is the scale and aspect ratio of the target and context blocks. Generally, a small context is used to make this task difficult, which would force the model to learn higher level and more useful features.
 
 ## V-JEPA: [Revisiting Feature Prediction for Learning Visual Representations from Video](https://ai.meta.com/research/publications/revisiting-feature-prediction-for-learning-visual-representations-from-video/)
 
@@ -316,7 +316,7 @@ V-JEPA is an extension of I-JEPA to videos. This is done by treating videos are 
 2. The clip is split into $$L$$ spatiotemporal patches of size 16x16x2 (2 is the number of consecutive frames.
 3. A random mask is calculated for the context. This is a 2D that is similar to the mask in I-JEPA. This mask is then repeated across the time dimension. This repetition is necessary because the videos are short and there would be too much redundancy for the same patch at different time steps. This redundancy would make the learning task too easy. This masking creates a context image, while the target is the original image.
 
-   1. 2 masks are sampled: one short range and one long range. The short range mask covers less area in the image and is more discontinuous. These masks are constructed by different configurations of overlapping blocks, as done in I-JEPA. The target encoder only needs to run once, even is there are multiple masks for the context. Having multiple masks leads to more efficient training.
+   1. 2 masks are sampled: one short range and one long range. The short range mask covers less area in the image and is more discontinuous. These masks are constructed by different configurations of overlapping blocks, as done in I-JEPA. The target encoder only needs to run once, even if there are multiple masks for the context. Having multiple masks leads to more efficient training.
 
    {% include figure.liquid loading="eager" path="assets/img/blog/jepa/vjepa_masking.png" class="image-fluid mx-auto d-block" caption="Short-range (left), long-range (right)" alt="V-JEPA masking" source="https://ai.meta.com/research/publications/revisiting-feature-prediction-for-learning-visual-representations-from-video/"%}
 
@@ -329,19 +329,19 @@ This is predicting gaps in short videos. It does not predict across time. Human 
 
 Attentive probing is used to evaluate this model on different finetuning tasks. This is needed in place of linear probing since the input size may vary. This just requires learning a query token specific to the task and a linear classifier on top of the pretrained encoder.
 
-V-JEPA processes small sequences of frames. These short videos are essentially images with a little animation. However, that is the current state of video self supervised learning. To achieve a model that is closer to human or even animal level intelligence, this approach needs to scale up significantly. The resolution of the video needs to be increased. Also, the model needs to process longer durations of video and make predictions across time. For example, you should be able to predict what happens in the next 1 minute, based on the previous ten minutes of video input. Such a model could be the basis for an intelligent agent’s world model.
+V-JEPA processes small sequences of frames. These short videos are essentially images with a little animation. However, that is the current state of video self-supervised learning. To achieve a model that is closer to human or even animal-level intelligence, this approach needs to scale up significantly. The resolution of the video needs to be increased. Also, the model needs to process longer durations of video and make predictions across time. For example, you should be able to predict what happens in the next 1 minute, based on the previous ten minutes of video input. Such a model could be the basis for an intelligent agent’s world model.
 
 V-JEPA is a very interesting model that may be the start of a highly important line of research.
 
 ## MC-JEPA: [A Joint-Embedding Predictive Architecture for Self-Supervised Learning of Motion and Content Features](https://arxiv.org/abs/2307.12698)
 
-This is an extension of JEPA to include motion information. It uses an optical flow objective to learn motion from videos, and uses general SSL to learn about the content of the images/videos. Optical flow is estimating the direction in which pixels move between two consecutive frames of a video.
+This is an extension of JEPA to include motion information. It uses an optical flow objective to learn motion from videos and uses general SSL to learn about the content of the images/videos. Optical flow is estimating the direction in which pixels move between two consecutive frames of a video.
 
 {% include figure.liquid loading="eager" path="assets/img/blog/jepa/mcjepa_architecture.png" class="image-fluid mx-auto d-block" alt="MC-JEPA" source="https://arxiv.org/abs/2307.12698"%}
 
 The details of this dense flow estimation are out of the scope of this blog post. Flow estimation and content feature learning are combined as a multitask learning objective. Images are sampled for content learning, while consecutive frames are sampled from videos for flow estimation. The encoder is shared for both tasks. This is a JEPA architecture because the representations from one frame are warped to match the representations from the next frame. The same encoder is used to process both frames.
 
-The architecture for flow estimation is hierarchal. This may be the first instantiation of an H-JEPA architecture. This architecture is based on [PWC-Net](https://openaccess.thecvf.com/content_cvpr_2018/papers/Sun_PWC-Net_CNNs_for_CVPR_2018_paper.pdf). Each level is a different resolution.
+The architecture for flow estimation is hierarchal. This may be the first instantiation of an H-JEPA architecture. This architecture is based on [PWC-Net](https://openaccess.thecvf.com/content_cvpr_2018/papers/Sun_PWC-Net_CNNs_for_CVPR_2018_paper.pdf). Each level has a different resolution.
 
 {% include figure.liquid loading="eager" path="assets/img/blog/jepa/mcjepa_full_architecture.png" class="image-fluid mx-auto d-block" alt="MC JEPA full architecture" source="https://arxiv.org/abs/2307.12698"%}
 
@@ -349,7 +349,7 @@ The image features are sampled from ImageNet, while a video dataset is used for 
 
 This work shows that the JEPA framework is generalizable. There are a lot of ways that we could design a world model and it could include many possible objectives.
 
-## Whats next?
+## What’s Next?
 
 The current research in JEPA represents a significant step towards Yann LeCun's vision of building a world model capable of human-level AI. While the present focus is on creating effective representation learning models for visual data, the ultimate goal is far more ambitious. The holy grail of this research is a V-JEPA model that can predict across extended time horizons, potentially through a Hierarchical JEPA architecture capable of processing complex, lengthy videos like 10-minute YouTube clips.
 
