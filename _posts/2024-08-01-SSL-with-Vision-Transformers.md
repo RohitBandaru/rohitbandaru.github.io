@@ -7,18 +7,18 @@ toc:
   sidebar: left
 ---
 
-In recent years, self-supervised learning (SSL) has emerged as a powerful paradigm in computer vision, allowing models to learn meaningful representations from unlabeled data. The prior work in this field focuses on using CNN architectures such as ResNet on this task. However, as evidenced by the success of self supervised language models, transformers are a natural fit for self supervised training. We will cover a set of recent papers that apply transformers for self supervised visual learning.
+In recent years, self-supervised learning (SSL) has emerged as a powerful paradigm in computer vision, allowing models to learn meaningful representations from unlabeled data. Prior work in this field focuses on using CNN architectures such as ResNet for this task. However, as evidenced by the success of self-supervised language models, transformers are a natural fit for self-supervised training. We will cover a set of recent papers that apply transformers for self-supervised visual learning.
 
-One key variation is that you often see masking in these methods. CNN based SSL methods rely more on data augmentations to create a prediction task for the model. Masking is advantageous for several reasons outlined below, and it also aligns more with language model training (example: BERT).
+One key variation is that you often see masking in these methods. CNN-based SSL methods rely more on data augmentations to create a prediction task for the model. Masking is advantageous for several reasons outlined below, and it also aligns more with language model training (example: BERT).
 
 - Computational efficiency
-  - You do not have to process the masked regions of the image. When a large portion of the image is masked
+  - You do not have to process the masked regions of the image when a large portion of the image is masked.
 - Data augmentations can introduce unwanted invariances and remove useful information
-  - For example, a data augmentation that strongly distorts the color, may result in representations that do not encode color
+  - For example, a data augmentation that strongly distorts the color may result in representations that do not encode color.
 
-Masking is more naturally enabled by the transformer architecture. There is a reason that masking based SSL training hasn’t worked well with CNNs.
+Masking is more naturally enabled by the transformer architecture. There is a reason that masking-based SSL training hasn't worked well with CNNs.
 
-By examining these different methods, we’ll discuss what makes transformers work for vision.
+By examining these different methods, we'll discuss what makes transformers work for vision.
 
 # [**DINO**](https://arxiv.org/abs/2104.14294)
 
@@ -107,23 +107,23 @@ This paper uses a simple autoencoder architecture to learn image representations
 {% include figure.liquid loading="eager" path="assets/img/blog/ssl-vit/mae.png" alt="Masked Autoencoder" class="mx-auto d-block" source="https://arxiv.org/abs/2111.06377"%}
 
 1. The image is split into patches, as done in Vision Transformers.
-2. Using a mask ratio (75%-95%), patches are selected randomly without replacement.
-3. The unmasked patches are inputted into the encoder. Note that the mask tokens do not get processed by the encoder (difference from BERT). The encoder uses a vanilla ViT architecture, where the unmasked patches are linearly projected into token embeddings which get processed by transformer blocks. The output is a ViT processed embedding for each unmasked patch. Each patch has an added position embedding.
-4. The encoded tokens and the masked tokens are combined as an input to the decoder. The mask tokens map to a learned embedding. This embedding will be the same at all positions because it is not transformed by the encoder. At this stage position embeddings are added to the full set.
+2. Using a mask ratio (75%–95%), patches are selected randomly without replacement.
+3. The unmasked patches are input into the encoder. Note that the mask tokens do not get processed by the encoder (difference from BERT). The encoder uses a vanilla ViT architecture, where the unmasked patches are linearly projected into token embeddings which get processed by transformer blocks. The output is a ViT-processed embedding for each unmasked patch. Each patch has an added position embedding.
+4. The encoded tokens and the masked tokens are combined as an input to the decoder. The mask tokens map to a learned embedding. This embedding will be the same at all positions because it is not transformed by the encoder. At this stage, position embeddings are added to the full set.
    1. Note that for unmasked tokens, position embeddings are added twice, once before the encoder and once before the decoder.
 5. The decoder reconstructs the unmasked image from the set of patch embeddings. The decoder is trained by a mean squared error loss with respect to the unmasked input image.
 
-This architecture builds on the vision transformer. An alternative is to use CNNs. This would involve directly setting pixels in the input image to zero, learn a vector representation, and then decode it back to the image. The reason this fails is that it aims to globally decode an image. With transformers you first predict representations of the masked patches, and then decode into the image patch. This breaks it down into two easier problems. Also with CNNs, you can’t explicitly encode masked regions like you can with a ViT. Having a mask token more explicitly indicates the mask.
+This architecture builds on the vision transformer. An alternative is to use CNNs. This would involve directly setting pixels in the input image to zero, learning a vector representation, and then decoding it back to the image. The reason this fails is that it aims to globally decode an image. With transformers, you first predict representations of the masked patches, and then decode into the image patch. This breaks it down into two easier problems. Also, with CNNs, you can't explicitly encode masked regions like you can with a ViT. Having a mask token more explicitly indicates the mask.
 
-They mask a very high percentage of patches (80%). This reduces spatial redundancy and forces the model to learn more higher level and useful features. With a lower mask ratio, the model might learn to represent small local changes, like color and lighting variation. It doesn’t need to understand the higher level structure of the image, because its mostly already there. This is notable change from language models. BERT masks 15% of tokens. MAE and related works mask a majority of the image 75%+.
+They mask a very high percentage of patches (80%). This reduces spatial redundancy and forces the model to learn more higher-level and useful features. With a lower mask ratio, the model might learn to represent small local changes, like color and lighting variation. It doesn't need to understand the higher-level structure of the image, because it's mostly already there. This is a notable change from language models. BERT masks 15% of tokens. MAE and related works mask a majority of the image (75%+).
 
-The model uses the ImageNet-1K dataset for pretraining and evaluation. Evaluation is done by either finetuning to full encoder model, or a linear probe (train one MLP layer on the output of the encoder) on the task of classification.
+The model uses the ImageNet-1K dataset for pretraining and evaluation. Evaluation is done by either finetuning the full encoder model or using a linear probe (training one MLP layer on the output of the encoder) on the task of classification.
 
 One interesting result is that the performance of finetuning and linear probing has different trends when ablating the masking ratio. Linear probing accuracy increases linearly with masking ratio until 75%. Finetuning has relatively consistent performance between 40% and 80%.
 
-Having a deep decoder allows for the representations to be more abstract, because the decoder has more capacity for reconstruction. A shallower decoder would lead to the encoder having to represent more of the details needed for reconstruction. This is less relevant for finetuning that it is for linear probing, as during FT the encoder than shift from focusing on reconstruction to recognition. In my opinion linear probing results are more interesting since the goal is build useful representations that can be used for various tasks. Finetuning offers just a marginal improvement over just training on the classification task directly without pretraining at all. However linear probing discourages learning nonlinear features in the representation. To address this the authors evaluate “partial finetuning” in which the last few blocks of the transformer are finetuned.
+Having a deep decoder allows for the representations to be more abstract, because the decoder has more capacity for reconstruction. A shallower decoder would lead to the encoder having to represent more of the details needed for reconstruction. This is less relevant for finetuning than it is for linear probing, as during finetuning, the encoder can shift from focusing on reconstruction to recognition. In my opinion, linear probing results are more interesting since the goal is to build useful representations that can be used for various tasks. Finetuning offers just a marginal improvement over just training on the classification task directly without pretraining at all. However, linear probing discourages learning nonlinear features in the representation. To address this, the authors evaluate "partial finetuning" in which the last few blocks of the transformer are finetuned.
 
-Excluding mask tokens from the input and using a lightweight decoder makes this model very efficient to train. Using mask tokens in the encoder also creates a domain shift between pretraining and downstream tasks which hurts performance. This is because a large portion of the pretraining input will be mask tokens, which is significantly different than what the model will see downstream.
+Excluding mask tokens from the input and using a lightweight decoder makes this model very efficient to train. Using mask tokens in the encoder also creates a domain shift between pretraining and downstream tasks, which hurts performance. This is because a large portion of the pretraining input will be mask tokens, which is significantly different from what the model will see downstream.
 
 # [**BEiT: BERT Pre-Training of Image Transformers**](https://arxiv.org/abs/2106.08254)
 
@@ -135,14 +135,14 @@ A fundamental difference in applying SSL to images compared to text is that imag
 
 The main difference between this and a vanilla ViT architecture is the usage of discrete visual tokens.
 
-There are two step to training:
+There are two steps to training:
 
 1. Tokenizer and Decoder are trained as a VAE to learn discrete visual tokens
 2. The discrete tokens from the learned tokenizer are used to pretrain a BEiT encoder.
 
-Why aren’t the tokens used as the input directly? The softmax distribution of tokens could be used as a soft label for the BEIT encoder.
+Why aren’t the tokens used as the input directly? The softmax distribution of tokens could be used as a soft label for the BEiT encoder.
 
-The transformer training task is named as masked image modeling (MIM), as it is designed after BERT’s masked language modeling (MLM). 40% of the tokens are masked. Similar to other methods, BEIT masks a large portion of the image to make the pretraining task sufficiently difficult.
+The transformer training task is named masked image modeling (MIM), as it is designed after BERT's masked language modeling (MLM). 40% of the tokens are masked. Similar to other methods, BEiT masks a large portion of the image to make the pretraining task sufficiently difficult.
 
 # Conclusion
 
