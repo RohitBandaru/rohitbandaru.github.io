@@ -158,7 +158,7 @@ Cross-attention is particularly relevant for machine translation. In this contex
 ## Masked Self-Attention
 
 The transformer decoder uses causal masking. The decoder is trained to predict the next token. This task becomes trivial if the next token and all future tokens are visible, as in full self-attention. Causal masking constrains the attention operation to only look at tokens to the left, making the decoder auto-regressive (meaning each output depends only on previous outputs). This one-way flow of information is essential for generating sequences one token at a time.
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt1/masked_attention.png" caption="Example of a masked attention matrix" alt="Example of a masked attention matrix" source="https://arxiv.org/abs/"%}
+{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt1/masked_attention.png" caption="Example of a masked attention matrix" alt="Example of a masked attention matrix" %}
 
 Masking is applied on the $$QK^T$$ matrix. Masked indices are set to $$-\infty$$, this causes the softmax function to assign zero weight to these tokens. In many implementations of attention, the mask can be customized by passing in a Boolean matrix.
 
