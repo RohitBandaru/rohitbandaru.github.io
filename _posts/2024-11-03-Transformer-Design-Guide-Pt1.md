@@ -123,7 +123,7 @@ For language, 1D position encodings are used. These embeddings should be designe
 
 The transformer blocks are where the bulk of the computation takes place. We will first go through the components needed to build these blocks, and then put them together.
 
-# Attention
+## Attention
 
 The core component of the Transformer architecture, as highlighted in the title "Attention Is All You Need," is Attention. This concept predates transformers in Natural Language Processing (NLP). The fundamental equation for attention is:
 
@@ -264,7 +264,7 @@ The architecture of the output processing is simple. There is a final linear lay
 
 Transformer models can be trained with different objectives and losses based on the use case and architecture type. We will discuss different types of objectives and how they are used for training. We will also explain how inference works under these objectives.
 
-### Next Token Prediction
+## Next Token Prediction
 
 Encoder-Decoder and Decoder-only transformers are primarily trained on next token prediction. This task involves predicting the subsequent word in a sequence based on the preceding words. The output layer is applied to each embedding, with the output size matching the input vocabulary size. A softmax function then creates a probability distribution over the token vocabulary, from which the next token is sampled.
 
@@ -276,7 +276,7 @@ At each step, the model outputs a probability distribution for the next token. T
 
 Next token prediction training is highly parallelizable. A single forward pass generates predictions and losses for each token in the input. However, inference is an iterative process requiring a forward pass for each generated token.
 
-### Masked Language Modeling
+## Masked Language Modeling
 
 Masked Language Modeling (MLM) is a training objective introduced by [BERT](https://arxiv.org/abs/1810.04805). This method trains encoder-only transformers. MLM training follows these steps:
 
@@ -291,7 +291,7 @@ The intuition behind this technique differs fundamentally from next token predic
 
 MLM is a pretraining method that doesn't yield directly interpretable output. The model can be used for embedding representations, where the output embedding is aggregated and used in another application. The model can also be fine-tuned on a scalar prediction task.
 
-### Scalar Predictions
+## Scalar Predictions
 
 Encoder-only transformers support a wide variety of losses in addition to MLM. While MLM is a per-token objective where outputs are generated from multiple tokens, many objectives require using an output linear layer on a singular embedding to get a single output.
 
