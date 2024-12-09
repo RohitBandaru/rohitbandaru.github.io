@@ -3,6 +3,7 @@ layout: post
 title: "Transformer Design Guide (Part 1: Vanilla)"
 tags: transformer
 thumbnail: assets/img/blog/transformer_pt1/transformer.png
+citation: true
 toc:
   sidebar: left
 ---

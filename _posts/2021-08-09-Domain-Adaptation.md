@@ -3,6 +3,7 @@ layout: post
 title: Domain Adaptation
 tags: computer-vision
 thumbnail: assets/img/blog/domain_adaptation/framework.png
+citation: true
 toc:
   sidebar: left
 ---

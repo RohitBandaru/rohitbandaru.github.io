@@ -3,6 +3,7 @@ layout: post
 title: Deep Dive into Yann LeCun’s JEPA
 tags: self-supervised-learning ai computer-vision
 thumbnail: assets/img/blog/jepa/jepa_brain.png
+citation: true
 toc:
   beginning: true
   sidebar: left
