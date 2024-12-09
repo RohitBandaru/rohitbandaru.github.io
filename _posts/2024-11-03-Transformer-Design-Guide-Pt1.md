@@ -112,7 +112,8 @@ The original transformer paper evaluates two methods of configuring the position
 - Fixed: The embedding values aren’t learned but are configured as a function of the position. $$i$$ is the index in the embedding. $$d_{model}$$ values have to be generated so the position embedding can be the same dimension as the token embedding.
 
 $$
-PE_{(pos,2i)} = \sin\left(pos/10000^{2i/d_{model}}\right) \\ PE_{(pos,2i+1)} = \cos\left(pos/10000^{2i/d_{model}}\right)
+PE_{(pos,2i)} = \sin\left(pos/10000^{2i/d_{model}}\right) \\
+PE_{(pos,2i+1)} = \cos\left(pos/10000^{2i/d_{model}}\right)
 $$
 
 These embeddings are added to the input token embeddings. This assumes that the addition of the positional encoding doesn’t cause conflicts in the embedding space (which is typically in a high dimension). However, it is also possible to concatenate position embedding values.
@@ -181,7 +182,7 @@ Multi-head attention (MHA) effectively divides the softmax operation into separa
 
 In transformer architectures, layer normalization is typically used. Unlike batch normalization, the values are independent of other items in the batch. This is because batch-wide statistics aren't used. Layer Normalization was [introduced](https://arxiv.org/abs/1607.06450) just a year prior to transformers.
 
-For each set $$x$$ in the batch, the mean $$\mu(x)$$ and variance $$\sigma(x)^2$$ of the embedding values (across all ⁍ values of each embedding) are calculated. These values are used to normalize each embedding value:
+For each set $$x$$ in the batch, the mean $$\mu(x)$$ and variance $$\sigma(x)^2$$ of the embedding values (across all $$d_{model}$$ values of each embedding) are calculated. LayerNorm operates on each embedding in the input completely independently. These values are used to normalize each embedding value:
 
 $$
 \mathrm{LN}(x) = \frac{x-\mu(x)}{\sqrt{\sigma(x)^2+\epsilon}} *\gamma +\beta
