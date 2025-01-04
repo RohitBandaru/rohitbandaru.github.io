@@ -1,8 +1,7 @@
 ---
 layout: about
 title: about
-permalink: /about/
-nav: true
+permalink: /
 navorder: 1
 
 profile:
