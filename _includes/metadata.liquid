@@ -67,7 +67,7 @@
   <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' }}">
   <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
   {% if page.og_image or site.og_image %}
-    <meta property="og:image" content="{{ image_path }}"">
+    <meta property="og:image" content="{{ image_path }}">
   {% endif %}
   <meta property="og:locale" content="{{ site.lang }}">
 
@@ -76,7 +76,7 @@
   <meta name="twitter:title" content="{% if page.title %}{{ page.title }}{% else %}{{ title }}{% endif %}">
   <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
   {% if page.og_image or site.og_image %}
-    <meta name="twitter:image" content={{ image_path }}"">
+    <meta name="twitter:image" content="{{ image_path }}">
   {% endif %}
   {% if site.x_username %}
     <meta name="twitter:site" content="@{{ site.x_username }}">
