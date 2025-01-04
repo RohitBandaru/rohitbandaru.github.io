@@ -52,6 +52,14 @@
 {% endif %}
 
 {% if site.serve_og_meta %}
+  {% if page.thumbnail %}
+    {% assign image_path = page.thumbnail | prepend: '/' | prepend: site.baseurl | prepend: site.url %}
+  {% elsif page.og_image %}
+    {% assign image_path = page.og_image | prepend: '/' | prepend: site.baseurl | prepend: site.url %}
+  {% else %}
+    {% assign image_path = site.og_image |  prepend: '/' | prepend: site.baseurl | prepend: site.url %}
+  {% endif %}
+
   <!-- OpenGraph -->
   <meta property="og:site_name" content="{{ title }}">
   <meta property="og:type" content="{% if is_blog_post %}article{% else %}website{% endif %}">
@@ -59,7 +67,7 @@
   <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' }}">
   <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
   {% if page.og_image or site.og_image %}
-    <meta property="og:image" content="{% if page.thumbnail %}{{ page.thumbnail }}{% elsif page.og_image %}{{ page.og_image }}{% else %}{{ site.og_image }}{% endif %}">
+    <meta property="og:image" content="{{ image_path }}"">
   {% endif %}
   <meta property="og:locale" content="{{ site.lang }}">
 
@@ -68,7 +76,7 @@
   <meta name="twitter:title" content="{% if page.title %}{{ page.title }}{% else %}{{ title }}{% endif %}">
   <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
   {% if page.og_image or site.og_image %}
-    <meta name="twitter:image" content="{% if page.thumbnail %}{{ page.thumbnail }}{% elsif page.og_image %}{{ page.og_image }}{% else %}{{ site.og_image }}{% endif %}">
+    <meta name="twitter:image" content={{ image_path }}"">
   {% endif %}
   {% if site.x_username %}
     <meta name="twitter:site" content="@{{ site.x_username }}">
