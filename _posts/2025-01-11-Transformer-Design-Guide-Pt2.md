@@ -39,13 +39,13 @@ Unfortunately many of the most used transformer models are opaque in that the pu
   - Mistral (2023): [Mistral 7B](https://arxiv.org/abs/2310.06825), [Mixtral of Experts](https://arxiv.org/abs/2401.04088)
   - Qwen (2023): [Qwen](https://arxiv.org/abs/2309.16609)
   - Phi (2024): [Phi-3](https://arxiv.org/abs/2404.14219), [Phi-4](https://arxiv.org/abs/2412.08905)
-  - DeepSeek
+  - DeepSeek (2024): [DeepSeek LLM](https://arxiv.org/abs/2401.02954) [DeepSeek V2](https://arxiv.org/abs/2405.04434) [DeepSeek V3](https://arxiv.org/abs/2412.19437)
   - OLMo (2024): [OLMo](https://arxiv.org/abs/2402.00838), [OLMo 2](https://arxiv.org/abs/2501.00656)
     - Open training code!
 - Text encoder LLMs
   - [ModernBERT](https://arxiv.org/abs/2412.13663) (2024)
 - Open Source Vision Language Models
-  - PaliGemma (2023)
+  - PaliGemma (2024): [PaliGemma](https://arxiv.org/abs/2407.07726), [PaliGemma 2](https://arxiv.org/abs/2412.03555)
   - [DeepSeek-VL2](https://arxiv.org/abs/2412.10302) (2024)
 - Computer Vision Models
   - [ViT-22B](https://arxiv.org/abs/2302.05442) (2023)

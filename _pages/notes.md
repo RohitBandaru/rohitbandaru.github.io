@@ -7,6 +7,10 @@ nav: true
 
 Notes on various resources (hosted on Notion), sharing to help others learn with these resources.
 
+### [ML Divergences](https://sage-ethernet-365.notion.site/KL-Divergence-17a3e1f793f58032a547fa3622bc9133?pvs=4)
+
+---
+
 ### [Foundations of Deep RL Series Notes](https://sage-ethernet-365.notion.site/Foundations-of-Deep-RL-Series-Notes-16e3e1f793f580579dbfdc37e760524b?pvs=4)
 
 ---
