@@ -10,7 +10,7 @@ email: roh.bandaru@gmail.com
 description: ML blog.
 keywords: machine-learning, ai, artificial-intelligence, research
 lang: en # the language of your site (for example: en, fr, cn, ru, etc.)
-icon: 🤖 # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
+icon: blog/favicon.ico # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
 
 url: https://rohitbandaru.github.io # the base hostname & protocol for your site
 baseurl: # the subpath of your site, e.g. /blog/. Leave blank for root
