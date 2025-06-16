@@ -7,18 +7,22 @@ nav: true
 
 Notes on various resources (hosted on Notion), sharing to help others learn with these resources.
 
-### [ML Divergences](https://sage-ethernet-365.notion.site/KL-Divergence-17a3e1f793f58032a547fa3622bc9133?pvs=4)
+### [PyTorch Cheatsheet](https://rohitbandaru.notion.site/pytorch-cheatsheet)
 
 ---
 
-### [Foundations of Deep RL Series Notes](https://sage-ethernet-365.notion.site/Foundations-of-Deep-RL-Series-Notes-16e3e1f793f580579dbfdc37e760524b?pvs=4)
+### [ML Divergences](https://rohitbandaru.notion.site/ml-divergences)
 
 ---
 
-### [MIT The Human Brain](https://sage-ethernet-365.notion.site/MIT-The-Human-Brain-b400f44fe0f44678b05164f8ff4bacd4?pvs=4)
+### [Foundations of Deep RL Series Notes](https://rohitbandaru.notion.site/foundations-of-deep-rl-series-notes)
 
 ---
 
-### [Introduction to Neuroscience - Bing Wen Brunton](https://sage-ethernet-365.notion.site/Introduction-to-Neuroscience-939fdc60f24041a6ac501a6a90e037ed?pvs=4)
+### [MIT The Human Brain](https://rohitbandaru.notion.site/mit-the-human-brain)
+
+---
+
+### [Introduction to Neuroscience - Bing Wen Brunton](https://rohitbandaru.notion.site/introduction-to-neuroscience)
 
 ---
