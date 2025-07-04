@@ -9,6 +9,8 @@ toc:
   sidebar: left
 ---
 
+**<span style="color:blue">[2025-07-04 Added section on V-JEPA 2]</span>**
+
 In the AI research community, Yann LeCun has a unique and often controversial perspective. As of 2024, LLMs and Generative AI are the main focus areas of the field of AI. We’ve all been impressed by the performance of LLMs in various contexts, and generative systems like OpenAI’s [Sora](https://openai.com/sora). However, it is not clear where these advances fit in the long term goal of achieving and surpassing human level intelligence, which many call AGI.
 
 In his position paper [A Path Towards Autonomous Machine Intelligence](https://openreview.net/pdf?id=BZ5a1r-kVsf) and his many recent talks (linked below), Yann presents an alternative framework for achieving artificial intelligence. He also proposes a new architecture for a predictive world model: Joint Embedding Predictive Architecture (JEPA).
@@ -22,7 +24,7 @@ This is a long post, feel free to jump to the sections about JEPA, I-JEPA, and V
 [_From Machine Learning to Autonomous Intelligence_](https://drive.google.com/file/d/1RVYBVi_bWyz-4sZSsu4rSWzDwQBLsvHL/view)
 {% include youtube.liquid id='VRzvpV9DZ8Y' %}
 
-[_Objective-Driven AI: Towards Machines that can Learn, Reason, and Plan”_](https://www.ece.uw.edu/wp-content/uploads/2024/01/lecun-20240124-uw-lyttle.pdf)
+[_Objective-Driven AI: Towards Machines that can Learn, Reason, and Plan_](https://www.ece.uw.edu/wp-content/uploads/2024/01/lecun-20240124-uw-lyttle.pdf)
 
 {% include youtube.liquid id='d_bdU3LsLzE' %}
 
@@ -357,3 +359,105 @@ The current research in JEPA represents a significant step towards Yann LeCun's 
 To realize this vision, several crucial advancements are necessary. Firstly, we need to embrace true multimodality, incorporating audio and other modalities that are often overlooked in current video models. Scaling up V-JEPA is also essential, requiring larger video datasets and more sophisticated model architectures that can handle higher resolutions. Additionally, the development of more challenging benchmarks for video understanding is critical, as current standards fall short of the complexity seen in image or language modeling tasks.
 
 Future iterations of V-JEPA must evolve beyond spatial masking to make predictions across various time horizons. This capability to forecast future representations based on present information is fundamental to understanding the temporal dynamics of video content. Achieving this may necessitate a hierarchical JEPA structure, where different levels handle predictions at various time scales and abstraction levels. Maybe the next JEPA paper will introduce a hierarchal video JEPA (HV-JEPA).
+
+# [V-JEPA 2](https://arxiv.org/abs/2506.09985)
+
+**<span style="color:blue">[2025-07-04 Update]</span>**
+
+V-JEPA 2 keeps the same model architecture and pretraining method as the original models. However, the model size and the datasets are scaled up. The authors also introduce some interesting post-training methods that unlock more capabilities for this model.
+
+First we will compare the model architectures and datasets, and then delve into the post-training methods.
+
+### Model Comparison
+
+|                         | V-JEPA 1                                                                                                                                                              | V-JEPA 2                                                                                                                                                                                               | notes                                                                                                                                        |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Model Backbone**      | $$\text{ViT-L/16}$$, $$\text{ViT-H/16}$$, $$\text{ViT-H/16}_{384}$$                                                                                                   | $$\text{ViT-L/16}$$, $$\text{ViT-H/16}$$, $$\text{ViT-g/16}$$                                                                                                                                          | 16 is the patch size. The models use a standard resolution of 224x224 images. $$\text{ViT-H/16}_{384}$$ uses a larger resolution of 384x384. |
+| **Largest Model Size**  | $$\text{ViT-H/16}$$ (630M Params)                                                                                                                                     | $$\text{ViT-g/16}$$ (1B Params)                                                                                                                                                                        |                                                                                                                                              |
+| **Pretraining Dataset** | VideoMix2M (2 million videos) = Something-Something v2 (168K videos, 168 hours) + Kinetics-400/600/700 (733K videos, 614 hours) + Howto100M (1.1 M videos 134K hours) | VideoMix22M (22 million videos) = VideoMix2M + YT-Temporal-1B (19 M videos, 16M hours) + ImageNet (1M images)                                                                                          | Both datasets are combinations of existing video and image datasets. Weighted sampling and data curation are used during training.           |
+| **Model Input**         | ~3 seconds of video (16 frames, 4 FPS)                                                                                                                                | ~16 seconds (64 frames, 4 FPS) Progressive-Resolution training is used. Higher frame counts were tested but were not more effective.                                                                   |                                                                                                                                              |
+| **Finetuning**          | Finetuned on motion classification on SSv2 and action recognition in K400. Attentive probing is used to evaluate on image and video tasks.                            | Various post-training methods used: language alignment for visual question answering, attentive probing for action and object recognition, and action-conditioned post-training for robot manipulation |                                                                                                                                              |
+
+### Post Training
+
+We have seen the transformer architecture, which started with language, take over many other modalities. A more recent trend is that LLM training methods and recipes (pretraining → SFT → RL) are being adapted to other domains. V-JEPA 2 represents another iteration of this trend. We will explore the different types of post-training implemented in V-JEPA 2.
+
+**Progressive-Resolution Training**
+
+We also see a form of long context finetuning in the progressive-resolution training. This is part of the video pretraining recipe. While most pretraining is done with 16 frames, the model is then further trained on 64 frames during the cooldown phase. This enables efficiently training a model that can process longer video clips. This is the same way that LLMs are trained to process long contexts.
+
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/post_training.png" class="image-fluid mx-auto d-block" caption="" alt="V-JEPA Post-training" source="https://arxiv.org/abs/2506.09985"%}
+
+**Attentive Probe Finetuning**
+
+This method was implemented in V-JEPA 1. A larger attentive probe is used in comparison to the evals in V-JEPA 1.
+
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/attentive_probe.png" class="image-fluid mx-auto d-block" caption="" alt="V-JEPA Attentive Probe Architecture" width=500 %}
+
+This attentive probe finetuning leads to strong performance on action classification and object recognition evals.
+
+V-JEPA 2 introduces an evaluation on action anticipation. The Epic-Kitchens-100 human-action anticipation task evaluates the model’s ability to predict future actions. This is represented with an action, verb, and noun. This can be considered as 3 classification tasks. An attentive probe with three learnable query embeddings is used for this. The eval task is structured so that the model predicts what action is taken 1 second into the future. This is limited in that it can only predict from a fixed set of actions, verbs, and nouns. It also can’t predict multiple actions or on a longer time frame.
+
+**LLM Conditioning**
+
+V-JEPA 2 is used as a video encoder for an LLM. This enables evaluation on Video Question Answering.
+
+This uses the architecture and visual instruction tuning training method of LLaVA models. The JEPA embeddings are projected into the input of the LLM as non-tokenized early fusion. The visual instruction tuning method from LLaVA is used to train this architecture.
+
+1. Only the projector is unfrozen and trained on image captioning
+2. The model is trained end to end on image question answering
+3. The model is trained end to end on video question answering
+
+**Action Conditioned Post-Training**
+
+The model is also evaluated for robotics. It is post-trained on 62 hours of video from the Droid dataset. This model is then deployed on Franka arms. This is a tabletop arm with a fixed camera. The actions are end-effector commands. There are 7 degrees of freedom so that effector states can be represented by the 7D vector. The actions are changes in these states. These diffs are used to form commands.
+
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/action_conditioning.png" class="image-fluid mx-auto d-block" caption="" alt="V-JEPA Action-Conditioned Training" source="https://arxiv.org/abs/2506.09985"%}
+
+The V-JEPA 2 encoder $$E(\cdot)$$ encodes each of the 16 frames into a feature map. We get 16 feature maps $$(z_k)_{k \in [16]}$$, where $$z_k := E(x_k) \in \mathbb{R}^{H \times W \times D}$$. With 16×16 patches, we get an output of size 16×16×1408. The feature maps are interleaved with the actions and states: $$(a_k,s_k,z_k)_{k \in [15]}$$. Note that we have 15 of these tuples since the actions are formed by the differences between states.
+
+This is processed by the predictor model $$P_{\phi}(\cdot)$$, which is a separate 300M parameter autoregressive transformer. Given the action, state, and previous feature maps, it predicts the next feature map. The result is a sequence of predicted feature maps $$(\hat{z}_{k+1})_{k \in [15]}$$.
+
+We can then apply a teacher forcing loss, similar to next token prediction SFT in LLMs. Note that $$k=0$$ is skipped because there is no prediction at the first timestamp.
+
+$$
+\begin{align*}
+ \mathcal{L}_{\text{teacher-forcing}}(\phi) &:= \frac{1}{T}\sum_{k=1}^T \|\hat{z}_{k+1} - z_{k+1}\|_1\\ &= \frac{1}{T}\sum_{k=1}^T \|P_{\phi}\left( (a_t, s_t, E(x_t))_{t<k} \right) - E(x_{k+1})\|_1\end{align*}
+
+
+$$
+
+A two-step rollout loss ($$T=2$$) is also used. We start with the initial state and feature map, then use the first $$T$$ actions to rollout to the $$T+1$$ feature map. We then minimize the distance between the true $$T+1$$ feature map and the one predicted by the rollout. This differs from the teacher forcing loss since we only have the true state and feature map for the initial state. The subsequent states and feature maps are predicted by the model.
+
+$$
+\mathcal{L}_{\text{rollout}}(\phi) := \|P_{\phi}(a_{1:T}, s_1, z_1) - z_{T+1}\|_1
+$$
+
+We train on a combination of the teacher forcing and rollout loss.
+
+$$
+L(\phi) := \mathcal{L}_{\text{teacher-forcing}}(\phi) + \mathcal{L}_{\text{rollout}}(\phi)
+$$
+
+During this training the V-JEPA 2 encoder is frozen. We train the predictor network to enable planning.
+
+For planning we use the Cross Entropy Method (explained in my [World Models blog](https://rohitbandaru.github.io/blog/World-Models/)). This method is used to minimize the goal conditioned energy function at inference time:
+
+$$
+\mathcal{E}(\hat{a}_{1:T}; z_k, s_k, z_g) := \|P(\hat{a}_{1:T}; s_k, z_k) - z_g\|_1
+$$
+
+$$z_g$$ represents the feature map of the goal state. This uses the same method as DINO-WM ([World Models blog](https://rohitbandaru.github.io/blog/World-Models/#dino-wm)). We get an action sequence $$(a_i^\star)_{i \in [T]}$$ through this optimization.
+
+{% include figure.liquid loading="eager" path="assets/img/blog/jepa/planning.png" class="image-fluid mx-auto d-block" caption="Planning with V-JEPA" alt="V-JEPA Test Time Planning" source="https://arxiv.org/abs/2506.09985"%}
+
+An interesting future direction is to use this world model for language-specified goals. We can train an LLM to generate the goal latent embedding from text. Here is a simple design for implementation:
+
+1. Collect a robotics dataset containing pairs of (action, video), where actions are free-form text and videos are short clips of robots performing these actions.
+2. Initialize an MLLM with a JEPA video encoder and a predictor network.
+3. Use the action-conditioned training method to train the predictor and the MLLM.
+   1. The loss functions would need adaptation:
+      1. Add a loss term that forces the MLLM-generated embeddings to be close to the representation of the final image.
+      2. Include the MLLM embedding as an input to the predictor. Backpropagate gradients to both the LLM and the predictor.
+
+V-JEPA 2 proves to be an effective world model when applied to robotics planning. This robotics application brings JEPA closer to the brain framework introduced in the original JEPA position paper, demonstrating how to build a JEPA world model and use it for real-world planning.

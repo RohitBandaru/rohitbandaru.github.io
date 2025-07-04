@@ -24,13 +24,19 @@ hr {
 }
 
 table {
+  border-collapse: collapse;
+  width: 100%;
+
   td,
   th {
     font-size: 1rem;
+    border: 1px solid var(--global-divider-color);
+    padding: 8px;
   }
 
   th {
     font-weight: bold;
+    background-color: var(--global-background-color, #f8f8f8);
   }
 }
 
@@ -50,6 +56,7 @@ table.table a {
 
 .table-dark {
   background-color: transparent;
+
   &.table-bordered {
     border: 1px solid var(--global-divider-color) !important;
   }
