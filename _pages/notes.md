@@ -7,7 +7,7 @@ nav: true
 
 Notes on various resources (hosted on Notion), sharing to help others learn with these resources.
 
-### [Notes for MIT 6.S184: Flow Matching and Diffusion Models]([https://rohitbandaru.notion.site/mit-6-s184-flow-matching-and-diffusion-models?source=copy_link](https://rohitbandaru.notion.site/mit-6-s184-flow-matching-and-diffusion-models))
+### [Notes for MIT 6.S184: Flow Matching and Diffusion Models](https://rohitbandaru.notion.site/mit-6-s184-flow-matching-and-diffusion-models)
 
 ---
 
