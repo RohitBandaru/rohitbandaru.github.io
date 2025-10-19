@@ -9,8 +9,6 @@ toc:
 keywords: vision language action, VLA, robotics foundation models, embodied AI, multimodal robotics, robot learning, foundation models, transformer architectures, visual reasoning, language grounding, action prediction, robotic manipulation, autonomous systems
 ---
 
-[DRAFT]
-
 AI research has converged around foundation models across various domains. Rather than developing specialized models for specific tasks like visual question answering, researchers now employ versatile multimodal language models that tackle a wide variety of problems. This shift has extended to models operating in the physical world, particularly robotics.
 
 A long-standing goal of robotics is to develop versatile systems that perform effectively across diverse settings, applications, and hardware configurations. This makes deployment easier, improves model robustness, and enables transfer learning between domains. We've had tremendous success achieving this with foundation models for language. LLMs can be applied to many different problems and easily adapted with limited task-specific data, benefiting from learning across domains. We seek to achieve this same type of foundation model for embodied AI.
@@ -420,4 +418,4 @@ Although their approaches aren’t always very public (except PI), it’s worth 
 - [Stanford CS25: V3 I Low-level Embodied Intelligence w/ Foundation Models](https://www.youtube.com/watch?v=fz8wf9hN20c)
 - [Stanford CS25: V3 I Low-level Embodied Intelligence w/ Foundation Models](https://www.youtube.com/watch?v=fz8wf9hN20c)
 - [U of T Robotics Institute Seminar: Sergey Levine (UC Berkeley)](https://www.youtube.com/watch?v=EYLdC3a0NHw)
-- [Princeton Robotics Seminar - Brian Ichter](https://www.youtube.com/watch?v=wQS7kqY2EhQ)
+- [Princeton Robotics Seminar - Brian Ichter](https://www.youtube.com/watch?v=whn4eXlV0hk)
