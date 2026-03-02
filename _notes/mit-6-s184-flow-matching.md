@@ -3,10 +3,11 @@ layout: post
 title: "Notes for MIT 6.S184: Flow Matching and Diffusion Models"
 date: 2025-08-10
 tags: generative-models, deep-learning
-citation: true
+citation: false
 toc:
   sidebar: left
 ---
+
 Lecture Notes: [https://diffusion.csail.mit.edu/docs/lecture-notes.pdf](https://diffusion.csail.mit.edu/docs/lecture-notes.pdf)
 
 [Lab One](https://colab.research.google.com/drive/1oSkN77rfr4USUhJkvV6U68-0O429t7dx#scrollTo=93d49b57-85cb-407c-a2e3-c79f682a3dc1)
@@ -27,13 +28,13 @@ $$
 
 We can't explicitly define $$p_{\mathrm{data}}$$ but we can access samples from it (dataset): $$z_1, z_2, \ldots, z_n \sim p_{\mathrm{data}}$$.
 
-Unconditional generation (sampling from the data distribution): 
+Unconditional generation (sampling from the data distribution):
 
 $$
 z \sim p_{\mathrm{data}}
 $$
 
-Conditional generation (conditioning the sampling with $$y$$, which can be a prompt): 
+Conditional generation (conditioning the sampling with $$y$$, which can be a prompt):
 
 $$
 z \sim p_{\mathrm{data}}(\cdot|y)
@@ -67,7 +68,7 @@ $$
 \frac{d}{dt}X_t = u_t(X_t)
 $$
 
-Initial condition: 
+Initial condition:
 
 $$
 X_0 = x_0
@@ -75,7 +76,7 @@ $$
 
 **Vector Field**
 
-This maps time and location $$x$$ to a vector. 
+This maps time and location $$x$$ to a vector.
 
 $$
 u:\mathbb{R} \times [0,1] \rightarrow \mathbb{R}^d, (x,t) \mapsto u_t(x)
@@ -103,7 +104,7 @@ Some ODEs are solvable by hand like Linear ODEs. Otherwise we can use simulation
 
 **Euler Method**
 
-After initializing $$X_0 = x_0$$, we can update $$X$$ as follows: 
+After initializing $$X_0 = x_0$$, we can update $$X$$ as follows:
 
 $$
 X_{t+h} = X_t+hu_t(X_t)\quad (t=0,h,2h,3h,…1-h)
@@ -116,7 +117,7 @@ $$h$$ is the step size parameter. We take steps in the direction of the vector f
 We use Euler’s method to guess the next state. Then we update $$X$$ with the average of the current state and the guess for the new state.
 
 $$
-X'_{t+h} = X_t + h u_t(X_t) \quad  \\X_{t+h} = X_t + \frac{h}{2} (u_t(X_t) + u_{t+h}(X'_{t+h})) \quad 
+X'_{t+h} = X_t + h u_t(X_t) \quad  \\X_{t+h} = X_t + \frac{h}{2} (u_t(X_t) + u_{t+h}(X'_{t+h})) \quad
 $$
 
 **Flow Models**
@@ -153,13 +154,13 @@ $$
 dX_t = u_t(X_t)dt+\sigma_tdW_t
 $$
 
-Initial condition: 
+Initial condition:
 
 $$
 X_0=x_0
 $$
 
-The SDE is the same as the ODE but with a stochastic term. $$\sigma_t$$ is the scalar diffusion coefficient. 
+The SDE is the same as the ODE but with a stochastic term. $$\sigma_t$$ is the scalar diffusion coefficient.
 
 $$W$$ is Brownian motion.
 
@@ -193,15 +194,15 @@ $$
 
 In the limit of the step size going to zero, the error term becomes 0 and the vector field defines the derivative.
 
-**SDE** 
+**SDE**
 
-We can make this stochastic with the SDE $$dX_t = u_t(X_t)dt +\sigma_tdW_t$$. 
+We can make this stochastic with the SDE $$dX_t = u_t(X_t)dt +\sigma_tdW_t$$.
 
 $$
 X_{t+h} = X_t+hu_t(X_t)+\sigma_t(W_ {t+h} - W_t) + hR_t(h) \quad \lim_{h\to0}\sqrt{\mathbb{E}[||R_t(h)||^2]}= 0
 $$
 
-The standard deviation of the error goes to 0. 
+The standard deviation of the error goes to 0.
 
 SDEs also have unique solutions for all vector fields with bounded derivatives and if it is Lipschitz. Additionally the diffusion coefficient has to be continuous.
 
@@ -215,7 +216,7 @@ For each step:
 
 1. Sample $$\epsilon \sim \mathcal{N}(0,I_d)$$
 2. Update the state: $$X_{t+h} = X_t+hu_t^{\theta}(X_t)+\sigma_t\sqrt{h}\epsilon$$
-    1. $$\sqrt{h}$$ is needed so that the variance scales linearly with $$h$$
+   1. $$\sqrt{h}$$ is needed so that the variance scales linearly with $$h$$
 
 **Ohrnstein-Uhlenbeck Process**
 
@@ -280,7 +281,7 @@ Example: Gaussian probability paths
 
 $$p_t(\cdot\vert z)=\mathcal{N}(\alpha_tz, \beta_t^2I_d)$$
 
-Noise schedulers: $$\alpha_t, \beta_t \quad\text{s.t.}\quad \alpha_0 = 0, \alpha_1 = 1, \beta_0 = 1, \beta_1 = 0$$, The variance goes to 0 as the mean goes to the datapoint. 
+Noise schedulers: $$\alpha_t, \beta_t \quad\text{s.t.}\quad \alpha_0 = 0, \alpha_1 = 1, \beta_0 = 1, \beta_1 = 0$$, The variance goes to 0 as the mean goes to the datapoint.
 
 example values: $$\alpha_t = t, \beta_t = 1-t$$
 
@@ -382,7 +383,7 @@ $$
 
 In the last step we use the equality: $$\nabla \log p_t(x\vert z) = \frac{\nabla p_t(x\vert z)}{p_t(x\vert z)}$$
 
-**Gaussian Score**: 
+**Gaussian Score**:
 
 $$
 \nabla \log p_t(x|z) = - \frac{x - a_t z}{\beta_t^2}
@@ -412,16 +413,16 @@ $$\Delta$$ is the Laplacian operator.
 
 **Summary**
 
-|  |  | Notation | Gaussian Example |
-| --- | --- | --- | --- |
-| Probability Path | Conditional | $$p_t(\cdot\vert z)$$   | $$\mathcal{N}(\alpha_t z, \beta_t^2 I_d)$$ |
-|  | Marginal | $$p_t$$ | $$\int p_t(x\vert z) p_{\text{data}}(z) \,dz$$ |
-| Vector Field | Conditional | $$u_t^{\text{target}}(x\vert z)$$      | $$\left( \dot{\alpha}_t - \frac{\dot{\beta}_t}{\beta_t} \alpha_t \right) z + \frac{\dot{\beta}_t}{\beta_t} x$$ |
-|  | Marginal | $$u_t^{\text{target}}(x)$$ | $$\int u_t^{\text{target}}(x\vert z) \frac{p_t(x\vert z) p_{\text{data}}(z)}{p_t(x)} \,dz$$ |
-| Score Function | Conditional | $$\nabla \log p_t(x\vert z)$$ | $$- \frac{x - \alpha_t z}{\beta_t^2}$$ |
-|  | Marginal | $$\nabla \log p_t(x)$$ | $$\int \nabla \log p_t(x\vert z) \frac{p_t(x\vert z) p_{\text{data}}(z)}{p_t(x)} \,dz$$ |
+|                  |             | Notation                          | Gaussian Example                                                                                               |
+| ---------------- | ----------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Probability Path | Conditional | $$p_t(\cdot\vert z)$$             | $$\mathcal{N}(\alpha_t z, \beta_t^2 I_d)$$                                                                     |
+|                  | Marginal    | $$p_t$$                           | $$\int p_t(x\vert z) p_{\text{data}}(z) \,dz$$                                                                 |
+| Vector Field     | Conditional | $$u_t^{\text{target}}(x\vert z)$$ | $$\left( \dot{\alpha}_t - \frac{\dot{\beta}_t}{\beta_t} \alpha_t \right) z + \frac{\dot{\beta}_t}{\beta_t} x$$ |
+|                  | Marginal    | $$u_t^{\text{target}}(x)$$        | $$\int u_t^{\text{target}}(x\vert z) \frac{p_t(x\vert z) p_{\text{data}}(z)}{p_t(x)} \,dz$$                    |
+| Score Function   | Conditional | $$\nabla \log p_t(x\vert z)$$     | $$- \frac{x - \alpha_t z}{\beta_t^2}$$                                                                         |
+|                  | Marginal    | $$\nabla \log p_t(x)$$            | $$\int \nabla \log p_t(x\vert z) \frac{p_t(x\vert z) p_{\text{data}}(z)}{p_t(x)} \,dz$$                        |
 
-Conditional VF is just a weighted average between $$x$$ and $$z$$. 
+Conditional VF is just a weighted average between $$x$$ and $$z$$.
 
 # Flow Matching
 
@@ -502,7 +503,7 @@ $$
 Plug in neural networks
 
 $$
-X_0 \sim p_{\text{init}}, \quad dX_t = \left[ u_t^{\theta}(X_t) + \frac{\sigma_t^2}{2} s_t^{\theta}(X_t) \right] dt + \sigma_t dW_t\quad 
+X_0 \sim p_{\text{init}}, \quad dX_t = \left[ u_t^{\theta}(X_t) + \frac{\sigma_t^2}{2} s_t^{\theta}(X_t) \right] dt + \sigma_t dW_t\quad
 $$
 
 After training we get $$X_t \sim p_t$$
@@ -522,12 +523,12 @@ We only need to train a vector field or the score network.
 
 Conditional/Guided generation: generate with a text prompt or label. We don’t condition on the latent $$z$$ here as we use the marginal definitions.
 
-|  | Unguided | Guided |
-| --- | --- | --- |
-| Marginal Probability Path | $$p_t(x)$$   | $$p_t(x\vert y)$$   |
-| Marginal Vector Field | $$u_t^{\text{target}}(x)$$      | $$u_t^{\text{target}}(x\vert y)$$      |
-| Score Function | $$\nabla \log p_t(x)$$ | $$\nabla \log p_t(x\vert y)$$ |
-| Model | $$u_t^{\theta}(x)$$      | $$u_t^{\theta}(x\vert y)$$ |
+|                           | Unguided                   | Guided                            |
+| ------------------------- | -------------------------- | --------------------------------- |
+| Marginal Probability Path | $$p_t(x)$$                 | $$p_t(x\vert y)$$                 |
+| Marginal Vector Field     | $$u_t^{\text{target}}(x)$$ | $$u_t^{\text{target}}(x\vert y)$$ |
+| Score Function            | $$\nabla \log p_t(x)$$     | $$\nabla \log p_t(x\vert y)$$     |
+| Model                     | $$u_t^{\theta}(x)$$        | $$u_t^{\theta}(x\vert y)$$        |
 
 $$
 \mathcal{L}_{\text{CFM}}^{\text{guided}}(\theta) = \mathbb{E}_{\square}\left[\left\|u_t^{\theta}(x) - u_t^{\text{target}}(x|z)\right\|^2\right] \\
@@ -555,19 +556,19 @@ $$
 Plugging into the vector field definition:
 
 $$
-\begin{aligned} 
+\begin{aligned}
 u_t^{\text{target}}(x|y) &= a_tx + b_t (\nabla_x \log p_t(x)+\nabla_x\log p_t(y|x)) \\
 &= a_tx + b_t \nabla_x \log p_t(x))+b_t\nabla_x\log p_t(y|x) \\
 &= u_t^{\text{target}}(x) +b_t\nabla_x\log p_t(y|x)
 \end{aligned}
 $$
 
-This shows that we simply take the unguided vector field and add a single term for guidance. 
+This shows that we simply take the unguided vector field and add a single term for guidance.
 
-We apply a guidance scale $$w>1$$ to amplify the effects of the guidance. We apply Bayes’ rule again. 
+We apply a guidance scale $$w>1$$ to amplify the effects of the guidance. We apply Bayes’ rule again.
 
 $$
-\begin{aligned} 
+\begin{aligned}
 \tilde{u}_t(x|y) &= u_t^{\text{target}}(x) + w b_t\nabla_x\log p_t(y|x) \\
 &= u_t^{\text{target}}(x) + w b_t (\nabla_x\log p_t(x|y)-\nabla_x \log p_t(x)) \\
 &= u_t^{\text{target}}(x) - wa_tx +wa_tx + wb_t(\nabla_x\log p_t(x|y)-\nabla_x \log p_t(x)) \\

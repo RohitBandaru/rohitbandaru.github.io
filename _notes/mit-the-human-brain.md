@@ -3,10 +3,11 @@ layout: post
 title: "MIT The Human Brain"
 date: 2025-01-04
 tags: neuroscience, cognitive-science
-citation: true
+citation: false
 toc:
   sidebar: left
 ---
+
 [https://ocw.mit.edu/courses/9-13-the-human-brain-spring-2019/](https://ocw.mit.edu/courses/9-13-the-human-brain-spring-2019/)
 
 # Lecture 1: Introduction to the Human Brain
@@ -48,9 +49,9 @@ Ill-posed problems:
 
 If you hear a new word, there are many possible meanings depending on the context. If you see an object, there are many different possible shapes that could have generated the image. There are many ill posed problems in perception and cognition.
 
-Psycho-physics: showing people an input like an image or video and asking them what they perceive. 
+Psycho-physics: showing people an input like an image or video and asking them what they perceive.
 
-L (luminance, light hitting eyes) = I (Illuminence, light hitting object) * R (Reflectance, color of object)
+L (luminance, light hitting eyes) = I (Illuminence, light hitting object) \* R (Reflectance, color of object)
 
 Perceived color depends on L but also I. We don’t actually sense I, but we can estimate it to solve the illposed problem of getting R from L. We don’t perceive L, we perceive an estimate of R.
 
@@ -101,14 +102,14 @@ A species of ants can return to their home in a straight vector, no matter where
 Two fundamental questions
 
 1. Where am i?
-    1. recognize familiar location
-    2. what kind of place, if unfamiliar
-    3. layout of place
+   1. recognize familiar location
+   2. what kind of place, if unfamiliar
+   3. layout of place
 2. How to get to point b from point a
-    1. beaconing: can see or hear destination
-    2. where is b
-    3. current heading with respect to mental map
-    4. what routes are possible
+   1. beaconing: can see or hear destination
+   2. where is b
+   3. current heading with respect to mental map
+   4. what routes are possible
 
 Event related fMRI adaptation: Useful when the responses are the same between two classes of stimuli. In this case two stimuli are shown very quickly with a small gap. If the response is higher when the two stimuli are the same, it means that the neurons are processing information about the difference. Response is lower for stimulus the brain region thinks is the same because it “gets bored” or there is no new information to process in the internal representation space.
 
@@ -120,7 +121,7 @@ RSC: getting current location and direction with respect to mental map
 
 Place cells: in hippocampus, activate in particular locations. is it relative to some anchor point, if you travel a long distance will this anchor point be redefined and will the place cell fire again
 
-dead reckoning: keeping track of vectors based on speed and direction and being able to determine the vector to get  to a place.
+dead reckoning: keeping track of vectors based on speed and direction and being able to determine the vector to get to a place.
 
 head direction cells: brain’s compass
 
@@ -177,16 +178,14 @@ Number sense: higher level representation of number without counting
 
 - Can represent high magnitude without verbal counting
 - Approximate, discrimination depends on ratio not absolute difference
-    - easier to discriminate between 1 and 2 than between 100 and 110
-    - Weber’s law
+  - easier to discriminate between 1 and 2 than between 100 and 110
+  - Weber’s law
 - abstract, generalize across modalities
 - can be used in mathematical operations
 
 Weber fraction: minimum distinguishable ratio of quantities. This can be predictive of arithmetic ability.
 
 Acalculia: inability to calculate
-
- 
 
 Are there ML datasets for counting? Prompt tuning for multitask ViTs
 
@@ -196,13 +195,13 @@ Hearing is challenging because
 
 1. invariance, same sound is different in different environments
 2. multiple sound sources, diarization
-    1. ill posed problem
+   1. ill posed problem
 3. Reverberation from environment
-    1. sounds arrive at multiple times
-    2. gives info on environment, we can hear echos
+   1. sounds arrive at multiple times
+   2. gives info on environment, we can hear echos
 4. Speaker variability
-    1. We are able to get acclimated to a person after hearing them talk for a short time
-    2. Need to confound speaker, language, and speech
+   1. We are able to get acclimated to a person after hearing them talk for a short time
+   2. Need to confound speaker, language, and speech
 
 Human audition is different from animals. We have brain regions that are much more precise than general audition. For example, speech processing.
 
@@ -226,11 +225,11 @@ Global aphasics: people who have lost language ability
 
 Earlier lecture mentions an experiment where humans can’t reorient based on non spatial clues when you tie up the language system. However, aphasics have this ability. One theory is that language is used to learn the ability to reorient when the aphasics were younger and had language ability. However, that doesn’t explain why people with their language tied up can’t do this. Maybe aphasics learned a different mental mechanism to reorient.
 
-Language influences thought. There is an aboriginal language where they use compass directions instead of “left” or “right”. This makes them keep track of compass direction at all times. 
+Language influences thought. There is an aboriginal language where they use compass directions instead of “left” or “right”. This makes them keep track of compass direction at all times.
 
 # **Lecture 20: Theory of Mind & Mentalizing**
 
-Mentalizing: inferring the mental state of other agents 
+Mentalizing: inferring the mental state of other agents
 
 rTBJ selectively activates when thinking about another persons thoughts
 
@@ -264,7 +263,7 @@ Overt attention
 
 Automatic attention: stimulus driven
 
-Voluntary attention 
+Voluntary attention
 
 [Assignments](https://www.notion.so/Assignments-e07c45cfd87948e2ae34f99d320edf63?pvs=21)
 
