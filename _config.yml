@@ -186,6 +186,9 @@ collections:
   projects:
     output: true
     permalink: /:collection/:title/
+  notes:
+    output: true
+    permalink: /notes/:title/
 
 announcements:
   enabled: false

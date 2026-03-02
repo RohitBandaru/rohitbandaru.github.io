@@ -5,28 +5,28 @@ title: notes
 nav: true
 ---
 
-Notes on various resources (hosted on Notion), sharing to help others learn with these resources.
+Notes on various resources, sharing to help others learn with these resources.
 
-### [Notes for MIT 6.S184: Flow Matching and Diffusion Models](https://rohitbandaru.notion.site/mit-6-s184-flow-matching-and-diffusion-models)
-
----
-
-### [PyTorch Cheatsheet](https://rohitbandaru.notion.site/pytorch-cheatsheet)
+### [Notes for MIT 6.S184: Flow Matching and Diffusion Models](/notes/mit-6-s184-flow-matching/)
 
 ---
 
-### [ML Divergences](https://rohitbandaru.notion.site/ml-divergences)
+### [PyTorch Cheatsheet](/notes/pytorch-cheatsheet/)
 
 ---
 
-### [Foundations of Deep RL Series Notes](https://rohitbandaru.notion.site/foundations-of-deep-rl-series-notes)
+### [ML Divergences](/notes/ml-divergences/)
 
 ---
 
-### [MIT The Human Brain](https://rohitbandaru.notion.site/mit-the-human-brain)
+### [Foundations of Deep RL Series Notes](/notes/foundations-of-deep-rl-series-notes/)
 
 ---
 
-### [Introduction to Neuroscience - Bing Wen Brunton](https://rohitbandaru.notion.site/introduction-to-neuroscience)
+### [MIT The Human Brain](/notes/mit-the-human-brain/)
+
+---
+
+### [Introduction to Neuroscience - Bing Wen Brunton](/notes/introduction-to-neuroscience/)
 
 ---
