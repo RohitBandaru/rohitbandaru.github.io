@@ -306,7 +306,7 @@ The high-level policy takes a command and outputs both a response to the user an
 
 $$\pi_0$$ does an evaluation where they break apart complex high-level commands to lower level simpler text commands, using both expert humans and another VLM. They find that $$\pi_0$$-HL and $$\pi_0$$-Human both improve the performance on complex tasks, compared with giving $$\pi_0$$ the complex prompt directly. This motivates further research into hierarchical systems where one model processes complex text prompts
 
-In the [Hi Robot](https://arxiv.org/abs/2502.19417) work, the authors build build kind of hierarchical system with a high-level policy generating commands to a low-level policy. The high-level policy is just a VLM that outputs text, while the low-level policy generates actions.
+In the [Hi Robot](https://arxiv.org/abs/2502.19417) work, the authors build this kind of hierarchical system with a high-level policy generating commands to a low-level policy. The high-level policy is just a VLM that outputs text, while the low-level policy generates actions.
 
 {% include figure.liquid loading="eager" path="assets/img/blog/vla/hi_robot.png" alt="Hi Robot hierarchical architecture" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2502.19417" %}
 
