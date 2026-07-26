@@ -429,7 +429,7 @@ When the ratio falls outside the clipping bounds, the importance sampling ratio 
 
 We need to consider the signs of the ratios and advantages. When both are positive, we increase the probability of good actions, and when both are negative, we decrease the probability of bad actions. The clipping mechanism limits both types of updates. However, edge cases occur when the signs don't match. In these situations, the min operation might select the term with the larger absolute value (for example, when $$r_t<1-\epsilon$$ and $$\hat{A}_t > 0$$). The presented clipping formula is somewhat simplified and inaccurate. In practice, the clipping behavior depends on the advantage's sign.
 
-![[source](/assets/img/notes/foundations-of-deep-rl-series-notes/1707.06347)](Foundations%20of%20Deep%20RL%20Series%20Notes/ppo-clipping-mechanism.png)
+![PPO clipping mechanism](/assets/img/notes/foundations-of-deep-rl-series-notes/ppo-clipping-mechanism.png)
 
 [source](https://arxiv.org/abs/1707.06347)
 

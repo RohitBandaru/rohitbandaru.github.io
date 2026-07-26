@@ -277,7 +277,7 @@ Other divergences: $$\chi^2$$-divergence, Squared Hellinger distance, Le Cam dis
 
 # Sources
 
-https://dibyaghosh.com/blog/probability/kldivergence.html
+https://dibyaghosh.com/blog/probability/kldivergence/
 
 https://blog.alexalemi.com/kl.html
 
