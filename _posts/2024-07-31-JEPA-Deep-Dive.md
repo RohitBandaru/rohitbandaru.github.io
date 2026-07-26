@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Deep Dive into Yann LeCun’s JEPA
+description: "A deep dive into Yann LeCun's Joint Embedding Predictive Architecture, covering I-JEPA, V-JEPA, V-JEPA 2, and energy-based alternatives to generative AI."
 tags: self-supervised-learning ai computer-vision
 thumbnail: assets/img/blog/jepa/jepa_brain.png
 citation: true

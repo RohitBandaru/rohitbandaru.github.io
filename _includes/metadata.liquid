@@ -63,7 +63,7 @@
   <!-- OpenGraph -->
   <meta property="og:site_name" content="{{ title }}">
   <meta property="og:type" content="{% if is_blog_post %}article{% else %}website{% endif %}">
-  <meta property="og:title" content="{% if page.title %}{{ title }} | {{ page.title }}{% else %}{{ title }}{% endif %}">
+  <meta property="og:title" content="{% if page.title %}{{ page.title }} | {{ title }}{% else %}{{ title }}{% endif %}">
   <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' }}">
   <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
   {% if page.og_image or site.og_image %}
@@ -72,7 +72,7 @@
   <meta property="og:locale" content="{{ site.lang }}">
 
   <!-- Twitter card -->
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="{% if page.og_image or page.thumbnail or site.og_image %}summary_large_image{% else %}summary{% endif %}">
   <meta name="twitter:title" content="{% if page.title %}{{ page.title }}{% else %}{{ title }}{% endif %}">
   <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
   {% if page.og_image or site.og_image %}
@@ -239,6 +239,25 @@
         "@type": "{% if is_blog_post %}BlogPosting{% else %}WebSite{% endif %}",
         "description": "{% if page.description %}{{ page.description }}{% else if site.description %}{{ site.description }}{% endif %}",
         "headline": "{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}",
+        {% if is_blog_post %}
+        "mainEntityOfPage":
+        {
+            "@type": "WebPage",
+            "@id": "{{ page.url | prepend: site.baseurl | prepend: site.url }}"
+        },
+        {% if page.date %}
+        "datePublished": "{{ page.date | date_to_xmlschema }}",
+        "dateModified": "{% if page.last_updated %}{{ page.last_updated | date_to_xmlschema }}{% else %}{{ page.date | date_to_xmlschema }}{% endif %}",
+        {% endif %}
+        {% if image_path %}
+        "image": "{{ image_path }}",
+        {% endif %}
+        "publisher":
+        {
+            "@type": "Person",
+            "name": "{{ author_name }}"
+        },
+        {% endif %}
         {% if sameaslinks != blank %}
         "sameAs": {{ sameaslinks }},
         {% endif %}

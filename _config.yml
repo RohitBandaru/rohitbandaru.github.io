@@ -7,7 +7,7 @@ first_name: Rohit
 middle_name:
 last_name: Bandaru
 email: roh.bandaru@gmail.com
-description: ML blog.
+description: Deep dives into AI research by Rohit Bandaru — self-supervised learning, transformers, world models, generative models, and foundation models for robotics.
 keywords: machine-learning, ai, artificial-intelligence, research
 lang: en # the language of your site (for example: en, fr, cn, ru, etc.)
 icon: blog/favicon.ico # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
@@ -73,7 +73,7 @@ dblp_url: # your DBLP profile url
 discord_id: # your discord id (18-digit unique numerical identifier)
 facebook_id: # your facebook id
 flickr_id: # your flickr id
-github_username: # your GitHub user name
+github_username: RohitBandaru # your GitHub user name
 gitlab_username: # your GitLab user name
 ieee_id: # your ieeexplore.ieee.org/author/id
 instagram_id: # your instagram id

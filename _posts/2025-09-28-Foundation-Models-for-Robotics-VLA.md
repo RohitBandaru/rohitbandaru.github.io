@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Foundation Models for Robotics: Vision-Language-Action (VLA)"
+description: "How vision-language-action models bring foundation models to robotics, covering RT-1, RT-2, OpenVLA, pi0, and Hi Robot."
 tags: robotics, computer-vision, deep-learning, reinforcement-learning, transformers
 thumbnail: assets/img/blog/vla/pi0.png
 citation: true

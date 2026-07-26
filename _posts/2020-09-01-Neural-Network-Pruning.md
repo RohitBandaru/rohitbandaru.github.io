@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Pruning Neural Networks
+description: "How neural network pruning compresses trained models by removing weights and neurons, and the tradeoff between model size and accuracy."
 tags: applied-ml
 thumbnail: assets/img/blog/pruning/weights_vs_neurons.png
 citation: true

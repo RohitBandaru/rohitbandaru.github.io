@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Self-Supervision from Videos
+description: "Self-supervised learning from video, and how methods like VideoMAE use temporal structure to learn representations without labels."
 tags: computer-vision self-supervised-learning
 thumbnail: assets/img/blog/video-ssl/videomae.png
 citation: true

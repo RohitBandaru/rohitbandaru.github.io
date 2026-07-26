@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Scaling Deep Learning
+description: "Intuitions for scaling deep learning across many GPUs: data, model, pipeline, and tensor parallelism, and how each affects training."
 tags: applied-ml
 thumbnail: assets/img/blog/scaling_ml/data_parallelism.png
 citation: true

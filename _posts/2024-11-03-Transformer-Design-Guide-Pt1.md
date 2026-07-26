@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Transformer Design Guide (Part 1: Vanilla)"
+description: "Part 1 of a thorough guide to the Transformer, breaking down attention, embeddings, and every component of the original architecture."
 tags: transformer
 thumbnail: assets/img/blog/transformer_pt1/transformer.png
 citation: true

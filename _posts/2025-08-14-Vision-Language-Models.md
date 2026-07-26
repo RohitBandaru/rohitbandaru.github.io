@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Vision Language Models"
+description: "How vision language models connect images to text for zero-shot tasks, covering CLIP, SigLIP, Flamingo, and LLaVA."
 tags: computer-vision, deep-learning, transformers, multimodal
 thumbnail: assets/img/blog/vlm/clip_architecture.png
 citation: true

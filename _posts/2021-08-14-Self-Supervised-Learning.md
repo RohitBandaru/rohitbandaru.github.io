@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Self-Supervised Learning  -  Getting more out of data
+description: "An introduction to self-supervised learning and how contrastive methods like SimCLR, BYOL, and SwAV learn image representations from unlabeled data."
 tags: computer-vision self-supervised-learning
 thumbnail: assets/img/blog/self_supervised_learning/byol.png
 citation: true

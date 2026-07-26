@@ -1,6 +1,7 @@
 ---
 layout: post
 title: SSL with Vision Transformers
+description: "How self-supervised learning adapts to vision transformers through masking, covering MAE, BEiT, DINO, DINOv2, iBOT, and data2vec."
 tags: self-supervised-learning transformer computer-vision
 thumbnail: assets/img/blog/ssl-vit/data2vec_architecture.png
 citation: true

@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Transformer Design Guide (Part 2: Modern Architecture)"
+description: "Part 2 of the Transformer design guide, covering RMSNorm, SwiGLU, RoPE, FlashAttention, KV caching, GQA, and mixture-of-experts."
 tags: transformer
 thumbnail: assets/img/blog/transformer_pt2/rope.png
 citation: true

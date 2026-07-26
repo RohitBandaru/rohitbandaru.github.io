@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Domain Adaptation
+description: "Why a model trained on one dataset fails on a slightly different one, and how domain adaptation methods close the domain shift gap in computer vision."
 tags: computer-vision
 thumbnail: assets/img/blog/domain_adaptation/framework.png
 citation: true

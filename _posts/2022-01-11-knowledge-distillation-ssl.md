@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Knowledge Distillation as Self-Supervised Learning
+description: "A review of SEED (ICLR 2021), which unifies knowledge distillation and self-supervised learning to pretrain small networks without labels."
 tags: paper-review self-supervised-learning knowledge-distillation computer-vision
 thumbnail: assets/img/blog/distillation_ssl/seed2.png
 citation: true
