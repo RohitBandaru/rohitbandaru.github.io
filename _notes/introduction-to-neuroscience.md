@@ -334,10 +334,10 @@ Common NTs
   3. Acetylcholine activates Na channels in muscle to depolarize
   4. Depolarization of T-tubule triggers release of Ca from sarcoplasmic reticulum into cytocol
   5. Elevated Ca causes muscle contraction
-  There are many synapses at the neuromuscular junction to increase reliability.
-  Old experiments show that the brain is needed to initiate movement, but not for maintaining it. A cat can walk with a severed spinal cord once initiated on a treadmill.
-  Central Pattern Generator (CPG) can create walking through neural oscillators. Each leg is at a different phase of oscillation with mutual inhibition. There is also sensory feedback to react to environmental changes.
-  Skipping gait is energetically favorable for kids because they are smaller. This is why adults choose not to skip. However, skipping is favorable in low gravity on the moon.
+     There are many synapses at the neuromuscular junction to increase reliability.
+     Old experiments show that the brain is needed to initiate movement, but not for maintaining it. A cat can walk with a severed spinal cord once initiated on a treadmill.
+     Central Pattern Generator (CPG) can create walking through neural oscillators. Each leg is at a different phase of oscillation with mutual inhibition. There is also sensory feedback to react to environmental changes.
+     Skipping gait is energetically favorable for kids because they are smaller. This is why adults choose not to skip. However, skipping is favorable in low gravity on the moon.
   # **Movement Initiation(28)**
   Cerebellum is required for fine control of movement. Cerebellum defects lead to slower and uncoordinated movement, and delay in initiation.
   Purkinje cell has a large number of synapses with parallel fibers. There is another cell that follows the purkinje cell and acts as an inhibitor.

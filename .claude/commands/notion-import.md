@@ -15,6 +15,7 @@ python3 scripts/notion_import.py "$ARGUMENTS" --blog-root /Users/Vinnu/Desktop/b
 If $ARGUMENTS is empty, use `~/Downloads/notionexports/` as the input path.
 
 The script handles:
+
 - Extracting nested Notion zips
 - Matching exports to existing `_notes/` stub files by slug
 - Copying images to `assets/img/notes/<slug>/` (one subfolder per note)
@@ -49,6 +50,7 @@ If importing a new note, add an entry to `_pages/notes.md`:
 ### Step 4: Verify rendering
 
 If the dev server is running, fetch the rendered page with curl and check for:
+
 - Spurious `<table>` elements from pipe characters in math
 - MathJax loading correctly
 - Images loading correctly

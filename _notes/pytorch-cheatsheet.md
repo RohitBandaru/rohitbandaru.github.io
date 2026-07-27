@@ -8,7 +8,8 @@ citation: true
 toc:
   sidebar: left
 ---
-This assumes prior experience with PyTorch or related frameworks. The content is presented in a dense manner so that it can serve as a quick reference. Readers are encouraged to run the code themselves to get a better understanding. 
+
+This assumes prior experience with PyTorch or related frameworks. The content is presented in a dense manner so that it can serve as a quick reference. Readers are encouraged to run the code themselves to get a better understanding.
 
 AI was heavily involved in some sections. However, AI still doesn't have a strong understanding of niche PyTorch behaviors, so I have had to make many corrections. I welcome any feedback about inaccuracies or suggestions for general improvements.
 
@@ -257,7 +258,7 @@ tensor  # [[0., 1.], [0., 1.]]
 # Same data, different metadata
 tensor.data_ptr() == view.data_ptr()  # True - shared memory
 
-tensor.stride()  # (2, 1) - row skip 2, col skip 1  
+tensor.stride()  # (2, 1) - row skip 2, col skip 1
 view.stride()    # (2,)   - skip 2 for next element
 
 tensor.storage_offset()  # 0 - starts at storage[0]
@@ -266,11 +267,11 @@ view.storage_offset()    # 1 - starts at storage[1]
 
 ### **Advanced Indexing**
 
-These methods generate **copies** of the data instead of views. In some applications, this can cause additional memory usage. 
+These methods generate **copies** of the data instead of views. In some applications, this can cause additional memory usage.
 
 **Tensor Indexing**
 
-Tensor indexing is when you use a tensor at a specific dimension. This can be thought of as a generalization of basic indexing. For example you can express [1,2,3,5] with basic indexing, but not [1,5,6,9]. It is not possible to generate a view when the strides vary like this. 
+Tensor indexing is when you use a tensor at a specific dimension. This can be thought of as a generalization of basic indexing. For example you can express [1,2,3,5] with basic indexing, but not [1,5,6,9]. It is not possible to generate a view when the strides vary like this.
 
 Advanced indexing with multiple tensors broadcasts the index arrays to create an implicit coordinate grid. The broadcast shape becomes your output shape, where each position maps to a specific element selection from the original tensor. Think of it as a "virtual mask" - PyTorch computes only the needed (row, col) coordinates without materializing a full boolean mask, efficiently selecting elements based on the broadcasted index pair.
 
@@ -290,7 +291,7 @@ indices_2d = torch.tensor([[0, 1], [2, 0]])  # shape: (2, 2)
 tensor[indices_2d, :]  # shape: (2, 2, 3)
 tensor[:, indices_2d]  # shape: (3, 2, 2)
 
-# Higher dimensional indices just specify the shape 
+# Higher dimensional indices just specify the shape
 # we want the output to be at that dimension
 # Equivalent to flatten -> index -> reshape
 tensor[indices_2d.flatten(), :].reshape(2, 2, 3)  # Same as tensor[indices_2d, :]
@@ -300,7 +301,7 @@ tensor[indices_2d.flatten(), :].reshape(2, 2, 3)  # Same as tensor[indices_2d, :
 tensor[[0, 2]]  # shape: (2, 3)
 ```
 
- If we use multiple index tensors, the shapes of each index tensor are broadcast together. The resulting shape is added to the position of the indices are contiguous, otherwise they are added the beginning.
+If we use multiple index tensors, the shapes of each index tensor are broadcast together. The resulting shape is added to the position of the indices are contiguous, otherwise they are added the beginning.
 
 ```python
 tensor = torch.randn(4, 3)
@@ -337,7 +338,7 @@ tensor[:, row_indices]  # shape: (4, 2, 5, 6)
 
 **Mask Indexing**
 
-Mask indices create an additional dimension that is of the size of the number of selected elements true values in the mask. This dimension is added at the position of the mask. 
+Mask indices create an additional dimension that is of the size of the number of selected elements true values in the mask. This dimension is added at the position of the mask.
 
 There is no broadcasting so the size of the mask must match at the position it is applied.
 
@@ -354,7 +355,7 @@ tensor[mask]  # shape: (2, 4) - selects rows 0 and 2
 
 # 2D boolean mask - flattens result
 mask = torch.tensor([[True, False, True, False],
-                      [False, True, False, True], 
+                      [False, True, False, True],
                       [True, True, False, False]])
 tensor[mask]  # shape: (5,) - flattened selection
 
@@ -375,14 +376,14 @@ data_2d[mask_2d]  # shape: (3, 5) - selects elements where mask is True
 
 **Mask vs Tensor Indexing**
 
-We can convert between mask and tensor indexing. When converting a mask to index tensors, we want the length of the index tensor to match the number of True values in the mask. When going the other direction, this may require repeating index values to reconstruct the mask. 
+We can convert between mask and tensor indexing. When converting a mask to index tensors, we want the length of the index tensor to match the number of True values in the mask. When going the other direction, this may require repeating index values to reconstruct the mask.
 
 ```python
 tensor = torch.randn(3, 4)
 
 # Boolean mask to tensor indices
-mask = torch.tensor([[True, False, True, False], 
-                    [False, True, False, True], 
+mask = torch.tensor([[True, False, True, False],
+                    [False, True, False, True],
                     [True, True, False, False]])
 
 row_idx, col_idx = torch.where(mask)
@@ -399,7 +400,7 @@ mask_reconstructed[indices_row, indices_col] = True
 tensor[indices_row, indices_col]    # tensor indexing: shape (5,)
 tensor[mask_reconstructed]          # boolean indexing: shape (4,) - one less due to duplicated indices
 
-# These two operations are not identical since the boolean mask loses the order 
+# These two operations are not identical since the boolean mask loses the order
 # of the indices used in the tensor indexing. We also remove duplicates when using bool
 ```
 
@@ -420,7 +421,7 @@ out = torch.gather(src, 1, index)  # dim=1 gathers along rows
 out = torch.gather(src, 0, index) # dim=0 gathers along cols
 # out_dim0: tensor([[1, 5, 3], [4, 2, 6]])
 
-# Scatter example 
+# Scatter example
 dest = torch.zeros(2, 3)
 index = torch.tensor([[0, 1, 1], [0, 0, 1]])
 src = torch.tensor([[1, 2, 3], [4, 5, 6]])
@@ -434,22 +435,22 @@ To better illustrate this, we can consider how this would work if implemented us
 def gather_manual(src, dim, index):
     """Manual implementation of torch.gather using for loops"""
     output = torch.zeros_like(index, dtype=src.dtype)
-    
+
     for i in range(index.shape[0]):
         for j in range(index.shape[1]):
             if dim == 0:
                 # Gather along rows: fix column j, vary row
                 output[i, j] = src[index[i, j], j]
             elif dim == 1:
-                # Gather along columns: fix row i, vary column  
+                # Gather along columns: fix row i, vary column
                 output[i, j] = src[i, index[i, j]]
-    
+
     return output
 
 def scatter_manual(dest, dim, index, src):
     """Manual implementation of torch.scatter using for loops"""
     result = dest.clone()  # Don't modify original
-    
+
     for i in range(index.shape[0]):
         for j in range(index.shape[1]):
             if dim == 0:
@@ -458,9 +459,9 @@ def scatter_manual(dest, dim, index, src):
             elif dim == 1:
                 # Scatter along columns: fix row i, vary column
                 result[i, index[i, j]] = src[i, j]
-    
+
     return result
-    
+
 # example of gather returning the original tensor
 input = torch.tensor([[10, 20, 30],
                       [40, 50, 60]])  # shape (2, 3)
@@ -478,12 +479,12 @@ We can also implement similar operations with eye.
 ```python
 # Scatter-add using identity matrix: sum values to target positions
 values = torch.tensor([10., 20., 30.])  # values to scatter
-link = torch.tensor([0, 2, 0])          # target positions [0,2,0] 
+link = torch.tensor([0, 2, 0])          # target positions [0,2,0]
 j = 3                                    # output size
 
 # eye(j)[link] creates selection matrix with one-hot rows
 # [[1,0,0],  <- row 0 (link[0]=0)
-#  [0,0,1],  <- row 2 (link[1]=2)  
+#  [0,0,1],  <- row 2 (link[1]=2)
 #  [1,0,0]]  <- row 0 (link[2]=0)
 
 result = values @ torch.eye(j)[link]     # [40, 0, 20] - automatic sum at pos 0
@@ -506,7 +507,7 @@ PyTorch's scatter operations support various reduction modes when multiple sourc
 ```python
 dest = torch.zeros(3, 4)
 index = torch.tensor([[0, 1, 1, 2],
-                      [1, 0, 1, 2], 
+                      [1, 0, 1, 2],
                       [2, 2, 0, 0]])  # Multiple indices point to same positions
 src = torch.tensor([[1, 2, 3, 4],
                     [5, 6, 7, 8],
@@ -520,7 +521,7 @@ dest_regular.scatter_(1, index, src)
 dest_add = dest.clone()
 dest_add.scatter_add_(1, index, src)  # Equivalent to scatter_reduce with 'sum'
 
-dest_sum = dest.clone() 
+dest_sum = dest.clone()
 dest_sum.scatter_reduce_(1, index, src, reduce='sum')  # Same as scatter_add_
 
 dest_mean = dest.clone()
@@ -549,7 +550,7 @@ mask = torch.tensor([True, False, True, False, True])
 
 # Ellipsis with integer tensor (advanced)
 result1 = x[indices, ...]              # shape: (2, 3, 4, 5, 6)
-result2 = x[..., indices]              # shape: (2, 3, 4, 5, 2) 
+result2 = x[..., indices]              # shape: (2, 3, 4, 5, 2)
 result3 = x[0, indices, ..., 1]        # shape: (2, 4, 5)
 
 # Ellipsis with boolean mask (advanced)
@@ -566,16 +567,16 @@ result7 = x[0, indices, ..., mask]     # shape: (2, 4, 3)
 In tensor assignment, the source automatically broadcasts to match the target's shape.
 
 ```
-target = tensor[index]  
+target = tensor[index]
 tensor[index] = source  <- source broadcasts to target's shape
 ```
 
-We can understand assignment through each type of indexing through this framework. Boolean mask indexing is a bit more complicated because there is a new dimension that is formed by the number of values for which the mask is true. The source tensor must also have this dimension. The values from the target are written to the source in row major order. 
+We can understand assignment through each type of indexing through this framework. Boolean mask indexing is a bit more complicated because there is a new dimension that is formed by the number of values for which the mask is true. The source tensor must also have this dimension. The values from the target are written to the source in row major order.
 
 ```python
 x = torch.tensor([[1, 2, 3],
                   [4, 5, 6]], dtype=torch.float)  # (2, 3)
-                  
+
 # () indicates the shape of a scalar tensor
 
 # Basic indexing
@@ -597,9 +598,9 @@ get_mask = lambda mask_shape: torch.bernoulli(torch.rand(mask_shape)).bool()
 mask = get_mask((6, 8))
 num_valid_values = mask.sum()
 # target: (4, num_valid_values) -> source: (1, num_valid_values) -> (4, num_valid_values)
-tensor[:, mask] = torch.zeros((1, num_valid_values), dtype=torch.float) 
+tensor[:, mask] = torch.zeros((1, num_valid_values), dtype=torch.float)
 # target: (4, num_valid_values) -> source: (4, num_valid_values) -> (4, num_valid_values)
-tensor[:, mask] = torch.zeros((4, num_valid_values), dtype=torch.float) 
+tensor[:, mask] = torch.zeros((4, num_valid_values), dtype=torch.float)
 ```
 
 **dtype consistency**
@@ -666,7 +667,7 @@ _, expert_indices = torch.topk(routing_scores, k=k, dim=2)  # (2, 3, 2)
 
 # Method 1: Use repeat instead of unsqueeze + expand (cleaner)
 expanded_index = expert_indices.unsqueeze(-1).repeat(1, 1, 1, d_model)
-result1 = torch.gather(expert_outputs, dim=2, 
+result1 = torch.gather(expert_outputs, dim=2,
                       index=expanded_index)
 
 # Method 2: Use advanced indexing (most readable)
@@ -681,7 +682,7 @@ result3 = expert_outputs[coords[0][:, :, None], coords[1][:, :, None], expert_in
 
 # Top K with Mask
 B, N = 3, 4
-scores = torch.randn(B, N)  # (batch_size, num_items) 
+scores = torch.randn(B, N)  # (batch_size, num_items)
 mask = torch.randint(0, 2, (B, N)).bool()  # Which items are "active"
 k = 3
 
@@ -700,8 +701,8 @@ B, W = 2, 4
 tensor = torch.zeros((B,W,W))
 
 # Method 1: Integer array indexing
-tensor[torch.arange(B)[:, None, None], 
-       torch.arange(W)[None, :], 
+tensor[torch.arange(B)[:, None, None],
+       torch.arange(W)[None, :],
        torch.arange(W)[None, :]] = torch.arange(W, dtype=torch.float)
 
 # Method 2: Boolean mask indexing
@@ -791,16 +792,16 @@ indices = torch.arange(window_size) + torch.arange(num_windows).unsqueeze(1) * s
 windows_index = x[indices]  # shape: (4, 3)
 ```
 
- ****
+---
 
 ### Matrix Operations
 
-| Operation | Syntax | Dimensions | Broadcasting | Use Case |
-| --- | --- | --- | --- | --- |
-| `torch.matmul` / `@` | `A @ B` | Flexible (≥2D) | Yes | General-purpose matrix multiplication |
-| `torch.mm` | `torch.mm(A, B)` | 2D only | No | Efficient 2D matrix multiplication |
-| `torch.bmm` | `torch.bmm(A, B)` | 3D only | No | Batched matrix multiplication |
-| `*` | `A * B` | Any | Yes | Element-wise multiplication (Hadamard) |
+| Operation            | Syntax            | Dimensions     | Broadcasting | Use Case                               |
+| -------------------- | ----------------- | -------------- | ------------ | -------------------------------------- |
+| `torch.matmul` / `@` | `A @ B`           | Flexible (≥2D) | Yes          | General-purpose matrix multiplication  |
+| `torch.mm`           | `torch.mm(A, B)`  | 2D only        | No           | Efficient 2D matrix multiplication     |
+| `torch.bmm`          | `torch.bmm(A, B)` | 3D only        | No           | Batched matrix multiplication          |
+| `*`                  | `A * B`           | Any            | Yes          | Element-wise multiplication (Hadamard) |
 
 **Advanced Matrix Multiplication:**
 
@@ -997,9 +998,9 @@ The PyTorch einsum operation and the more general Einops library are very powerf
 
 Einstein notation has gotten very popular with transformers. Attention is much cleaner to implement with these operations, especially variants like multi head or group query attention.
 
-PyTorch has a [torch.einsum](https://docs.pytorch.org/docs/stable/generated/torch.einsum.html#torch.einsum) operation. This lets you perform tensor operations using Einstein summation notation. The notation takes the format: 'input_indices, input_indices -> output_indices'. This enables cleaner code by reducing the need for reshaping and transposing dimensions. 
+PyTorch has a [torch.einsum](https://docs.pytorch.org/docs/stable/generated/torch.einsum.html#torch.einsum) operation. This lets you perform tensor operations using Einstein summation notation. The notation takes the format: 'input_indices, input_indices -> output_indices'. This enables cleaner code by reducing the need for reshaping and transposing dimensions.
 
-Einops operations are platform agnostic and work for NumPy, TensorFlow, PyTorch, and Jax, and also different device types (CPU/GPU/TPU). 
+Einops operations are platform agnostic and work for NumPy, TensorFlow, PyTorch, and Jax, and also different device types (CPU/GPU/TPU).
 
 ```python
 # Basic matrix multiplication (2D x 2D)
@@ -1096,7 +1097,7 @@ output = output.transpose(1, 2).reshape(batch_size, seq_len, d_model)
 
 # With Einstein - automatic broadcasting, no explicit expansion needed
 scores = torch.einsum('bshd,bSkd->bshS', q_reshaped, k_reshaped) / math.sqrt(head_dim)
-# Automatic broadcasting: (batch, seq, q_heads, head_dim) × (batch, seq, kv_heads, head_dim) 
+# Automatic broadcasting: (batch, seq, q_heads, head_dim) × (batch, seq, kv_heads, head_dim)
 # -> (batch, seq, q_heads, seq) with implicit grouping
 attn_weights = torch.softmax(scores, dim=-1)
 output = torch.einsum('bshS,bSkd->bshd', attn_weights, v_reshaped)
@@ -1224,7 +1225,7 @@ head_dim = d_model // num_heads  # 32
 
 # Create inputs in d_model format, then reshape to create heads
 query = torch.randn(batch_size, seq_len, d_model)     # [batch, seq, d_model]
-key = torch.randn(batch_size, kv_seq_len, d_model)   # [batch, kv_seq, d_model]  
+key = torch.randn(batch_size, kv_seq_len, d_model)   # [batch, kv_seq, d_model]
 value = torch.randn(batch_size, kv_seq_len, d_model) # [batch, kv_seq, d_model]
 
 # PyTorch
@@ -1428,7 +1429,7 @@ class CustomLinear(nn.Module):
             self.bias = nn.Parameter(torch.randn(out_features))
         else:
             self.register_parameter('bias', None)  # Explicitly register None
-    
+
     def forward(self, x):
         return F.linear(x, self.weight, self.bias)
 
@@ -1441,7 +1442,7 @@ class ResidualBlock(nn.Module):
         self.bn1 = nn.BatchNorm2d(channels)
         self.conv2 = nn.Conv2d(channels, channels, 3, padding=1)
         self.bn2 = nn.BatchNorm2d(channels)
-    
+
     def forward(self, x):
         residual = x
         out = F.relu(self.bn1(self.conv1(x)))
@@ -1463,7 +1464,7 @@ class FlexibleNet(nn.Module):
             'gelu': nn.GELU(),
             'tanh': nn.Tanh()
         })
-    
+
     def forward(self, x, activation='relu'):
         for layer in self.layers[:-1]:
             x = self.activations[activation](layer(x))
@@ -1487,18 +1488,18 @@ class AttentionBlock(nn.Module):
         self.qkv = nn.Linear(dim, dim * 3, bias=False)
         self.proj = nn.Linear(dim, dim)
         self.num_heads = num_heads
-        
+
         # Register buffers (non-learnable tensors)
         self.register_buffer('scale', torch.tensor(dim ** -0.5))
-    
+
     def forward(self, x):
         B, N, C = x.shape
         qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, C // self.num_heads)
         q, k, v = qkv.permute(2, 0, 3, 1, 4)
-        
+
         attn = (q @ k.transpose(-2, -1)) * self.scale
         attn = attn.softmax(dim=-1)
-        
+
         x = (attn @ v).transpose(1, 2).reshape(B, N, C)
         return self.proj(x)
 
@@ -1662,49 +1663,49 @@ def validate(model, dataloader, criterion, device):
 # Shared sampling function
 def sample_token(logits, temperature=1.0, top_k=None, top_p=None):
     logits = logits / temperature
-    
+
     # Top-k filtering
     if top_k:
         logits[logits < torch.topk(logits, top_k)[0][:, [-1]]] = float('-inf')
-    
-    # Top-p filtering  
+
+    # Top-p filtering
     if top_p:
         sorted_logits, sorted_idx = torch.sort(logits, descending=True)
         mask = torch.cumsum(torch.softmax(sorted_logits, dim=-1), dim=-1) > top_p
         sorted_logits[mask] = float('-inf')
         logits = sorted_logits.scatter(1, sorted_idx, sorted_logits)
-    
+
     # Sample token
     return logits.argmax(dim=-1, keepdim=True) if temperature == 0 else \
            torch.multinomial(torch.softmax(logits, dim=-1), 1)
 
 # Autoregressive inference (Transformer-style)
-def generate(model, tokenizer, prompt, max_length=50, temperature=1.0, 
+def generate(model, tokenizer, prompt, max_length=50, temperature=1.0,
              top_k=None, top_p=None, device='cuda'):
     model.eval()
     input_ids = tokenizer.encode(prompt, return_tensors='pt').to(device)
-    
+
     with torch.no_grad():
         for _ in range(max_length):
             logits = model(input_ids).logits[:, -1, :]
             next_token = sample_token(logits, temperature, top_k, top_p)
             input_ids = torch.cat([input_ids, next_token], dim=-1)
             if next_token.item() == tokenizer.eos_token_id: break
-    
+
     return tokenizer.decode(input_ids[0], skip_special_tokens=True)
 
 # RNN-based generation (uses hidden state)
-def generate_rnn(model, tokenizer, prompt, max_length=50, temperature=1.0, 
+def generate_rnn(model, tokenizer, prompt, max_length=50, temperature=1.0,
                  top_k=None, top_p=None, device='cuda'):
     model.eval()
     input_ids = tokenizer.encode(prompt, return_tensors='pt').to(device)
     hidden = None
-    
+
     with torch.no_grad():
         # Build hidden state from prompt
         for i in range(input_ids.size(1)):
             _, hidden = model(input_ids[:, i:i+1], hidden)
-        
+
         # Generate tokens using hidden state
         current_token = input_ids[:, -1:]
         for _ in range(max_length):
@@ -1714,7 +1715,7 @@ def generate_rnn(model, tokenizer, prompt, max_length=50, temperature=1.0,
             input_ids = torch.cat([input_ids, next_token], dim=-1)
             current_token = next_token
             if next_token.item() == tokenizer.eos_token_id: break
-    
+
     return tokenizer.decode(input_ids[0], skip_special_tokens=True)
 ```
 
@@ -1977,7 +1978,7 @@ class CustomScheduler(torch.optim.lr_scheduler._LRScheduler):
     def __init__(self, optimizer, total_epochs, last_epoch=-1):
         self.total_epochs = total_epochs
         super(CustomScheduler, self).__init__(optimizer, last_epoch)
-    
+
     def get_lr(self):
         # Example: polynomial decay - modify this function for your schedule
         progress = self.last_epoch / self.total_epochs
@@ -2120,12 +2121,12 @@ for name, param in model.named_parameters():
 
 ### In-Place vs Out-of-Place Operations
 
-| Aspect | In-Place Operations | Out-of-Place Operations |
-| --- | --- | --- |
-| **Syntax** | Suffix with underscore (`add_`, `mul_`) | No underscore (`add`, `mul`) |
-| **Memory** | Modifies tensor directly | Creates new tensor |
-| **Return** | Returns reference to modified tensor | Returns new tensor |
-| **Autograd** | Can break computational graph | Preserves computational graph |
+| Aspect       | In-Place Operations                     | Out-of-Place Operations       |
+| ------------ | --------------------------------------- | ----------------------------- |
+| **Syntax**   | Suffix with underscore (`add_`, `mul_`) | No underscore (`add`, `mul`)  |
+| **Memory**   | Modifies tensor directly                | Creates new tensor            |
+| **Return**   | Returns reference to modified tensor    | Returns new tensor            |
+| **Autograd** | Can break computational graph           | Preserves computational graph |
 
 ```python
 # Out-of-place (creates new tensor)
@@ -2147,22 +2148,22 @@ a.add_(5)       # a = [11, 12, 13]
 
 ### Memory Layout Operations
 
-| Operation | Memory Copy | Contiguity Requirement | Memory Layout | Use Case |
-| --- | --- | --- | --- | --- |
-| **view()** | No | Yes | Shares storage, same stride | Fast reshaping when contiguous |
-| **reshape()** | Maybe | No | Shares when possible, copies if needed | Safe general reshaping |
-| **permute()** | No | No | Shares storage, changes stride | Reordering dimensions |
-| **transpose()** | No | No | Shares storage, swaps dimensions | Special case of permute |
+| Operation       | Memory Copy | Contiguity Requirement | Memory Layout                          | Use Case                       |
+| --------------- | ----------- | ---------------------- | -------------------------------------- | ------------------------------ |
+| **view()**      | No          | Yes                    | Shares storage, same stride            | Fast reshaping when contiguous |
+| **reshape()**   | Maybe       | No                     | Shares when possible, copies if needed | Safe general reshaping         |
+| **permute()**   | No          | No                     | Shares storage, changes stride         | Reordering dimensions          |
+| **transpose()** | No          | No                     | Shares storage, swaps dimensions       | Special case of permute        |
 
 ### Tensor Management Operations
 
-| Operation | Type | Purpose | Returns New Tensor | Memory Copy |
-| --- | --- | --- | --- | --- |
-| `contiguous()` | Layout | Makes tensor memory-contiguous | Yes | Conditional |
-| `clone()` | Copy | Deep copy of tensor | Yes | Yes |
-| `detach()` | Graph | Detaches from computation graph | Yes | No |
-| `to(device, dtype)` | Transfer | Moves/converts tensor | Yes | Conditional |
-| `copy_(src)` | Copy | In-place copy from source | No | Yes |
+| Operation           | Type     | Purpose                         | Returns New Tensor | Memory Copy |
+| ------------------- | -------- | ------------------------------- | ------------------ | ----------- |
+| `contiguous()`      | Layout   | Makes tensor memory-contiguous  | Yes                | Conditional |
+| `clone()`           | Copy     | Deep copy of tensor             | Yes                | Yes         |
+| `detach()`          | Graph    | Detaches from computation graph | Yes                | No          |
+| `to(device, dtype)` | Transfer | Moves/converts tensor           | Yes                | Conditional |
+| `copy_(src)`        | Copy     | In-place copy from source       | No                 | Yes         |
 
 ```python
 # Device management
