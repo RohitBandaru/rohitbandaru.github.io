@@ -16,7 +16,7 @@ selected_papers: false # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
 ---
 
-I currently work at Google as a Machine Learning Software Engineer (all opinions and content are my own and do not reflect my employer)
+I work on developing AI that can understand and operate in the real world.
 
 My goal with this blog is to explain different areas of AI research. This will help us stay updated on an incredibly fast-moving field. I want to dig deep into papers and understand what makes certain models or algorithms actually work, and think of ideas for future research. I find it very satisfying to go as deep as possible into a topic and reach the edge of documented knowledge.
 
