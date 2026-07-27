@@ -43,7 +43,7 @@ These changes result in a self-distillation approach that proves particularly ef
    1. Perhaps centering allows this method to work without having the predictor layer. The center is a exponential moving average of the teacher encoding (of both views). This vector is subtracted from the teacher’s encoding before the softmax. A temperature is also applied with the softmax to achieve a “sharpening”. These methods help the teacher avoid collapse. Centering ensures that a single component of the vector doesn’t dominate. Sharpening ensures that it doesn’t collapse to a uniform vector.
 4. Softmax is applied to each encoding. The student is trained with a cross entropy loss to match the teacher. The teachers weights are updated as an exponential moving average of the student.
 
-This paper compares the performance of DINO with ResNet and ViT architectures against [SOTA SSL methods](https://rohitbandaru.github.io/blog//SSL-with-Vision-Transformers/) such as [BYOL](https://arxiv.org/abs/2006.07733), MoCov2, and SwAV. The combination os DINO and ViT has the most significant advantage. Interestingly, it is 6.6% better than ViT with BYOL training on linear ImageNet evaluation, despite minor differences in the methods. The SSL methods that are used for comparison were developed for CNN architectures, which put them at a disadvantage. DINO is designed for transformers, but what about it makes it work better with transformers? One possible explanation is that transformers handle different resolutions of images better. Higher resolution images results in more image patches generated in the transformer. The computation also scales quadratically in the attention operations with respect to the number of patches. For ResNet, the computation increases linearly.
+This paper compares the performance of DINO with ResNet and ViT architectures against [SOTA SSL methods](/blog/Self-Supervised-Learning/) such as [BYOL](https://arxiv.org/abs/2006.07733), MoCov2, and SwAV. The combination of DINO and ViT has the most significant advantage. Interestingly, it is 6.6% better than ViT with BYOL training on linear ImageNet evaluation, despite minor differences in the methods. The SSL methods that are used for comparison were developed for CNN architectures, which put them at a disadvantage. DINO is designed for transformers, but what about it makes it work better with transformers? One possible explanation is that transformers handle different resolutions of images better. Higher resolution images results in more image patches generated in the transformer. The computation also scales quadratically in the attention operations with respect to the number of patches. For ResNet, the computation increases linearly.
 
 The two main “emerging properties” they observe is that DINO ViT features are useful for dense predictions such as semantic segmentation. Another property is that k nearest neighbors on the output encodings, without any finetuning. This enables image retrieval applications.
 
@@ -57,7 +57,7 @@ There are several architectural and training changes applied on top DINO v1 that
 
 # [data2vec](https://arxiv.org/abs/2202.03555)
 
-{% include figure.liquid loading="eager" path="assets/img/blog/ssl-vit/data2vec.png" alt="data2vec architecture" class="image-fluid mx-auto d-block" source="https://arxiv.org/abs/2202.03555"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/ssl-vit/data2vec.png" alt="data2vec architecture" class="image-fluid mx-auto d-block" source="https://arxiv.org/abs/2202.03555"%}
 
 The teacher model predicts representations from unmasked input, while the student model predicts representations from masked input. The student aims to match the teacher's output by predicting the representations of the masked tokens. To avoid collapse, the teacher's weights are an exponential moving average of the student's weights.
 
@@ -79,12 +79,12 @@ Instead of training a multimodal model, independent models are trained on differ
 6. A regression loss (Smooth L1) is applied to the averaged vectors of each network.
    1. The loss transitions from a squared loss to an L2 loss when the error margin goes below the hyperparameter $$\beta$$. The L2 loss is only applied when the student and teacher predictions are close. This loss is designed to be less sensitive to outliers.
 
-{% include figure.liquid loading="eager" class="mx-auto d-block" path="assets/img/blog/ssl-vit/data2vec_loss" alt="data2vec loss" width=500 source="https://arxiv.org/abs/2202.03555"%}
+{% include figure.liquid loading="lazy" class="mx-auto d-block" path="assets/img/blog/ssl-vit/data2vec_loss" alt="data2vec loss" width=500 source="https://arxiv.org/abs/2202.03555"%}
 
 7. The students weights are updated with SGD. The teacher’s weights are updated as a EMA of the students weights: $$\Delta \leftarrow \tau \Delta + (1-\tau)\theta$$
    1. $$\Delta$$ represents the teacher’s parameters, while $$\theta$$ represents the student’s parameters.
 
-{% include figure.liquid loading="eager" class="mx-auto d-block" path="assets/img/blog/ssl-vit/data2vec_architecture.png" alt="data2vec architecture" width=500 %}
+{% include figure.liquid loading="lazy" class="mx-auto d-block" path="assets/img/blog/ssl-vit/data2vec_architecture.png" alt="data2vec architecture" width=500 %}
 
 The position encoding and feature encoder weights are shared between the two models. However, the teacher's transformer weights are specified through an exponential moving average.
 
@@ -98,7 +98,7 @@ They use a L2 loss instead of a smooth L1 loss. This is a simplification of the 
 
 They also introduce inverse block masking. Rather than masking blocks. Blocks are chosen to be unmasked areas. The representations outside of the block will be predicted. There are multiple blocks which may overlap. A mask consists of multiple blocks. Training includes multiple masks for each target.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/ssl-vit/data2vec_2.png" alt="data2vec 2.0" class="mx-auto d-block" source="https://arxiv.org/abs/2212.07525"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/ssl-vit/data2vec_2.png" alt="data2vec 2.0" class="mx-auto d-block" source="https://arxiv.org/abs/2212.07525"%}
 
 They also add a linear attention bias ([ALiBi](https://arxiv.org/abs/2108.12409)). This essentially modifies self attention to increase the bias for query key pairs that are far apart. This enables faster training by providing an inductive bias.
 
@@ -106,7 +106,7 @@ They also add a linear attention bias ([ALiBi](https://arxiv.org/abs/2108.12409)
 
 This paper uses a simple autoencoder architecture to learn image representations. Parts of the images are masked, and the model is tasked to predict what is in the masked regions. This model can be trained through this [notebook](https://github.com/ariG23498/mae-scalable-vision-learners/blob/master/mae-pretraining.ipynb).
 
-{% include figure.liquid loading="eager" path="assets/img/blog/ssl-vit/mae.png" alt="Masked Autoencoder" class="mx-auto d-block" source="https://arxiv.org/abs/2111.06377"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/ssl-vit/mae.png" alt="Masked Autoencoder" class="mx-auto d-block" source="https://arxiv.org/abs/2111.06377"%}
 
 1. The image is split into patches, as done in Vision Transformers.
 2. Using a mask ratio (75%–95%), patches are selected randomly without replacement.
@@ -131,7 +131,7 @@ Excluding mask tokens from the input and using a lightweight decoder makes this 
 
 This approach is most similar to BERT / NLP SSL models.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/ssl-vit/beit.png" alt="beit" class="mx-auto d-block" source="https://arxiv.org/abs/2106.08254"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/ssl-vit/beit.png" alt="beit" class="mx-auto d-block" source="https://arxiv.org/abs/2106.08254"%}
 
 A fundamental difference in applying SSL to images compared to text is that images are continuous. Text has a finite number of tokens. You can use a softmax to get a probability distribution across all tokens. In ViTs, patches of an image are treated as tokens. However, you can’t get an explicit probability distribution over all possible image patches. BEiT addresses this problem by training a discrete variational autoencoder (dVAE) to learn discrete visual tokens. These discrete tokens are an approximation or compression of image patches.
 

@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "ML Divergences"
+description: "KL divergence and other measures of difference between probability distributions, and the properties that make KL divergence so widely used in ML."
 date: 2025-01-21
-tags: machine-learning, probability
+tags: machine-learning probability
 citation: true
 toc:
   sidebar: left

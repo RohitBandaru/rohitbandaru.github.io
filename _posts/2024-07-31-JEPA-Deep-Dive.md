@@ -2,6 +2,7 @@
 layout: post
 title: Deep Dive into Yann LeCun’s JEPA
 description: "A deep dive into Yann LeCun's Joint Embedding Predictive Architecture, covering I-JEPA, V-JEPA, V-JEPA 2, and energy-based alternatives to generative AI."
+last_updated: 2025-07-04
 tags: self-supervised-learning ai computer-vision
 thumbnail: assets/img/blog/jepa/jepa_brain.png
 citation: true
@@ -108,7 +109,7 @@ Yann proposes a high level architecture for building an AI system that is aimed 
 
 We will then explore the various challenges that must be addressed to construct such an architecture. Currently, this is merely a theoretical architecture. Building certain components remains an open problem, and assembling all the modules will pose an additional challenge.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/jepa_brain.png" width=400 class="image-fluid mx-auto d-block" caption="High Level View of LeCun's Architecture for Intelligence" alt="High Level View of LeCun's Architecture for Intelligence" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/jepa/jepa_brain.png" width=400 class="image-fluid mx-auto d-block" caption="High Level View of LeCun's Architecture for Intelligence" alt="High Level View of LeCun's Architecture for Intelligence" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
 
 This architecture contains different proposed components. We will explain these components and their relationships.
 
@@ -180,7 +181,7 @@ In JEPA, the purpose of the world model is to predict future representations of 
 
 In order to train a world model, Yann LeCun proposes an SSL energy-based model (EBM).
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/ebm.png" width=300 class="image-fluid mx-auto d-block" alt="ebm" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/jepa/ebm.png" width=300 class="image-fluid mx-auto d-block" alt="ebm" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
 
 $$x$$ and $$y$$ can be considered videos, where $$y$$ follows x. EBMs learn an energy function $$F(x,y)$$ that take low values when $$x$$ and $$y$$ are compatible and high if not. Compatible in this context means that $$y$$ is a plausible continuation of $$x$$.
 
@@ -200,7 +201,7 @@ The EBM collapses when all pairs have the same low energy. This can happen when 
 
 The paper describes a high data density region. This refers to $$(x, y)$$ pairs that are commonly seen in the real data distribution. We want to lower energy in this region, but keep it high outside of it. Collapse is when the energy is low inside and outside of this region which makes the EBM useless.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/regularized_ebm.png" width=400 class="image-fluid mx-auto d-block" alt="regularized ebm" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/jepa/regularized_ebm.png" width=400 class="image-fluid mx-auto d-block" alt="regularized ebm" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
 
 There are two training methods used to prevent collapse.
 
@@ -218,7 +219,7 @@ Encoder invariance: This means that $$s_y$$ will be the same for different value
 
 Latent variable predictor: Varying $$z$$ will lead to different plausible predictions of $$s_y$$.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/lv_jepa.png" width=400 class="image-fluid mx-auto d-block" alt="JEPA with a latent variable" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/jepa/lv_jepa.png" width=400 class="image-fluid mx-auto d-block" alt="JEPA with a latent variable" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
 
 There are four criteria that can be used to train this architecture without contrastive loss:
 
@@ -231,7 +232,7 @@ There are four criteria that can be used to train this architecture without cont
 
 There is a trade off between information loss in the encoding and the predictability of the encodings. If a representation contains most of the information of the input, it would be hard to predict. A more abstract and higher level representation would be lower in dimension and more predictable. Higher dimension representations are also more suitable for longer term predictions.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/hjepa.png" width=500 class="image-fluid mx-auto d-block" alt="H-JEPA" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/jepa/hjepa.png" width=500 class="image-fluid mx-auto d-block" alt="H-JEPA" source="https://openreview.net/pdf?id=BZ5a1r-kVsf"%}
 
 H-JEPA (Hierarchical JEPA) enhances JEPA's abstraction capabilities by splitting the architecture into two parts. The first JEPA handles low-level representations for short-term predictions, while the second operates at a higher abstraction level for longer-term forecasts.
 This two-tier structure, though innovative, is arbitrary. True intelligence requires multiple levels of abstraction. However, it is not clear how many levels of abstraction are needed. We may even need variable levels of abstraction. Different situations have different levels of complexity.
@@ -282,13 +283,13 @@ Perception is used to generate an initial representation of the state of the wor
 
 The action sequence is optimized with respect to the objects. There will be a lot of flexibility in designing the objects to get the system to behave in the way we want.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/objective_driven_ai.png" class="image-fluid mx-auto d-block" alt="Objective Driven AI" source="https://www.ece.uw.edu/wp-content/uploads/2024/01/lecun-20240124-uw-lyttle.pdf"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/jepa/objective_driven_ai.png" class="image-fluid mx-auto d-block" alt="Objective Driven AI" source="https://www.ece.uw.edu/wp-content/uploads/2024/01/lecun-20240124-uw-lyttle.pdf"%}
 
 The system can also be extended to achieve hierarchal planning. The higher levels of planning produce a state that will serve as an objective for the lower level. This state can be considered as a subgoal that is necessary to achieve the higher level goal. We can have unique objectives and guardrails for each level of planning.
 
 Latent variables are also introduced to represent the uncertainty in predictions of future states. The latent variables at the higher levels can be thought as imaginary higher level actions. However, only the lower level actions can actually be directly executed.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/h_objective_driven_ai.png" class="image-fluid mx-auto d-block" alt="Hierarchal Objective Driven AI" source="https://www.ece.uw.edu/wp-content/uploads/2024/01/lecun-20240124-uw-lyttle.pdf"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/jepa/h_objective_driven_ai.png" class="image-fluid mx-auto d-block" alt="Hierarchal Objective Driven AI" source="https://www.ece.uw.edu/wp-content/uploads/2024/01/lecun-20240124-uw-lyttle.pdf"%}
 
 # Towards Implementing JEPA
 
@@ -300,7 +301,7 @@ These are essentially self supervised pretraining methods. When comparing agains
 
 Compared to other image SSL approaches, I-JEPA takes advantage of the flexibility of the transformer architecture. ViT is used because it can handle an arbitrary amount of patches in an image, without requiring a strict shape in the input like CNNs
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/ijepa.png" class="image-fluid mx-auto d-block" alt="I-JEPA" source="https://arxiv.org/abs/2301.08243" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/jepa/ijepa.png" class="image-fluid mx-auto d-block" alt="I-JEPA" source="https://arxiv.org/abs/2301.08243" %}
 
 The input image is split into $$N$$ non-overlapping patches and fed into a target encoder $$f_{\theta}$$ to compute patch representations. $$s_y = \{s_{y1} … s_{yN}\}$$
 
@@ -322,12 +323,12 @@ V-JEPA is an extension of I-JEPA to videos. This is done by treating videos are 
 
    1. 2 masks are sampled: one short range and one long range. The short range mask covers less area in the image and is more discontinuous. These masks are constructed by different configurations of overlapping blocks, as done in I-JEPA. The target encoder only needs to run once, even if there are multiple masks for the context. Having multiple masks leads to more efficient training.
 
-   {% include figure.liquid loading="eager" path="assets/img/blog/jepa/vjepa_masking.png" class="image-fluid mx-auto d-block" caption="Short-range (left), long-range (right)" alt="V-JEPA masking" source="https://ai.meta.com/research/publications/revisiting-feature-prediction-for-learning-visual-representations-from-video/"%}
+   {% include figure.liquid loading="lazy" path="assets/img/blog/jepa/vjepa_masking.png" class="image-fluid mx-auto d-block" caption="Short-range (left), long-range (right)" alt="V-JEPA masking" source="https://ai.meta.com/research/publications/revisiting-feature-prediction-for-learning-visual-representations-from-video/"%}
 
 4. The tokens are processed by a transformer encoder (linear projection of patches + multiple transformer blocks). The masked out patches do not need to be processed. There is a separate encoder for the target and context. The target encoder is an EMA of the context encoder (same as I-JEPA).
 5. The predictor predicts the representations of the masked tokens by the unmasked tokens processed by the context encoder. The loss is the L1 distance between the representations of these masked tokens (from the target encoder, and the context encoder + predictor).
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/vjepa.png" class="image-fluid mx-auto d-block" caption="Very similar to I-JEPA but with an added temporal dimension." alt="V-JEPA Architecture" source="https://ai.meta.com/research/publications/revisiting-feature-prediction-for-learning-visual-representations-from-video/"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/jepa/vjepa.png" class="image-fluid mx-auto d-block" caption="Very similar to I-JEPA but with an added temporal dimension." alt="V-JEPA Architecture" source="https://ai.meta.com/research/publications/revisiting-feature-prediction-for-learning-visual-representations-from-video/"%}
 
 This is predicting gaps in short videos. It does not predict across time. Human learning is across the time dimension.
 
@@ -341,13 +342,13 @@ V-JEPA is a very interesting model that may be the start of a highly important l
 
 This is an extension of JEPA to include motion information. It uses an optical flow objective to learn motion from videos and uses general SSL to learn about the content of the images/videos. Optical flow is estimating the direction in which pixels move between two consecutive frames of a video.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/mcjepa_architecture.png" class="image-fluid mx-auto d-block" alt="MC-JEPA" source="https://arxiv.org/abs/2307.12698"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/jepa/mcjepa_architecture.png" class="image-fluid mx-auto d-block" alt="MC-JEPA" source="https://arxiv.org/abs/2307.12698"%}
 
 The details of this dense flow estimation are out of the scope of this blog post. Flow estimation and content feature learning are combined as a multitask learning objective. Images are sampled for content learning, while consecutive frames are sampled from videos for flow estimation. The encoder is shared for both tasks. This is a JEPA architecture because the representations from one frame are warped to match the representations from the next frame. The same encoder is used to process both frames.
 
 The architecture for flow estimation is hierarchal. This may be the first instantiation of an H-JEPA architecture. This architecture is based on [PWC-Net](https://openaccess.thecvf.com/content_cvpr_2018/papers/Sun_PWC-Net_CNNs_for_CVPR_2018_paper.pdf). Each level has a different resolution.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/mcjepa_full_architecture.png" class="image-fluid mx-auto d-block" alt="MC JEPA full architecture" source="https://arxiv.org/abs/2307.12698"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/jepa/mcjepa_full_architecture.png" class="image-fluid mx-auto d-block" alt="MC JEPA full architecture" source="https://arxiv.org/abs/2307.12698"%}
 
 The image features are sampled from ImageNet, while a video dataset is used for flow estimation. It is also possible to use frames from video as images for content learning.
 
@@ -387,13 +388,13 @@ We have seen the transformer architecture, which started with language, take ove
 
 We also see a form of long context finetuning in the progressive-resolution training. This is part of the video pretraining recipe. While most pretraining is done with 16 frames, the model is then further trained on 64 frames during the cooldown phase. This enables efficiently training a model that can process longer video clips. This is the same way that LLMs are trained to process long contexts.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/post_training.png" class="image-fluid mx-auto d-block" caption="" alt="V-JEPA Post-training" source="https://arxiv.org/abs/2506.09985"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/jepa/post_training.png" class="image-fluid mx-auto d-block" caption="" alt="V-JEPA Post-training" source="https://arxiv.org/abs/2506.09985"%}
 
 **Attentive Probe Finetuning**
 
 This method was implemented in V-JEPA 1. A larger attentive probe is used in comparison to the evals in V-JEPA 1.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/attentive_probe.png" class="image-fluid mx-auto d-block" caption="" alt="V-JEPA Attentive Probe Architecture" width=500 %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/jepa/attentive_probe.png" class="image-fluid mx-auto d-block" caption="" alt="V-JEPA Attentive Probe Architecture" width=500 %}
 
 This attentive probe finetuning leads to strong performance on action classification and object recognition evals.
 
@@ -413,7 +414,7 @@ This uses the architecture and visual instruction tuning training method of LLaV
 
 The model is also evaluated for robotics. It is post-trained on 62 hours of video from the Droid dataset. This model is then deployed on Franka arms. This is a tabletop arm with a fixed camera. The actions are end-effector commands. There are 7 degrees of freedom so that effector states can be represented by the 7D vector. The actions are changes in these states. These diffs are used to form commands.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/action_conditioning.png" class="image-fluid mx-auto d-block" caption="" alt="V-JEPA Action-Conditioned Training" source="https://arxiv.org/abs/2506.09985"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/jepa/action_conditioning.png" class="image-fluid mx-auto d-block" caption="" alt="V-JEPA Action-Conditioned Training" source="https://arxiv.org/abs/2506.09985"%}
 
 The V-JEPA 2 encoder $$E(\cdot)$$ encodes each of the 16 frames into a feature map. We get 16 feature maps $$(z_k)_{k \in [16]}$$, where $$z_k := E(x_k) \in \mathbb{R}^{H \times W \times D}$$. With 16×16 patches, we get an output of size 16×16×1408. The feature maps are interleaved with the actions and states: $$(a_k,s_k,z_k)_{k \in [15]}$$. Note that we have 15 of these tuples since the actions are formed by the differences between states.
 
@@ -450,7 +451,7 @@ $$
 
 $$z_g$$ represents the feature map of the goal state. This uses the same method as DINO-WM ([World Models blog](https://rohitbandaru.github.io/blog/World-Models/#dino-wm)). We get an action sequence $$(a_i^\star)_{i \in [T]}$$ through this optimization.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/jepa/planning.png" class="image-fluid mx-auto d-block" caption="Planning with V-JEPA" alt="V-JEPA Test Time Planning" source="https://arxiv.org/abs/2506.09985"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/jepa/planning.png" class="image-fluid mx-auto d-block" caption="Planning with V-JEPA" alt="V-JEPA Test Time Planning" source="https://arxiv.org/abs/2506.09985"%}
 
 An interesting future direction is to use this world model for language-specified goals. We can train an LLM to generate the goal latent embedding from text. Here is a simple design for implementation:
 

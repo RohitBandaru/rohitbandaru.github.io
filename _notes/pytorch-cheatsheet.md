@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "PyTorch Cheatsheet"
+description: "A dense PyTorch quick reference covering tensor creation, dtypes, ops, autograd, and modules, for readers with prior framework experience."
 date: 2025-06-15
-tags: pytorch, deep-learning
+tags: pytorch deep-learning
 citation: true
 toc:
   sidebar: left

@@ -1,6 +1,7 @@
 ---
 layout: about
 title: about
+description: "Deep dives into AI research by Rohit Bandaru, digging into papers to understand what actually makes models and algorithms work."
 permalink: /
 navorder: 1
 

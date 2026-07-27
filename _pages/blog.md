@@ -3,6 +3,7 @@ layout: default
 permalink: /blog/
 nav: true
 title: blog
+description: "Deep dive blog posts on AI research: self-supervised learning, transformers, generative models, world models, vision language models, and robotics."
 pagination:
   enabled: false
   collection: posts

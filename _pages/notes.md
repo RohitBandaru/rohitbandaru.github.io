@@ -2,6 +2,7 @@
 layout: default
 permalink: /notes/
 title: notes
+description: "Notes from courses and lecture series on deep reinforcement learning, flow matching and diffusion models, neuroscience, PyTorch, and ML divergences."
 nav: true
 ---
 

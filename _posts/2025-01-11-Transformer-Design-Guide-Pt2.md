@@ -12,7 +12,7 @@ keywords: transformer, machine-learning, llm, large-language-model, rmsnorm, gel
 
 While the core transformer architecture introduced in "Attention is All You Need" remains effective and widely used today, numerous architectural improvements have emerged since its inception. Unlike the dramatic evolution seen in Convolutional Neural Networks (CNNs) from AlexNet onwards, transformer modifications tend to be more incremental and optional - the original architecture still serves as a strong baseline. This speaks to the elegant design choices made by the original authors, while leaving room for ongoing optimizations in efficiency, context length, and multimodal capabilities.
 
-This post will focus on changes to the Transformer architecture that have been popular in the last couple of years (as of 2024). Time will tell which of these will be relevant in the future. For a deep dive on the original transformer architecture from [Attention is All You Need](https://arxiv.org/abs/1706.03762) (2017), see part 1 of this blog post. ML researchers and engineers use a lot of jargon when discussing transformers. This blog post seeks to elucidate it.
+This post will focus on changes to the Transformer architecture that have been popular in the last couple of years (as of 2024). Time will tell which of these will be relevant in the future. For a deep dive on the original transformer architecture from [Attention is All You Need](https://arxiv.org/abs/1706.03762) (2017), see [part 1](/blog/Transformer-Design-Guide-Pt1/) of this blog post. ML researchers and engineers use a lot of jargon when discussing transformers. This blog post seeks to elucidate it.
 
 The original transformer architecture is very powerful and can handle a very wide range of applications. However, there are some limitations that more recent research has sought to address:
 
@@ -136,7 +136,7 @@ $$
 
 SwiGLU is a gated linear unit (GLU) version of this. GLUs were introduced in [2016](https://arxiv.org/abs/1612.08083). GLUs modify the feed-forward network by introducing a gating mechanism that controls information flow, allowing the network to selectively emphasize or suppress different parts of the input. This works by adding another linear transformation of the input $$Vx$$ that acts as the gating function. The gating function performs element-wise multiplication with the output of the first feedforward layer and activation function. SwiGLU is a GLU that uses Swish as the activation function.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt2/swiglu.png" caption="" alt="SwiGLU" width=400 class="image-fluid mx-auto d-block" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt2/swiglu.png" caption="" alt="SwiGLU" width=400 class="image-fluid mx-auto d-block" %}
 
 $$
 \mathrm{SwiGLU}(x) = \mathrm{Swish}(xW_1+b)⊗(Vx+c)
@@ -198,7 +198,7 @@ Huang et al. 2018 introduce in their [Music Transformer](https://arxiv.org/abs/1
 
 Music Transformer optimizes this by multiplying each query directly with the relative position embedding matrix: $$QE^{r\top}$$. This produces a matrix of size $$[N,N]$$, matching the expected size of the attention matrix bias. $$E^r$$ represents the embedding table as a matrix storing representations for every relative position (pairwise position difference). The matrix is then transformed into the correct attention bias $$S^{rel}$$ through a series of operations which they refer to as a skewing procedure. While these transformations are confusing, the key point is that we avoid creating any $$O(N^2d)$$ matrices. Instead, $$E^r$$ only requires $$O(Nd)$$ additional space, with all other matrices matching the attention matrix size of $$O(N^2)$$.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt2/musictransformer_rpe.png" caption="" alt="Music Transformer RPE" source="https://arxiv.org/abs/1809.04281" width=600 class="image-fluid mx-auto d-block" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt2/musictransformer_rpe.png" caption="" alt="Music Transformer RPE" source="https://arxiv.org/abs/1809.04281" width=600 class="image-fluid mx-auto d-block" %}
 
 1. Mask the top left triangle, this will be shifted to result in a causal mask
 2. Pad an empty “dummy” column on the left side
@@ -218,7 +218,7 @@ Relative position embeddings initialize embeddings for each relative position. H
 
 Attention with Linear Biases (ALiBi) is another method of position embedding introduced by [Press et al. 2021](https://arxiv.org/abs/2108.12409).
 
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt2/alibi.png" caption="" alt="ALiBi" source="https://arxiv.org/abs/2108.12409" width=400 class="image-fluid mx-auto d-block" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt2/alibi.png" caption="" alt="ALiBi" source="https://arxiv.org/abs/2108.12409" width=400 class="image-fluid mx-auto d-block" %}
 
 $$m$$ is a hyperparameter that can be set per attention head. No absolute position embeddings are added. This method adds a strong inductive bias for locality. The attention scores decay with relative distance. Since there are no learned parameters for position this bias can generalize to longer sequence lengths during inference. The biases can be extended indefinitely.
 
@@ -239,7 +239,7 @@ $$
 
 RoPE groups the embedding dimensions into groups of two adjacent indices. These two values can be considered to be defining a complex number. The first number represents the real part, and the second is the imaginary dimension.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt2/rope.png" caption="" alt="RoPE" source="https://arxiv.org/abs/2104.09864" width=400 class="image-fluid mx-auto d-block" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt2/rope.png" caption="" alt="RoPE" source="https://arxiv.org/abs/2104.09864" width=400 class="image-fluid mx-auto d-block" %}
 
 If the embeddings are of size $$d$$, $$d/2$$ of these size two blocks / complex numbers are present. The absolute position of the embedding in the input sequence is denoted $$m$$.
 
@@ -346,7 +346,7 @@ The $$N^2$$ complexity of self-attention has long been considered a major bottle
 
 Sliding Window Attention (SWA) is another sparse attention method introduced in [Longformer](https://arxiv.org/abs/2004.05150). Instead of having a query token attend to all prior key tokens, it attends only to $$w$$ (window length) prior tokens. This reduces attention complexity from $$N^2$$ to $$Nw$$. However, effective performance requires a substantial window length. For example, Mistral uses a window length of half the context length. This is implemented through an attention mask during training. During inference, the KV cache (explained later) size can be reduced from $$N$$ to $$w$$.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt2/swa.png" caption="" alt="SWA" source="https://arxiv.org/abs/2310.06825" width=600 class="image-fluid mx-auto d-block" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt2/swa.png" caption="" alt="SWA" source="https://arxiv.org/abs/2310.06825" width=600 class="image-fluid mx-auto d-block" %}
 
 SWA resembles convolution in that tokens attend only to nearby tokens. Longformer employs smaller window sizes in earlier transformer blocks and larger ones in later blocks. This enables both local and global information flow, allowing learning at different scales—similar to CNN architecture.
 
@@ -362,7 +362,7 @@ When designing algorithms like attention, we often only consider the number of f
 
 GPUs have two types of memory: slow but large HBM (high bandwidth memory) and small but fast SRAM (static random access memory). When working with large matrices, we load blocks (parts of the matrices) from HBM into SRAM. The computation takes place and then the output is written back to HBM.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt2/gpu_memory.png" caption="" alt="GPU Memory Hierarchy" source="https://arxiv.org/abs/2205.14135" width=400 class="image-fluid mx-auto d-block" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt2/gpu_memory.png" caption="" alt="GPU Memory Hierarchy" source="https://arxiv.org/abs/2205.14135" width=400 class="image-fluid mx-auto d-block" %}
 
 We will review two prerequisite topics before covering FlashAttention.
 
@@ -507,7 +507,7 @@ MoE is generally structured as follows:
 
 The number of selected experts $$k$$ is chosen to be small (typically 2) to achieve this sparsity. With this approach and parameter setting, we achieve the goal of a sparse transformer architecture.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt2/moelayer.png" caption="" alt="MoE Layer" source="https://arxiv.org/abs/2401.04088" width=500 class="image-fluid mx-auto d-block" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt2/moelayer.png" caption="" alt="MoE Layer" source="https://arxiv.org/abs/2401.04088" width=500 class="image-fluid mx-auto d-block" %}
 
 We want all $$n$$ experts to be utilized with roughly equal frequency. In the worst case, the same $$k$$ experts are selected for every input, and the remaining experts are just a waste of space. While each input should activate only a few experts, we want to ensure that all experts are activated with roughly equal frequency over the entire training set. We want to encourage diversity in expert selection. Different MoE implements achieve this differently.
 
@@ -515,7 +515,7 @@ We want all $$n$$ experts to be utilized with roughly equal frequency. In the wo
 
 [Shazeer et al. 2017](https://arxiv.org/abs/1701.06538) introduces mixture of experts for language modeling, however, using LSTMs instead of transformers.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt2/lstm_moe.png" caption="" alt="MoE on LSTM" source="https://arxiv.org/pdf/1701.06538" width=600 class="image-fluid mx-auto d-block" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt2/lstm_moe.png" caption="" alt="MoE on LSTM" source="https://arxiv.org/pdf/1701.06538" width=600 class="image-fluid mx-auto d-block" %}
 
 In order to enforce diversity, they add tunable Gaussian noise to the expert score $$(xW_g)_i$$ of each expert in the function $$H()$$.
 
@@ -553,7 +553,7 @@ A key challenge with MoE is that each expert only sees a fraction of the trainin
 
 MoE also requires careful handling in multi-device training setups. Through expert parallelism—a form of model parallelism—different devices manage different experts. After the gating function determines expert assignments, tokens are shuffled between GPUs in a ring pattern before returning to their original GPU. This allows us to use MoE to scale the number of parameters in a model, but there is an added communication cost with expert parallelism.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt2/expert_parallelism.png" caption="" alt="Expert Parallelism" source="https://pytorch.org/blog/training-moes/" width=500 class="image-fluid mx-auto d-block" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt2/expert_parallelism.png" caption="" alt="Expert Parallelism" source="https://pytorch.org/blog/training-moes/" width=500 class="image-fluid mx-auto d-block" %}
 
 The auxiliary loss is calculated separately for each MoE layer in the transformer.
 
@@ -642,7 +642,7 @@ Multi query attention maybe more aptly named single key and value attention, sin
 
 Group-Query Attention was introduced in the paper [GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints](https://arxiv.org/abs/2305.13245)
 
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt2/mqa_gqa.png" caption="" alt="MHA, MQA, GQA" source="https://arxiv.org/pdf/2305.13245" width=500 class="image-fluid mx-auto d-block" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt2/mqa_gqa.png" caption="" alt="MHA, MQA, GQA" source="https://arxiv.org/pdf/2305.13245" width=500 class="image-fluid mx-auto d-block" %}
 
 GQA is a middle ground between standard multi-head attention and Multi-Query Attention (MQA). Instead of sharing a single key-value head across all query heads (as in MQA), GQA shares key-value heads among groups of query heads.
 

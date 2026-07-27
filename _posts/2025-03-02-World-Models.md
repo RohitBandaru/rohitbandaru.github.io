@@ -2,7 +2,7 @@
 layout: post
 title: "World Models"
 description: "How world models learn to predict the effect of actions on an environment, covering Dreamer, Genie, Cosmos, and DINO-WM."
-tags: computer-vision, deep-learning, reinforcement-learning
+tags: computer-vision deep-learning reinforcement-learning
 thumbnail: assets/img/blog/world_models/world_model.png
 citation: true
 toc:
@@ -38,7 +38,7 @@ This work from Google is a “generative interactive environment” trained on i
 
 Since it is trained on videos, Genie uses the Spatial-Temporal Transformer (ST-Transformer) architecture to implement most model components. The ST-Transformer block has three components, temporal attention, spatial attention, and a single feed forward block. The spatial attention is self attention among patches of a single frame. The temporal attention is for a single patch on $$T$$ time steps. This uses causal attention. This architecture scales linearly rather than quadratically with the number of frames, which makes it efficient at processing video.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/st_transformer.png" caption="ST-Transformer architecture" alt="ST-Transformer architecture" source="https://arxiv.org/abs/2402.15391" width=500%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/st_transformer.png" caption="ST-Transformer architecture" alt="ST-Transformer architecture" source="https://arxiv.org/abs/2402.15391" width=500%}
 
 ### Latent Action Model (LAM)
 
@@ -46,23 +46,23 @@ In world models, we need to associate actions with transitions between observati
 
 When trained on 2d videos, the changes between frames can be described in a compact code. Think of moving left, right, jump etc. this may be more difficult in complex real world environments. Since the latent actions use a small codebook and the decoder has access to the prior frames, the model is forced to learn the differences between frames which can be represented as actions.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/genie_lam.png" caption="" alt="Latent Action Model" source="https://arxiv.org/abs/2402.15391" width=500 %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/genie_lam.png" caption="" alt="Latent Action Model" source="https://arxiv.org/abs/2402.15391" width=500 %}
 
 ### Video Tokenizer
 
 Another VQ-VAE is trained to generate tokens from the video. The difference here is that the input and output are identical and just the video frames.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/genie_tokenizer.png" caption="" alt="Genie Video Tokenizer" source="https://arxiv.org/abs/2402.15391" width=500%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/genie_tokenizer.png" caption="" alt="Genie Video Tokenizer" source="https://arxiv.org/abs/2402.15391" width=500%}
 
 ### Dynamics Model
 
 The dynamics model takes the prior video tokens and latent actions and predicts future video tokens. This also uses a ST-Transformer architecture. Since this is a causal transformer, at each timestep $$i$$ the model uses the current latent embedding $$z_i$$ to predict the next timestep’s embeddings $$z_{i+1}$$. At training time, this is parallelized so $$z_{1:t-1}$$ is mapped to $$z_{2:t}$$.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/genie_dynamics.png" caption="" alt="Genie Dynamics Model" source="https://arxiv.org/abs/2402.15391" width=500%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/genie_dynamics.png" caption="" alt="Genie Dynamics Model" source="https://arxiv.org/abs/2402.15391" width=500%}
 
 The [MaskGIT](https://arxiv.org/abs/2202.04200) method enhances this model's performance. Since we're dealing with images/video frames, $$z_i$$ represents a grid of latent embeddings. Traditional autoregressive prediction of these embeddings in one shot can be unstable. In this setting, if a single token is mispredicted, all subsequent predictions suffer. MaskGIT resolves this through an iterative process that enables prediction corrections. The tokens within the next frame can attend to each other bidirectionally.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/maskgit.png" caption="MaskGIT" alt="Example of MaskGIT inference" source="https://arxiv.org/abs/2202.04200" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/maskgit.png" caption="MaskGIT" alt="Example of MaskGIT inference" source="https://arxiv.org/abs/2202.04200" %}
 
 During training, tokens are randomly masked according to a Bernoulli distribution with a sampled probability between 0.5 and 1, and the model predicts these masked tokens. This training approach enables iterative decoding at inference time. The next frame is initialized as zeros, and the dynamics model makes predictions based on the context. The dynamics model then processes this output as an input. Since the predictions are a softmax over discrete token values, we can determine which tokens are low in confidence. The model in subsequent iteration only updates these low confidence predictions. This is repeated across 25 steps, where output tokens are regenerated until reaching high confidence. This method is similar to diffusion, but uses discrete rather than continuous tokens. The masking approach makes the dynamics model's predictions more robust and reduces the redundancy in video data for more efficient learning.
 
@@ -70,11 +70,11 @@ During training, tokens are randomly masked according to a Bernoulli distributio
 
 The latent action model and video tokenizer are trained separately first. They are trained using the VQ-VAE objective. The LAM and video tokenizer are then used to train the dynamics model. There is a stop grad so that the latent action model is frozen.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/genie_wm_training.png" caption="" alt="Genie training" source="https://arxiv.org/abs/2402.15391" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/genie_wm_training.png" caption="" alt="Genie training" source="https://arxiv.org/abs/2402.15391" %}
 
 At inference time, the LAM is discarded as we can define the actions directly. The model is prompted with a single initial frame which is tokenized. At each step, the user chooses an integer for the latent action. The initial frame tokens and the latent action are used to generate the next latent token. This generated token is appended to the input . The user can then select another action. At each step, the tokenizer decoder can map the latent embeddings to images which can be displayed to the user.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/genie_inference.png" caption="" alt="Genie inference" source="https://arxiv.org/abs/2402.15391" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/genie_inference.png" caption="" alt="Genie inference" source="https://arxiv.org/abs/2402.15391" %}
 
 The video tokenizer and LAM are very similar. One significant difference is that LAMs use smaller codebook sizes. The focus is on having a controllable set of actions (8 codes). The video tokenizer uses a larger codebook size (1024) to more effectively reconstruct the video. The LAM is able to use a smaller codebook size since it is only trying to encode one frame at a time. Whereas the video tokenizer tokenizes the entire video and then reconstructs it all together.
 
@@ -102,7 +102,7 @@ Like with tokenizers, the world model is also implemented for continuous and dis
 
 They use a DiT (Diffusion Transformer) based architecture. The continuous tokens are perturbed with Gaussian noise and the DiT model denoises these tokens. The model is conditioned on text through cross attention. The text prompt provides additional information about the video that is used for denoising. At inference time, the text can be used to generate new videos. The model can also be conditioned with input image frames to generate video continuations.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/cosmos_diffusion.png" caption="" alt="Cosmos Diffusion WFM" source="https://arxiv.org/abs/2501.03575"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/cosmos_diffusion.png" caption="" alt="Cosmos Diffusion WFM" source="https://arxiv.org/abs/2501.03575"%}
 
 **Autoregressive**
 
@@ -116,7 +116,7 @@ Stage 2: Train with text conditioning.
 
 A diffusion model is used as a decoder to achieve higher quality video generations. This decoder is trained separately.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/cosmos_ar.png" caption="" alt="Cosmos Autoregressive WFM" source="https://arxiv.org/abs/2501.03575"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/cosmos_ar.png" caption="" alt="Cosmos Autoregressive WFM" source="https://arxiv.org/abs/2501.03575"%}
 
 ---
 
@@ -126,7 +126,7 @@ In Cosmos, actions are referred to as perturbations or $$c_t$$. During WFM train
 
 During world model pretraining, explicit actions aren't used. The model functions essentially as a video generation model. However, the models are later finetuned to incorporate explicit actions for different use cases, transforming them into true world models.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/cosmos_wfm.png" caption="" alt="Cosmos WFM diagram" source="https://arxiv.org/abs/2501.03575"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/cosmos_wfm.png" caption="" alt="Cosmos WFM diagram" source="https://arxiv.org/abs/2501.03575"%}
 
 Cosmos was released very recently. It will be interesting to see whether "World Foundation Models" become more widely developed and used in the coming months. No model has been trained yet on this scale of physical AI data.
 
@@ -142,7 +142,7 @@ The dynamics model can be implemented with a world model. This is when the model
 
 This relatively early paper shows the advantages of world models in the context of reinforcement learning. They train world models on different OpenAI Gym environments to learn effective policies.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/ha_1.png" caption="" alt="World Models full diagram" source="https://worldmodels.github.io/"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/ha_1.png" caption="" alt="World Models full diagram" source="https://worldmodels.github.io/"%}
 
 V: The vision model is a VAE that learns a latent representation $$z$$ of the observation (image) from the environment.
 
@@ -150,7 +150,7 @@ M: The memory RNN learns representations across time and makes predictions in th
 
 C: The controller predicts an action from the hidden state and current latent representation. This can be a lightweight linear model.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/ha_2.png" caption="" alt="World Model inference" source="https://worldmodels.github.io/" width=500%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/ha_2.png" caption="" alt="World Model inference" source="https://worldmodels.github.io/" width=500%}
 
 Steps to train
 
@@ -172,7 +172,7 @@ The paper “Mastering Diverse Domains through World Models” by [Hafner et al.
 
 The world model is implemented as a Recurrent State-Space Model (RSSM), which is learned using trajectories with frames and actions.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/dreamer_training.png" caption="" alt="Dreamer world model training" source="https://arxiv.org/pdf/2301.04104" width=600%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/dreamer_training.png" caption="" alt="Dreamer world model training" source="https://arxiv.org/pdf/2301.04104" width=600%}
 
 Sequence model $$h_t=f_{\phi}(h_{t-1},z_{t-1},a_{t-1})$$: This model predicts the next hidden state from the prior hidden state, latent representation, and action.
 
@@ -212,7 +212,7 @@ Rather than interacting with real environments, the actor can be trained on imag
 
 The actor and critic are trained concurrently on both imagined trajectories from the world model and real trajectories stored in a replay buffer. While the world model improves sample efficiency, some real interaction is still needed to fine-tune on the specific task. The ratio of imagined to real trajectories and the weighting of losses are tunable hyperparameters.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/dreamer_inference.png" caption="" alt="Dreamer Actor Critic learning" source="https://arxiv.org/pdf/2301.04104" width=500%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/dreamer_inference.png" caption="" alt="Dreamer Actor Critic learning" source="https://arxiv.org/pdf/2301.04104" width=500%}
 
 Dreamer uses a general purpose world model to be able to more effectively and efficiently learn policies for a variety of tasks and environments. One shortcoming of Ha et al. 2018 and Dreamer is that they only use trajectories with rewards for training. As we know, this kind of data is limited. We want to be able to train with videos that have no actions and rewards, and even with static unlabeled images.
 
@@ -230,7 +230,7 @@ $$
 
 The observation model learns a latent representation. The transition model predicts future representations given the prior observations and actions. The decoder model reconstructs the image observation, which is optional (visualization/generation).
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/dino_wm.png" caption="" alt="DINO-WM" source="https://arxiv.org/abs/2411.04983"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/dino_wm.png" caption="" alt="DINO-WM" source="https://arxiv.org/abs/2411.04983"%}
 
 ### **Observation Model**
 
@@ -258,7 +258,7 @@ While the model is trained with trajectories from the dataset, at test time we w
 
 Given the current observation $$o_0$$ and a goal observation $$o_g$$, which is an image of the desired outcome. Model predictive control is used to find a sequence of actions to reach the goal. The following cost is optimized: $$\mathcal{C} = \| \hat{z}_T - z_g^2 \|$$ where $$\hat{z}_t = p(\hat{z}_{t-1},a_{t-1})$$, $$\hat{z}_0 = enc(o_0)$$, $$\hat{z}_g = enc(o_g)$$.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/dino_observations.png" caption="example start observation (left), and goal obvservation (right)" alt="example start observation (left), and goal obvservation (right)" source="https://arxiv.org/abs/2411.04983"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/dino_observations.png" caption="example start observation (left), and goal obvservation (right)" alt="example start observation (left), and goal obvservation (right)" source="https://arxiv.org/abs/2411.04983"%}
 
 This method defines goal states with images. This is only feasible for simulated environments. This method is not directly applicable to more complex real world applications.
 
@@ -282,7 +282,7 @@ Video generation models like [Veo](https://deepmind.google/technologies/veo/veo-
 
 [I-JEPA](https://arxiv.org/abs/2301.08243) and [V-JEPA](https://arxiv.org/abs/2404.08471) (discussed in my [JEPA blog post](https://rohitbandaru.github.io/blog/JEPA-Deep-Dive/)), and similar self-supervised learning methods can be interpreted as world models. These methods work by masking parts of the image or video. The masking itself functions as the action. The model has access to the location of the masks and predicts the latent representations of the masked regions.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/world_models/iwm.png" caption="" alt="IWM" source="https://arxiv.org/abs/2403.00504" width=500%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/world_models/iwm.png" caption="" alt="IWM" source="https://arxiv.org/abs/2403.00504" width=500%}
 
 This [work](https://arxiv.org/abs/2403.00504) introduces Image World Models (IWM). IWM extends I-JEPA by using various image distortions beyond simple masking—such as changes to brightness, contrast, and saturation. These distortions are commonly used in [contrastive SSL](https://rohitbandaru.github.io/blog/Self-Supervised-Learning/) methods. The action becomes a representation of the distortion applied to the source image to produce the target image. Using the source latent and the action, the IWM predicts the latent representation of the target image.
 

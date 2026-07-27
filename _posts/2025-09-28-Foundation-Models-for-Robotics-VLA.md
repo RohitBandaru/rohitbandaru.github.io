@@ -2,7 +2,7 @@
 layout: post
 title: "Foundation Models for Robotics: Vision-Language-Action (VLA)"
 description: "How vision-language-action models bring foundation models to robotics, covering RT-1, RT-2, OpenVLA, pi0, and Hi Robot."
-tags: robotics, computer-vision, deep-learning, reinforcement-learning, transformers
+tags: robotics computer-vision deep-learning reinforcement-learning transformer
 thumbnail: assets/img/blog/vla/pi0.png
 citation: true
 toc:
@@ -40,7 +40,7 @@ Fine-tuning data varies widely in scale. Pretraining makes these models sample e
 
 The data for training robots mainly consists of videos accompanied by robot actions. Actions are typically floating-point values to map to low-level commands to control the hardware. These robot “episodes” can also contain additional sensor data or multiple camera views. This data is diverse due to different robot embodiments, each with varying sensors, action spaces, and capabilities. The goal of a foundation model is to train a single model that can be deployed across many robots, requiring a large dataset that contains data from a diverse set of robots.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/trajectory.png" alt="Sample action trajectory from DROID" class="img-fluid mx-auto d-block" width=600 source="https://droid-dataset.github.io/" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/trajectory.png" alt="Sample action trajectory from DROID" class="img-fluid mx-auto d-block" width=600 source="https://droid-dataset.github.io/" %}
 
 One of the most significant efforts in building this kind of dataset is [Open X-Embodiment](https://robotics-transformer-x.github.io/). This collective effort from 21 academic and industrial institutions amalgamates 72 different datasets from 27 different robots, covering 527 skills across 160,266 tasks. The dataset standardizes data from diverse robot types (single arm, double arm, wheeled robots) with varying sensors and action spaces into a unified format.
 
@@ -48,11 +48,11 @@ If we want to compare the training scale directly with VLMs, we have to rely on 
 
 VLMs are trained on trillion token internet-scale data. It is possible to get competitive in token count with robotics data. Open X-Embodiment contains 2.4 million episodes. If we assume 30 seconds per episode, 30 Hz frame sampling, and ~512 vision tokens per frame, we can get over a trillion tokens. This token count also doesn’t account for additional sensor and camera views, and the action tokens. However, this token count shouldn’t be compared with the trillions of tokens that LLMs train on. The parameters used in this calculation are estimates only. Also, there is a lot of redundancy in these video tokens. We should expect a trillion video tokens to have less signal than a trillion text tokens.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/embodiment_distribution.png" alt="Embodiment Diversity in Open X-Embodiment" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2310.08864" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/embodiment_distribution.png" alt="Embodiment Diversity in Open X-Embodiment" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2310.08864" %}
 
 Rather than token counts, we should focus more on the quantity and diversity of video. It is hard to say how many videos the largest VLMs are trained on, but we do know that billions of general videos are available, far more than robot videos. This is because there are far more videos available through internet-scale pretraining than there are robot videos. The way to address this is to utilize non-robot videos to take advantage of transfer learning. The diversity of robot data is limited. While the 27 different embodiments represent unprecedented variety in robotics research, this is still minuscule compared to the diversity found in internet-scale datasets. One interesting avenue to address limited embodiment diversity is training in simulation. Skild AI [reports](https://www.skild.ai/blogs/omni-bodied) training on 100,000 different robots generated in simulation.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/task_distribution.png" alt="Task distribution in Open X-Embodiment" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2310.08864" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/task_distribution.png" alt="Task distribution in Open X-Embodiment" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2310.08864" %}
 
 These datasets are also limited in the diversity and coverage of tasks. For example, simple tasks are overrepresented while highly dexterous tasks are less covered.
 
@@ -98,17 +98,17 @@ In the Gemini Robotics paper, the authors define embodied reasoning as follows.
 
 This is an ability of vision language models (VLMs) and is not necessarily tied to robotics. VLMs refer to multimodal language models that can process visual and text inputs. Testing embodied reasoning simply involves prompting VLMs about images. Classical computer vision tasks like object detection and multi-view correspondence fall under embodied reasoning. These tasks are all expressed as language prompts.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/er_tasks.png" alt="Gemini Robotics embodied reasoning examples" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2503.20020" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/er_tasks.png" alt="Gemini Robotics embodied reasoning examples" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2503.20020" %}
 
 Embodied reasoning can also be tested through visual question answering. These questions test the understanding required to interact with the environment.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/embodied_reasoning.png" alt="Gemini Robotics visual question answering examples" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2503.20020" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/embodied_reasoning.png" alt="Gemini Robotics visual question answering examples" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2503.20020" %}
 
 In addition to general physical reasoning, we can take advantage of world knowledge to make decisions. For example, we could ask a robot to pick up a healthy snack in the kitchen. The world knowledge in the VLM would be used to figure out how to execute this ambiguous command.
 
 Applying VLMs means that robotics can take advantage of advances in LLM capabilities. For example, we can take advantage of the impressive recent progress made in LLM reasoning and test-time compute. We can prompt the VLM to output a reasoning trace which allows it to better solve an embodied reasoning problem.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/reasoning_trace.png" alt="Gemini Robotics reasoning trace example" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2503.20020" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/reasoning_trace.png" alt="Gemini Robotics reasoning trace example" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2503.20020" %}
 
 Gemini Robotics introduces an [Embodied Reasoning QA (](https://github.com/embodiedreasoning/ERQA)ERQA) benchmark that measures the embodied reasoning capabilities of LLMs. This benchmark requires no fine-tuning and works with any VLM. For models intended for embodied AI applications, performance results on this or other embodied reasoning benchmarks ([EmbodiedBench](https://embodiedbench.github.io/), [EAR-Bench](https://github.com/ZJU-REAL/OmniEmbodied)) should be reported.
 
@@ -122,7 +122,7 @@ When applying LLMs to new domains, we typically follow a progression of increasi
 
 One way to express robot control is by specifying an API with code. The context to the VLM will include the documented API. The robot can reason based on this API and produce code that would execute a command.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/gemini_zero_shot.png" alt="Gemini Robotics zero-shot control example" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2503.20020" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/gemini_zero_shot.png" alt="Gemini Robotics zero-shot control example" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2503.20020" %}
 
 [Levine et al. 2025](https://arxiv.org/abs/2407.08693) explore this in more depth. Reasoning improves performance on robotics tasks as well as the interpretability of the actions.
 
@@ -130,7 +130,7 @@ One way to express robot control is by specifying an API with code. The context 
 
 Zero-shot control works well when the API is high-level. For high-level APIs, we may have another model generating the low-level actions. However, if we want the VLM to output low-level actions, we need to give some examples. A few-shot prompt that includes examples of how to use low-level commands to complete actions would give the model the necessary information. It would then extrapolate based on these examples on how to execute novel commands.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/gemini_few_shot.png" alt="Gemini Robotics few-shot control example" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2503.20020" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/gemini_few_shot.png" alt="Gemini Robotics few-shot control example" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2503.20020" %}
 
 ### Fine-tuning
 
@@ -138,7 +138,7 @@ Similar to traditional LLM applications, we can enhance VLMs for robotics by fin
 
 The fine-tuning process follows a supervised learning paradigm where human operators manually demonstrate tasks with robots. These demonstrations generate datasets of visual observations paired with corresponding low-level action trajectories. This approach is known as behavior cloning or imitation learning in robotics, but can also be considered a form of supervised fine-tuning (SFT) process as used in LLM training.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/gemini_vla.png" alt="Gemini Robotics fine-tuning approach" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2503.20020" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/gemini_vla.png" alt="Gemini Robotics fine-tuning approach" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2503.20020" %}
 
 Modern implementations like Gemini Robotics employ a distributed architecture that balances capability with operational efficiency. A large VLA model runs in the cloud for high-level reasoning and planning, while a compact action decoder resides on the robot itself, translating model outputs into low-latency control signals.
 
@@ -150,7 +150,7 @@ A natural extension of this approach is training VLAs with reinforcement learnin
 
 However, scaling online learning becomes significantly more challenging when it requires physical actions in the real-world. Researchers have attempted to address this by creating environments where multiple robots can interact simultaneously. For example, Google built a [robot arm farm](https://arxiv.org/abs/1603.02199) in 2016. Yet in the context of modern deep learning, a scale of 14 robots is minuscule. We would need millions. We may be able to achieve this once robots are able to be mass-deployed. Then there will be a new set of challenges if we want to do distributed online reinforcement learning.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/robot_farm.png" alt="Google robot arm farm" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/1603.02199" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/robot_farm.png" alt="Google robot arm farm" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/1603.02199" %}
 
 There is a rich body of literature to work around the challenge of scaling online learning. The robot policy can be learned in simulation or in the real-world (which is more expensive and slower).
 
@@ -186,7 +186,7 @@ As we explored in my [VLM blog post](https://rohitbandaru.github.io/blog/Vision-
 
 LLMs are built to predict discrete tokens. The simplest implementations of VLAs discretize actions so the model can predict them as tokens in its vocabulary. The actions are trained and decoded autoregressively, with discretized tokens added to the model's vocabulary. During inference, the output is detokenized, meaning discrete tokens are mapped back to continuous actions for robot execution.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/openvla.png" alt="OpenVLA discrete action tokenization" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2406.09246" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/openvla.png" alt="OpenVLA discrete action tokenization" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2406.09246" %}
 
 [RT-2](https://arxiv.org/abs/2307.15818) and [OpenVLA](https://arxiv.org/abs/2406.09246) are two works that implement discretized autoregressive action training. Although it's possible to represent actions as text using the normal text tokenizer (treating this as standard SFT), it's more effective to treat actions as distinct tokens.
 
@@ -259,7 +259,7 @@ These specialized weights can be added on top of the transformer, such as a mult
 
 $$\pi_0$$ adds a 300 million parameter action expert to a PaliGemma VLM. The model's inputs are divided into a prefix and suffix. The prefix contains vision tokens for recent image frames and text prompts, which can be processed directly by the pretrained VLM. The suffix adds robotics inputs: $$q_t$$ representing the proprioceptive state (current position of robot), and noise (interpolation between noise and actions for flow matching).
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/pi0.png" alt="π₀ action expert architecture" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2410.24164v1" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/pi0.png" alt="π₀ action expert architecture" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2410.24164v1" %}
 
 The action expert is a transformer model with the same number of layers but smaller embedding dimensions and MLP widths. The attention heads and per-head embedding dimension must match the main model to allow prefix tokens in the attention mechanism. When processing, suffix tokens go through the action expert transformer while incorporating the KV embeddings from the prefix (these are computed once then cached). The prefix uses full self-attention, while the suffix uses causal attention. This makes sense since we don't need to predict tokens in the prefix. This smaller action expert architecture enables faster inference while still leveraging the capabilities of the larger VLM.
 
@@ -277,13 +277,13 @@ Chunking is effective since actions have a lot of redundancy. This means that th
 
 The original work ([Zhao et al. 2023](https://arxiv.org/abs/2304.13705)) also evaluates temporal ensembling, which is later found not to be effective in $$\pi_0$$. This involves introducing an overlap between chunks and taking the average of the predicted actions. However, incorporating temporal ensembling could be useful if we want to increase the frequency of observations.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/act.png" alt="Action chunking methodology" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2304.13705" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/act.png" alt="Action chunking methodology" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2304.13705" %}
 
 ### Real-Time Action Chunking
 
 The main problem with action chunking is that we either have to have inference delays or introduce lag in the observations. If we use real-time with observation lag, the model doesn't see the result of the second half of the latest chunk while planning the next chunk, since those actions haven't been executed yet. This can cause discontinuities in the action that lead to jerky, unnatural movement at chunk boundaries. This delay can also be exacerbated by latency in retrieving the observations. It is possible to address this issue by adding the unexecuted actions to the input of the model, but the $$\pi_0$$ model doesn't seem to do this.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/chunk_discontinuity.png" alt="How delays introduce discontinuities in action chunking" class="img-fluid mx-auto d-block" width=600 source="https://www.pi.website/download/real_time_chunking.pdf" caption="This illustration shows how delays introduce discontinuities. This also shows how temporal ensembling results in erroneous trajectories." %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/chunk_discontinuity.png" alt="How delays introduce discontinuities in action chunking" class="img-fluid mx-auto d-block" width=600 source="https://www.pi.website/download/real_time_chunking.pdf" caption="This illustration shows how delays introduce discontinuities. This also shows how temporal ensembling results in erroneous trajectories." %}
 
 [Black et al. 2025](https://www.pi.website/research/real_time_chunking) proposes an inference time solution that does not require training changes. The main goal is to improve consistency between chunks as simply smoothing over the discontinuities wasn’t working well enough. They treat generating new action chunks like an [image inpainting](https://huggingface.co/docs/diffusers/en/using-diffusers/inpaint) problem. This is another area where VLA research has taken advantage of image generation.
 
@@ -291,7 +291,7 @@ We can first introduce some terminology to define the inference process. $$H$$ (
 
 With $$H=50$$ and $$s=25$$, if we start inference after executing $$s$$ actions, then by the time Chunk 1 is ready ($$d$$=3 timesteps later), we'll have executed $$s+d=28$$ actions from Chunk 0. This means when we eventually switch to Chunk 1, the first d=3 actions need to be frozen to match actions 25-27 from Chunk 0. However, actions 28-49 can be edited while we predict Chunk 1. We can consider 3 regions:
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/rtc.png" alt="Action chunking regions: frozen, intermediate, and fresh" class="img-fluid mx-auto d-block" width=600 source="https://www.pi.website/download/real_time_chunking.pdf" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/rtc.png" alt="Action chunking regions: frozen, intermediate, and fresh" class="img-fluid mx-auto d-block" width=600 source="https://www.pi.website/download/real_time_chunking.pdf" %}
 
 1. **Frozen region (first** $$d$$ **actions)**: Weight = 1. These actions from the previous chunk will have already executed by the time inference finishes, so they must be frozen to match what actually happened.
 2. **Intermediate region (actions** $$d$$ **to** $$H-s$$**)**: Exponentially decaying weights from 1 to 0. These actions belong to the current chunk. The exponential decay encourages smoothness between chunks.
@@ -309,7 +309,7 @@ $$\pi_0$$ does an evaluation where they break apart complex high-level commands 
 
 In the [Hi Robot](https://arxiv.org/abs/2502.19417) work, the authors build this kind of hierarchical system with a high-level policy generating commands to a low-level policy. The high-level policy is just a VLM that outputs text, while the low-level policy generates actions.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/hi_robot.png" alt="Hi Robot hierarchical architecture" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2502.19417" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/hi_robot.png" alt="Hi Robot hierarchical architecture" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2502.19417" %}
 
 This hierarchical approach enhances the system's ability to handle longer-term and more complex tasks, while also improving interpretability by making the high-level policy outputs readable. The approach more than doubles performance on certain open-ended tasks such as table bussing and sandwich making, compared to $$\pi_0$$.
 
@@ -317,11 +317,11 @@ One gap with breaking part a high-level task into low-level commands is that the
 
 $$\pi_{0.5}$$ implements this kind of combined [model](https://arxiv.org/abs/2504.16054). It is trained to predict a single subtask at a time based on the observation. It runs an inference loop where it generates a subtask based on the observation, executes the subtask to completion, and then generates a new subtask based on the latest observation.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/pi05.png" alt="π₀.₅ combined VLM/VLA architecture" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2504.16054" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/pi05.png" alt="π₀.₅ combined VLM/VLA architecture" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2504.16054" %}
 
 Although this approach is effective in executing complex multi-step tasks, it is limited in the fact that it greedily only generates one subtask at a time. Some tasks may benefit from generating a complete plan of subtasks before executing. However, we may also want to update the plan as we complete subtasks. In a follow-up [work](https://www.physicalintelligence.company/research/knowledge_insulation), they introduce a stop grad between the action expert and the VLM backbone. The idea is that the VLM parameters should only be trained to output text. Gradients from predicting continuous actions can interfere with the VLM’s abilities. This is considered knowledge insulation. However, we still want the VLM to learn from the actions, so it is co-trained to predict discretized actions.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vla/knowledge_insulation.png" alt="Knowledge insulation in VLA training" class="img-fluid mx-auto d-block" width=600 source="https://www.physicalintelligence.company/research/knowledge_insulation" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vla/knowledge_insulation.png" alt="Knowledge insulation in VLA training" class="img-fluid mx-auto d-block" width=600 source="https://www.physicalintelligence.company/research/knowledge_insulation" %}
 
 Training effective VLAs requires balancing different capabilities: continuous action prediction, discrete action understanding, and the semantic comprehension of the VLM.
 

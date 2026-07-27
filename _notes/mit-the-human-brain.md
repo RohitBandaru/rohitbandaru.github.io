@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "MIT The Human Brain"
+description: "Notes from MIT 9.13 The Human Brain, covering neuroanatomy, cognitive neuroscience methods, category selectivity, navigation, and development."
 date: 2025-01-04
-tags: neuroscience, cognitive-science
+tags: neuroscience cognitive-science
 citation: false
 toc:
   sidebar: left

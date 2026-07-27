@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Introduction to Neuroscience"
+description: "Notes from Bing Wen Brunton's introductory neuroscience course, covering the neuron doctrine, resting potential, synapses, and synaptic transmission."
 date: 2025-01-04
 tags: neuroscience
 citation: false

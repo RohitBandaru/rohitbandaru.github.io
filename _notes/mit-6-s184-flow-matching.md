@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Notes for MIT 6.S184: Flow Matching and Diffusion Models"
+description: "Notes for MIT 6.S184 on flow matching and diffusion models: flow and diffusion models, score functions, training targets, and classifier-free guidance."
 date: 2025-08-10
-tags: generative-models, deep-learning
+tags: generative-models deep-learning
 citation: false
 toc:
   sidebar: left

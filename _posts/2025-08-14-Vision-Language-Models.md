@@ -2,7 +2,7 @@
 layout: post
 title: "Vision Language Models"
 description: "How vision language models connect images to text for zero-shot tasks, covering CLIP, SigLIP, Flamingo, and LLaVA."
-tags: computer-vision, deep-learning, transformers, multimodal
+tags: computer-vision deep-learning transformer multimodal
 thumbnail: assets/img/blog/vlm/clip_architecture.png
 citation: true
 toc:
@@ -10,7 +10,7 @@ toc:
 keywords: vision language models, VLM, CLIP, multimodal, transformers, computer vision, natural language processing, image understanding, zero-shot learning, few-shot learning, contrastive learning, cross-attention, attention pooling, visual question answering, image captioning
 ---
 
-In previous blog posts, we explored self-supervised visual learning methods that transform images and videos into information-rich embeddings. While these embeddings are powerful, they typically require fine-tuning downstream models for specific tasks. In contrast, LLMs excel at zero-shot and few-shot tasks without any fine-tuning. We want to achieve this capability with visual data.
+In previous blog posts, we explored self-supervised visual learning methods that transform [images](/blog/SSL-with-Vision-Transformers/) and [videos](/blog/Self-Supervision-from-Videos/) into information-rich embeddings. While these embeddings are powerful, they typically require fine-tuning downstream models for specific tasks. In contrast, LLMs excel at zero-shot and few-shot tasks without any fine-tuning. We want to achieve this capability with visual data.
 
 The best way to specify few-shot tasks is through language. For example, you can input any image to ChatGPT or Gemini and ask questions like "What species of bird is in this photo?". Without language you would need to collect training datasets of bird species and frame this as a classification problem. Alternatively, you could use few-shot learning with support sets by showing the model a few labeled examples of each bird species, but this approach is fundamentally brittle. You must pre-define every possible category and cannot handle abstract concepts like migration patterns or behavioral traits. Zero-shot learning is essentially impossible without language, as there's no way to specify novel tasks the model is not trained to predict. Connecting vision to language allows us to specify arbitrary tasks without having to train any model. Some tasks also inherently require language generation, like image captioning and visual question answering.
 
@@ -34,7 +34,7 @@ In this blog we will cover the vision encoders used in VLMs, different types of 
 
 # Vision Encoders
 
-In order to build a VLM, we need a vision encoder to map images/videos into embeddings or sequences of embeddings. While we could use a pure vision encoder model (as explained in my previous SSL blog posts), we achieve better performance when training vision encoders alongside text. Let's explore some methods for pretraining vision encoders using image-text pairs.
+In order to build a VLM, we need a vision encoder to map images/videos into embeddings or sequences of embeddings. While we could use a pure vision encoder model (as explained in my previous [SSL blog posts](/blog/SSL-with-Vision-Transformers/)), we achieve better performance when training vision encoders alongside text. Let's explore some methods for pretraining vision encoders using image-text pairs.
 
 ## [CLIP](https://arxiv.org/abs/2103.00020)
 
@@ -82,7 +82,7 @@ The loss is computed for each image and text pair independently. Since most of t
 
 The advantage of this compared to CLIP is that we do not need to calculate a global normalization factor for the cross entropy. The SigLIP loss can be better parallelized across devices.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/siglip_parallelization.png" alt="SigLIP parallelization strategy" class="img-fluid mx-auto d-block" width=650 source="https://arxiv.org/abs/2303.15343" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/siglip_parallelization.png" alt="SigLIP parallelization strategy" class="img-fluid mx-auto d-block" width=650 source="https://arxiv.org/abs/2303.15343" %}
 
 Each device gets a chunk of the images. In step 1, they compute the loss with respect to the matching chunk of text. Each device then iterates through the other chunks of text embeddings (containing only negatives) and accumulates the loss.
 
@@ -90,7 +90,7 @@ Each device gets a chunk of the images. In step 1, they compute the loss with re
 
 An alternative to the contrastive training methods of CLIP/ALIGN and SigLIP is image captioning. The pretraining task is to predict the text from the image. This is also closer to how the vision encoder will be used in a VLM.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/cappa_architecture.png" alt="CapPa architecture" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2306.07915v5" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/cappa_architecture.png" alt="CapPa architecture" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2306.07915v5" %}
 
 Captioning is an alternative training method. A transformer decoder (LLM) is trained to predict the text, while attending to the image through cross attention. This contrasts with contrastive approaches in that we are generating the text, rather than text embeddings. This requires a decoder architecture for the text encoder.
 
@@ -100,7 +100,7 @@ In addition to captioning (Cap), this work also incorporates parallel decoding t
 
 This paper introduces Contrastive Captioner (CoCa), which is a method that unifies the contrastive and captioning approaches to learning from image text pairs.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/coca_architecture.png" alt="CoCa architecture" class="img-fluid mx-auto d-block" width=500 source="https://arxiv.org/abs/2205.01917" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/coca_architecture.png" alt="CoCa architecture" class="img-fluid mx-auto d-block" width=500 source="https://arxiv.org/abs/2205.01917" %}
 
 CoCa combines both approaches by training with a multi-task loss function that incorporates both contrastive learning and captioning objectives. Unlike CapPa, CoCa's text decoder is split into unimodal and multimodal components.
 
@@ -136,7 +136,7 @@ Intermediate fusion, where vision embeddings are added at a middle layer, could 
 
 Early fusion VLM architectures use a vision encoder to output a sequence of vision embeddings. These embeddings are processed by an adapter before being appended to the LLM's input. Typically, the LLM applies full attention to these visual tokens while using causal attention for the language tokens. This approach works because the model isn't generating the image tokens but using them to generate text. Models that perform autoregressive image generation are an exception to this pattern (it's rumored that GPT-4o uses this approach). [Chameleon](https://arxiv.org/abs/2405.09818) from Meta implements this. Currently, it is more popular to have separate models for image generation, so we'll focus more on images as inputs rather than outputs.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/chameleon_architecture.png" alt="Chameleon architecture" class="img-fluid mx-auto d-block" width=700 caption="The Chameleon architecture requires quantizing image into discrete tokens using a VQ-VAE encoder, and then decoding the outputs. The model generates special start and end tokens around the images." source="https://arxiv.org/abs/2405.09818" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/chameleon_architecture.png" alt="Chameleon architecture" class="img-fluid mx-auto d-block" width=700 caption="The Chameleon architecture requires quantizing image into discrete tokens using a VQ-VAE encoder, and then decoding the outputs. The model generates special start and end tokens around the images." source="https://arxiv.org/abs/2405.09818" %}
 
 Transformers have a quadratic computational complexity with respect to token length. Images introduce a large number of tokens, particularly at high resolutions, significantly increasing the computational demands on the LLM. When designing VLM architectures, token compression becomes essential. Several techniques exist to reduce the number of visual tokens that the language model must process.
 
@@ -148,7 +148,7 @@ Cross attention adapters, also called attention poolers, compress sets of embedd
 
 This is implemented in Qwen-VL as a “position-aware vision-language adapter”. The number of query embeddings dictates how many embeddings we choose to represent the image. There is a trade-off between capturing more information and reducing the sequence length that the LLM sees.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/qwen_vl_adapter.png" alt="Qwen-VL position-aware vision-language adapter" class="img-fluid mx-auto d-block" width=500 source="https://arxiv.org/abs/2308.12966" width=400 %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/qwen_vl_adapter.png" alt="Qwen-VL position-aware vision-language adapter" class="img-fluid mx-auto d-block" width=500 source="https://arxiv.org/abs/2308.12966" width=400 %}
 
 This cross attention layer is added in between the ViT and the LLM. The existing transformer blocks of the vision encoder and language model are not modified.
 
@@ -158,7 +158,7 @@ This architecture can gracefully handle different resolutions of images, but the
 
 In the [LLaVA](https://arxiv.org/abs/2304.08485) work by [Liu et al. 2023](https://arxiv.org/abs/2304.08485), the authors train a simple VLM architecture by combining a pretrained LLM ([Vicuna](https://github.com/lm-sys/FastChat) model, open-source instruction-tuned LLaMA) and a pretrained vision encoder (CLIP ViT-L). The vision tokens are linearly projected and then concatenated to the input of the LLM decoder.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/llava_architecture.png" alt="LLaVA architecture" class="img-fluid mx-auto d-block" width=500 %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/llava_architecture.png" alt="LLaVA architecture" class="img-fluid mx-auto d-block" width=500 %}
 
 This approach is currently more popular than cross attention. Qwen switched to MLP for Qwen-VL2. LLaMA 3.2-Vision, PaliGemma 2, and DeepSeek-VL also use MLP adapters.
 
@@ -168,13 +168,13 @@ With MLPs, we have less control over the token lengths. The simplest way to comp
 
 BLIP-2 ([Li et al. 2023](https://arxiv.org/abs/2301.12597)) uses a Querying Transformer or Q-Former as an adapter. These architectures are similar to Flamingo in that they keep the vision encoder and text decoder frozen. However, BLIP is actually an early fusion architecture.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/blip2_architecture.png" alt="BLIP-2 Q-Former architecture" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2305.06500" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/blip2_architecture.png" alt="BLIP-2 Q-Former architecture" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2305.06500" %}
 
 The Q-Former is similar to the Perceiver in that it processes images with a fixed number of learned query embeddings. However, it also takes in the text tokens. The text input shares the self attention layer but skips the vision cross attention and learns a new feed forward layer.
 
 This is trained in two stages. In stage 1, three losses are optimized: Image-Text Matching (ITM, binary classification of whether image-text pairs match), Image-Grounded Text Generation (ITG, next token prediction loss conditioned on image), and Image-Text Contrastive Learning (ITC, CLIP loss). These different losses are set up by changing the attention masks.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/blip2_training_stages.png" alt="BLIP-2 training stages" class="img-fluid mx-auto d-block" width=500 source="https://arxiv.org/abs/2301.12597" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/blip2_training_stages.png" alt="BLIP-2 training stages" class="img-fluid mx-auto d-block" width=500 source="https://arxiv.org/abs/2301.12597" %}
 
 In Stage 2, they connect the Q-Former to a frozen LLM, by concatenating the visual outputs to the LLM’s inputs. The text component of the Q-Former is discarded. This is finetuned to generate text.
 
@@ -186,11 +186,11 @@ The cross attention adapter uses attention to map embeddings to the input of the
 
 [Alayrac et al. 2022](https://arxiv.org/abs/2204.14198) introduce the Flamingo VLM architecture. It keeps the vision encoder and LLM parameters frozen but adds perceiver resamplers and gated cross-attention dense blocks. Since the LLM parameters are frozen, this method has no effect on the text only performance of the model and we can easily recover the text only LLM by deleting these additional modules.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/flamingo_architecture.png" alt="Flamingo architecture" class="img-fluid mx-auto d-block" width=700 source="https://arxiv.org/abs/2204.14198" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/flamingo_architecture.png" alt="Flamingo architecture" class="img-fluid mx-auto d-block" width=700 source="https://arxiv.org/abs/2204.14198" %}
 
 The perceiver resampler takes a variable number of input embeddings and outputs a fixed number of output embeddings. It is essentially an attention pooler with a feed forward layer that is repeated by num_layers.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/flamingo_perceiver_resampler.png" alt="Flamingo perceiver resampler" class="img-fluid mx-auto d-block" width=500 source="https://arxiv.org/abs/2204.14198" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/flamingo_perceiver_resampler.png" alt="Flamingo perceiver resampler" class="img-fluid mx-auto d-block" width=500 source="https://arxiv.org/abs/2204.14198" %}
 
 The gated cross attention dense layers are similar to the cross attention layers in encoder-decoder transformers. It is gated by layer specific learnable alpha parameters. These are initialized to 0, so the added vision modules have no impact at the start of training. The tanh activation ensures non-zero gradients for the alpha parameters after initialization.
 
@@ -222,7 +222,7 @@ To guide GPT-4's generation, the authors manually designed seed examples for thr
 
 In the pretraining stage, both the vision encoder and the adapter are unfrozen. Qwen trains at a much larger scale than LLaVA, using 5 billion image-text pairs. They initially pretrain at a lower resolution and then switch to higher resolution images for subsequent stages.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/qwen_vl_training_stages.png" alt="Qwen-VL training stages" class="img-fluid mx-auto d-block" width=600 %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/qwen_vl_training_stages.png" alt="Qwen-VL training stages" class="img-fluid mx-auto d-block" width=600 %}
 
 The multi-task training phase uses higher quality data covering various vision-language tasks, including captioning, visual question answering, grounding, and OCR. They also incorporate text-only data to maintain the model's text generation abilities. All components remain unfrozen during this stage to develop general visual understanding, using 76.8 million examples.
 
@@ -230,7 +230,7 @@ In the final stage, the model is finetuned specifically for improved instruction
 
 [Qwen2-VL](https://arxiv.org/abs/2409.12191) uses the same training recipe but significantly scales up the datasets. It also uses the [Native Resolution ViT](https://arxiv.org/abs/2307.06304) architecture for dynamic resolution with the vision encoder. Unlike Qwen-VL, which used fixed image resolutions, Qwen2-VL also adds video support to both its architecture and training data.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/qwen25_vl_training_stages.png" alt="Qwen2.5-VL training stages" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2502.13923" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/qwen25_vl_training_stages.png" alt="Qwen2.5-VL training stages" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2502.13923" %}
 
 [Qwen2.5-VL](https://arxiv.org/abs/2502.13923) further improves this training recipe by scaling up sequence length, which is crucial for handling longer videos. The first two training stages maintain the same sequence length. However, Qwen2.5-VL replaces stage 3 with "Long-Context Pretraining," where the model is trained end-to-end (with both ViT and LLM unfrozen) on long-context data such as extended videos or images with substantial text. On top of these three pretraining stages, they add SFT and RLHF (DPO) post training stages.
 
@@ -240,7 +240,7 @@ They also show that this VLM training slightly reduces the text only performance
 
 The same pattern is used in [DeepSeek-VL](https://arxiv.org/abs/2403.05525), except the vision encoder is not frozen during the SFT stage.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/deepseek_vl_training_stages.png" alt="DeepSeek-VL training stages" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2403.05525" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/deepseek_vl_training_stages.png" alt="DeepSeek-VL training stages" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2403.05525" %}
 
 In [DeepSeek-VL2](https://arxiv.org/abs/2412.10302), they introduce a dynamic tiling strategy to enable dynamic resolution. The same training stages are applied but with scaled up and improved datasets.
 
@@ -248,11 +248,11 @@ In [DeepSeek-VL2](https://arxiv.org/abs/2412.10302), they introduce a dynamic ti
 
 Kimi-VL follows a strategy similar to Qwen2.5-VL. They pretrain MoonVIT, a dynamic resolution vision encoder. Both the Qwen2.5-VL and Kimi-VL vision encoders are trained using SigLIP and captioning losses, similar to CoCa. Unlike approaches that freeze certain components, Kimi-VL trains all parameters during each stage.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/kimi_vl_training_stages.png" alt="Kimi-VL training stages" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2504.07491" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/kimi_vl_training_stages.png" alt="Kimi-VL training stages" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2504.07491" %}
 
 During joint pretraining, the VLM trains on both image-text pairs and text-only data. This balanced approach is crucial at scale to prevent degradation of text generation capabilities. The cool down stage uses higher quality data, while the long context stage incorporates both long-context text and multimodal examples. A notable feature of Kimi's approach is the inclusion of both text and multimodal inputs throughout all training stages. They continue training with SFT and RL post training stages to develop a multimodal reasoning model.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/kimi_vl_data_composition.png" alt="Kimi-VL data composition" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2504.07491" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/kimi_vl_data_composition.png" alt="Kimi-VL data composition" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2504.07491" %}
 
 Despite variations in training pipelines, these models share common patterns. They all use multi-stage pretraining, with each progressive stage processing fewer examples but incorporating higher image resolution, longer context length, and improved data quality.
 
@@ -268,7 +268,7 @@ There are some interesting works on making this more efficient, leveraging the f
 
 There are more sophisticated methods that allow for a more dynamic compression that takes into account the variable amount of redundancy. For example, Run-Length Tokenization (RLT) ([Choudhury et al. 2024](https://arxiv.org/abs/2411.05222)) identifies consecutive patches that are repeated across video frames and replaces them with a single token plus a duration encoding. Consecutive patches are considered repeated if the L1 distance between them is below a threshold $\tau$. This method is content-aware in that the number of tokens depends on how redundant the frames of the video are.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/vlm/rlt_video_compression.png" alt="Run-Length Tokenization for video compression" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2411.05222" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/vlm/rlt_video_compression.png" alt="Run-Length Tokenization for video compression" class="img-fluid mx-auto d-block" width=600 source="https://arxiv.org/abs/2411.05222" %}
 
 RLT is a simple heuristic-based method of video token compression. There are also model based approaches for this.
 

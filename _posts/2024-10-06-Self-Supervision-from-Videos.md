@@ -17,7 +17,7 @@ Contrastive learning is limited by its dependence on data augmentations. These a
 
 {% include figure.liquid loading="eager" path="assets/img/blog/video-ssl/contrastive_ssl.png" alt="Contrastive SSL" width=500 %}
 
-{% include figure.liquid loading="eager" path="assets/img/blog/video-ssl/Purushwalkam.png" caption="Example showing that cropping can remove semantic information in images." source="https://arxiv.org/abs/2007.13916"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/video-ssl/Purushwalkam.png" caption="Example showing that cropping can remove semantic information in images." source="https://arxiv.org/abs/2007.13916"%}
 
 Example from [Purushwalkam et al](https://arxiv.org/abs/2007.13916) showing that cropping can remove semantic information in images.
 
@@ -37,7 +37,7 @@ Video representation learning can be understood through its downstream tasks. On
 
 This work is very similar to [SimCLR](https://rohitbandaru.github.io/blog/Self-Supervised-Learning/#simclr). It uses contrastive learning to learn representations of videos. Like SimCLR, InfoNCE loss is used to bring closer the representations of positive pairs and repel those of negative pairs. Positive pairs are data augmentations of the same video. There are two main differences with SimCLR:
 
-{% include figure.liquid loading="eager" path="assets/img/blog/video-ssl/cvrl.png" source="https://arxiv.org/abs/2008.03800" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/video-ssl/cvrl.png" source="https://arxiv.org/abs/2008.03800" %}
 
 ### 1) 3D CNN model architecture for the video encoder to produce representations
 
@@ -67,7 +67,7 @@ This paper is a great example of how image SSL techniques can be extended to vid
 
 ## [Self-Supervised Learning of Video-Induced Visual Invariances (VIVI)](https://arxiv.org/abs/1912.02783)
 
-{% include figure.liquid loading="eager" path="assets/img/blog/video-ssl/vivi.png" source="https://arxiv.org/abs/1912.02783"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/video-ssl/vivi.png" source="https://arxiv.org/abs/1912.02783"%}
 
 They developed a video-based self-supervised learning framework for image representations and evaluated it on the [VTAB](https://ai.googleblog.com/2019/11/the-visual-task-adaptation-benchmark.html) image representation benchmark.
 
@@ -85,7 +85,7 @@ They pretrain and evaluate an SSL model (MOCOv2) with the MSCOCO dataset (scene-
 
 This shows that for scene-centric evaluation tasks like object detection, cropping while pretraining is harmful.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/video-ssl/video-moco.png" source="https://arxiv.org/abs/2007.13916"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/video-ssl/video-moco.png" source="https://arxiv.org/abs/2007.13916"%}
 
 To replace cropping, videos can be used to get “temporal transformations”.
 
@@ -109,7 +109,7 @@ They use region tracking to make the frames of the video object-centric. They tr
 
 This work extends the [MAE](https://arxiv.org/abs/2111.06377) work ([SSL with Vision Transformers blog post](https://rohitbandaru.github.io/blog/SSL-with-Vision-Transformers/#masked-autoencoders-are-scalable-vision-learners)) to video. Rather than using contrastive learning, masked patches are predicted in the video.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/video-ssl/videomae.png" source="https://arxiv.org/abs/2203.12602"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/video-ssl/videomae.png" source="https://arxiv.org/abs/2203.12602"%}
 
 The video is represented as a 3D image. The video is split into cubes (in this paper, it's size 2 × 16 × 16). These cubes are treated like patches in ViT, but with an added time dimension. Each cube in the video is linearly projected and treated as a token embedding in the transformer. A position embedding is also added to the cube embedding. These cubes are treated as tokens in the transformer.
 

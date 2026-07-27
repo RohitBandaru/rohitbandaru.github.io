@@ -2,6 +2,7 @@
 layout: post
 title: "Transformer Design Guide (Part 1: Vanilla)"
 description: "Part 1 of a thorough guide to the Transformer, breaking down attention, embeddings, and every component of the original architecture."
+last_updated: 2024-12-11
 tags: transformer
 thumbnail: assets/img/blog/transformer_pt1/transformer.png
 citation: true
@@ -15,7 +16,7 @@ This blog post will be in two parts:
 
 **Part 1 will be a deep dive of the standard Transformer architecture.** It is a highly modular architecture, so we will explain each component in detail and how they integrate. This will also cover how to design the components for different use cases. It was introduced by the famous paper [Attention Is All You Need](https://arxiv.org/abs/1706.03762). There is no shortage of resources to learn about transformers, but I hope to offer some new perspectives.
 
-**Part 2 will cover recent advancements that have further advanced the capabilities of transformers.** The original transformer architecture is robust and versatile and has led to many successful applications. However, in recent years with the surge in investment into transformers / LLMs, we have seen many useful advances. These impart new capabilities such as longer context length, faster training, and more efficient inference. This is a guide to designing modern transformer architectures for any use case.
+**[Part 2](/blog/Transformer-Design-Guide-Pt2/) will cover recent advancements that have further advanced the capabilities of transformers.** The original transformer architecture is robust and versatile and has led to many successful applications. However, in recent years with the surge in investment into transformers / LLMs, we have seen many useful advances. These impart new capabilities such as longer context length, faster training, and more efficient inference. This is a guide to designing modern transformer architectures for any use case.
 
 # Transformer Architecture
 
@@ -52,7 +53,7 @@ Transformers for images were introduced in the [ViT](https://arxiv.org/abs/2010.
 2. The pixel values of each patch are flattened to vector and fed through a learned linear projection, resulting in patch embeddings.
 
 The result is a set of embeddings that can be processed by the transformer.
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt1/vit_input.png" caption="" alt="Image Tokenization"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt1/vit_input.png" caption="" alt="Image Tokenization"%}
 
 ## Text Tokenizer
 
@@ -83,9 +84,9 @@ It works by first starting with the individual characters (bytes) in the text as
 One interesting feature of this approach is that the tokenizer uses a small and separate dataset for BPE. This dataset can be engineered to achieve certain properties in the tokenizer. For example, it is beneficial for this data to be balanced between different languages. For example, if the amount of data for Japanese is significantly lower than that for English. Rare pairs in English would be prioritized over common pairs in Japanese. This would be unfair to Japanese, and Japanese text would require far more tokens. To address this, the tokenizer dataset can be balanced between different languages.
 
 See [platform.openai.com/tokenizer](https://platform.openai.com/tokenizer) for an interactive demo on how text is tokenized and mapped in token indices.
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt1/text_tokenization.png" caption="Example of tokenized text" alt="Example of tokenized text." source="https://platform.openai.com/tokenizer"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt1/text_tokenization.png" caption="Example of tokenized text" alt="Example of tokenized text." source="https://platform.openai.com/tokenizer"%}
 
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt1/token_indices.png" caption="Generated token indices" alt="Generated token indices" source="https://platform.openai.com/tokenizer"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt1/token_indices.png" caption="Generated token indices" alt="Generated token indices" source="https://platform.openai.com/tokenizer"%}
 
 BPE also involves some hardcoded rules. Some bytes, such as punctuation can be ignored in the tokenizer merging. GPT tokenizers use different regex patterns to split the string prior to tokenization to prevent certain bytes from merging.
 
@@ -98,7 +99,7 @@ See this [video](https://www.youtube.com/watch?v=zduSFxRajkE&t=24s&ab_channel=An
 ## Audio and Other Modalities
 
 Like images, audio is a continuous data modality. A popular method of tokenizing audio is to generate a spectrogram using a Fourier Transform. This creates an image that can be tokenized in the same way as images in ViT. The [AST: Audio Spectrogram Transformer](https://arxiv.org/abs/2104.01778) paper does exactly this.
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt1/audio_input.png" caption="Audio tokenization from AST" alt="Audio tokenization from AST" source="https://arxiv.org/abs/2104.01778" class="image-fluid mx-auto d-block" width=400 %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt1/audio_input.png" caption="Audio tokenization from AST" alt="Audio tokenization from AST" source="https://arxiv.org/abs/2104.01778" class="image-fluid mx-auto d-block" width=400 %}
 
 This paper uses a 2D position embedding so they can warmstart from a ViT model. If it were to train from audio only, a 1D position embedding could be used, as in OpenAI’s [Whisper](https://arxiv.org/abs/2212.04356).
 
@@ -142,7 +143,7 @@ Attention is implemented by first generating these three matrices. Let’s say t
 
 At this stage, no information has been transferred between tokens. Given the variable number of tokens, we can't use a single large MLP layer. To mix the information, we set each embedding to be a weighted sum of all value embeddings.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt1/scaled_attention.png" caption="Scaled Dot-Product Attention" alt="Scaled Dot-Product Attention" source="https://arxiv.org/abs/1706.03762" class="image-fluid mx-auto d-block" width=200%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt1/scaled_attention.png" caption="Scaled Dot-Product Attention" alt="Scaled Dot-Product Attention" source="https://arxiv.org/abs/1706.03762" class="image-fluid mx-auto d-block" width=200%}
 
 To compute this weighted sum, we first compute the attention matrix $$QK^T$$. This matrix is of shape $$(N, N)$$. This is the source of the $$N^2$$ complexity of transformers. The attention matrix contains scores for every combination of token query and key embeddings: $$q*k$$, which is scaled by a factor $$\frac{1}{\sqrt{d_k}}$$. This scaling is applied to normalize the gradients, such that the magnitude of the dot product isn’t dependent on the embedding dimension. This specific attention formulation is called scaled dot-product attention.
 
@@ -161,14 +162,14 @@ Cross-attention is particularly relevant for machine translation. In this contex
 ## Masked Self-Attention
 
 The transformer decoder uses causal masking. The decoder is trained to predict the next token. This task becomes trivial if the next token and all future tokens are visible, as in full self-attention. Causal masking constrains the attention operation to only look at tokens to the left, making the decoder auto-regressive (meaning each output depends only on previous outputs). This one-way flow of information is essential for generating sequences one token at a time.
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt1/masked_attention.png" caption="Example of a masked attention matrix" alt="Example of a masked attention matrix" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt1/masked_attention.png" caption="Example of a masked attention matrix" alt="Example of a masked attention matrix" %}
 
 Masking is applied on the $$QK^T$$ matrix. Masked indices are set to $$-\infty$$, this causes the softmax function to assign zero weight to these tokens. In many implementations of attention, the mask can be customized by passing in a Boolean matrix.
 
 ## Multi-Head Attention
 
 Multi-head attention (MHA) is a way to increase the expressivity of the attention operator. It is essentially running multiple attention operations in parallel and concatenating the output. This improves expressivity because each head is free to attend to different tokens.
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt1/mha.png" caption="Multi-Head Attention" alt="Multi-Head Attention" source="https://arxiv.org/abs/1706.03762" width=300 class="image-fluid mx-auto d-block" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt1/mha.png" caption="Multi-Head Attention" alt="Multi-Head Attention" source="https://arxiv.org/abs/1706.03762" width=300 class="image-fluid mx-auto d-block" %}
 
 Multi-head attention has two scaling parameters. Feature dimension for each head $$d_v$$, and number of heads $$h$$.
 
@@ -199,7 +200,7 @@ In [Attention Is All You Need](https://arxiv.org/abs/1706.03762), the layer norm
 ## Feed-Forward
 
 After each attention layer, a small feed forward neural network processes each token embedding. This is a position-wise operation. In the original paper, this is a two layer network with a ReLU activation after the first layer. The first layer outputs a dimension $$d_{ff}=2048$$. The second layer projects these embeddings back to the original token embedding dimension $$d_{model}=512$$. The first layer is set to the 4x the size of the token embedding. This multiplier is arbitrary but is considered to be an effective value given the efficiency tradeoff.
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt1/feed_forward.png" caption="Feed Forward Layer" alt="Feed Forward Layer" width=200 class="image-fluid mx-auto d-block"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt1/feed_forward.png" caption="Feed Forward Layer" alt="Feed Forward Layer" width=200 class="image-fluid mx-auto d-block"%}
 
 The attention layer has $$4*d_{model}*d_{model}$$ parameters (accounting for query, key, value, and output projection matrices), which is $$1.0*10^6$$ for the default embedding size. The feed forward layer has $$d_{model}*d_{ff} + d_{ff}*d_{model}$$ which is over $$2.1*10^6$$ parameters with the default configuration. When $$d_{ff} = 4*d_{model}$$, this is equivalent to $$8*d_{model}*d_{model}$$. The feed forward layer has roughly twice the number of parameters.
 
@@ -216,15 +217,15 @@ Now that we have covered each component, we can describe the transformer blocks.
 ### Encoder Block
 
 The encoder block maps a set of embeddings to another set of embeddings. It uses full self-attention, so each token can attend to all other tokens.
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt1/encoder_block.png" caption="Encoder Block" alt="Encoder Block" width=200 class="image-fluid mx-auto d-block" %}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt1/encoder_block.png" caption="Encoder Block" alt="Encoder Block" width=200 class="image-fluid mx-auto d-block" %}
 
 ## Decoder Block
 
 The decoder block takes in a set of input embeddings but also attends to a set of embeddings from the encoder. The first attention layer processes input embeddings with causal attention. The second attention layer is cross-attention, where the keys and values come from the encoder output. This kind of block is only used in encoder-decoder architectures since it relies on the encoder output embeddings.
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt1/decoder_cross_attention_block.png" caption="Decoder block with cross-attention" alt="Decoder block with cross-attention" width=300 class="image-fluid mx-auto d-block"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt1/decoder_cross_attention_block.png" caption="Decoder block with cross-attention" alt="Decoder block with cross-attention" width=300 class="image-fluid mx-auto d-block"%}
 
 The cross-attention block is omitted in decoder-only transformers. This is because there are no encoder tokens to attend to. This block is identical to the encoder block, but the attention is masked.
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt1/decoder_block.png" caption="Decoder block without cross-attention" alt="Decoder block without cross-attention" width=200 class="image-fluid mx-auto d-block"%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt1/decoder_block.png" caption="Decoder block without cross-attention" alt="Decoder block without cross-attention" width=200 class="image-fluid mx-auto d-block"%}
 
 ## Encoder-Only, Decoder-Only, and Encoder-Decoder Architectures
 
@@ -236,14 +237,14 @@ The encoder-decoder architecture can be viewed as two interconnected transformer
 
 The encoder and decoder can process different types of data. For instance, in speech recognition, the encoder might encode audio while the decoder translates it into text.
 
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt1/whisper.png" caption="OpenAI Whisper Encoder-Decoder Architecture" alt="OpenAI Whisper Encoder-Decoder Architecture" source="https://cdn.openai.com/papers/whisper.pdf" class="image-fluid mx-auto d-block" width=400%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt1/whisper.png" caption="OpenAI Whisper Encoder-Decoder Architecture" alt="OpenAI Whisper Encoder-Decoder Architecture" source="https://cdn.openai.com/papers/whisper.pdf" class="image-fluid mx-auto d-block" width=400%}
 
 This architecture employs cross-attention, whereas encoder-only and decoder-only architectures rely solely on self-attention.
 
 ### Encoder-Only
 
 Encoder-only transformers, popularized by [BERT](https://arxiv.org/abs/1810.04805), perform a one-to-one mapping of input embeddings to output embeddings. They can't perform sequence-to-sequence modeling unless the input and output sequences have identical lengths.
-{% include figure.liquid loading="eager" path="assets/img/blog/transformer_pt1/vit.png" caption="ViT Encoder-Only Architecture" alt="ViT Encoder-Only Architecture " source="https://arxiv.org/abs/2010.11929" class="image-fluid mx-auto d-block" width=400%}
+{% include figure.liquid loading="lazy" path="assets/img/blog/transformer_pt1/vit.png" caption="ViT Encoder-Only Architecture" alt="ViT Encoder-Only Architecture " source="https://arxiv.org/abs/2010.11929" class="image-fluid mx-auto d-block" width=400%}
 
 These models excel at scalar prediction tasks, such as classification or regression, where the output is a single value rather than a set or sequence. Text sentiment analysis and ImageNet classification are prime examples of their application.
 
@@ -313,4 +314,4 @@ Once you have a singular output embedding, it can be processed by the output lin
 
 # Conclusion
 
-This blog post covered the basic components of early transformers. In part 2, we will cover more recent innovations that further optimize these models and enable new capabilities.
+This blog post covered the basic components of early transformers. In [part 2](/blog/Transformer-Design-Guide-Pt2/), we will cover more recent innovations that further optimize these models and enable new capabilities.

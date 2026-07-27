@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "Foundations of Deep RL Series Notes"
+description: "Notes from Pieter Abbeel's Foundations of Deep RL lecture series, covering MDPs, DQN and its variants, policy gradients, PPO, and model-based RL."
 date: 2025-01-04
-tags: reinforcement-learning, deep-learning
+tags: reinforcement-learning deep-learning
 citation: false
 toc:
   sidebar: left
