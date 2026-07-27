@@ -52,13 +52,19 @@
 {% endif %}
 
 {% if site.serve_og_meta %}
-  {% if page.thumbnail %}
-    {% assign image_path = page.thumbnail | prepend: '/' | prepend: site.baseurl | prepend: site.url %}
-  {% elsif page.og_image %}
+  {% comment %}
+    og_image takes priority over thumbnail: a thumbnail is sized for the blog
+    listing, which is often the wrong shape for a 1.91:1 social card. Set
+    og_image (plus og_image_width/height) on a post to override it.
+  {% endcomment %}
+  {% if page.og_image %}
     {% assign image_path = page.og_image | prepend: '/' | prepend: site.baseurl | prepend: site.url %}
+  {% elsif page.thumbnail %}
+    {% assign image_path = page.thumbnail | prepend: '/' | prepend: site.baseurl | prepend: site.url %}
   {% else %}
     {% assign image_path = site.og_image |  prepend: '/' | prepend: site.baseurl | prepend: site.url %}
   {% endif %}
+  {% capture image_alt %}{% if page.og_image_alt %}{{ page.og_image_alt }}{% elsif page.title %}{{ page.title }}{% else %}{{ title }}{% endif %}{% endcapture %}
 
   <!-- OpenGraph -->
   <meta property="og:site_name" content="{{ title }}">
@@ -66,17 +72,29 @@
   <meta property="og:title" content="{% if page.title %}{{ page.title }} | {{ title }}{% else %}{{ title }}{% endif %}">
   <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' }}">
   <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
-  {% if page.og_image or site.og_image %}
+  {% if page.og_image or page.thumbnail or site.og_image %}
     <meta property="og:image" content="{{ image_path }}">
+    <meta property="og:image:alt" content="{{ image_alt | strip }}">
+    {% if page.og_image_width %}
+      <meta property="og:image:width" content="{{ page.og_image_width }}">
+    {% endif %}
+    {% if page.og_image_height %}
+      <meta property="og:image:height" content="{{ page.og_image_height }}">
+    {% endif %}
   {% endif %}
   <meta property="og:locale" content="{{ site.lang }}">
 
   <!-- Twitter card -->
-  <meta name="twitter:card" content="{% if page.og_image or page.thumbnail or site.og_image %}summary_large_image{% else %}summary{% endif %}">
+  {% comment %}
+    Set twitter_card: summary on a post whose only image is too small or the
+    wrong shape for a large card (needs roughly 1.91:1 and >=600px wide).
+  {% endcomment %}
+  <meta name="twitter:card" content="{% if page.twitter_card %}{{ page.twitter_card }}{% elsif page.og_image or page.thumbnail or site.og_image %}summary_large_image{% else %}summary{% endif %}">
   <meta name="twitter:title" content="{% if page.title %}{{ page.title }}{% else %}{{ title }}{% endif %}">
   <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
-  {% if page.og_image or site.og_image %}
+  {% if page.og_image or page.thumbnail or site.og_image %}
     <meta name="twitter:image" content="{{ image_path }}">
+    <meta name="twitter:image:alt" content="{{ image_alt | strip }}">
   {% endif %}
   {% if site.x_username %}
     <meta name="twitter:site" content="@{{ site.x_username }}">

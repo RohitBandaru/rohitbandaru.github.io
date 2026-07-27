@@ -4,6 +4,9 @@ title: "World Models"
 description: "How world models learn to predict the effect of actions on an environment, covering Dreamer, Genie, Cosmos, and DINO-WM."
 tags: computer-vision deep-learning reinforcement-learning
 thumbnail: assets/img/blog/world_models/world_model.png
+og_image: assets/img/blog/world_models/cosmos_ar.png
+og_image_width: 1622
+og_image_height: 872
 citation: true
 toc:
   sidebar: left

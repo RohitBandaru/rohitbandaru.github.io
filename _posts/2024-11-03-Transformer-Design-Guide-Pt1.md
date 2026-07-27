@@ -5,6 +5,9 @@ description: "Part 1 of a thorough guide to the Transformer, breaking down atten
 last_updated: 2024-12-11
 tags: transformer
 thumbnail: assets/img/blog/transformer_pt1/transformer.png
+og_image: assets/img/blog/transformer_pt1/vit.png
+og_image_width: 2212
+og_image_height: 1117
 citation: true
 toc:
   sidebar: left
