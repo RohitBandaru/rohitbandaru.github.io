@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """
-Import Notion Markdown exports into Jekyll _notes/ directory.
+Import Notion Markdown exports into Jekyll _notes/ or _posts/.
 
 Handles:
   - Nested zips (Notion exports an outer zip containing an inner zip)
   - Image extraction and renaming (generic "image.png" → "image-1.png")
-  - Image path rewriting to /assets/img/notes/<slug>/
+  - Image path rewriting to /assets/img/{notes,blog}/<slug>/
   - Date inference from screenshot filenames
   - Matching exported notes to existing _notes/ stub files
+  - Post mode (--as post): _posts/YYYY-MM-DD-Slug.md, figure.liquid includes
+    with the first image eager and the rest lazy, and a check that every
+    referenced image actually exists on disk
   - Math formatting fixes for kramdown/MathJax compatibility:
     - Ensures blank lines around $$ display math blocks
     - Removes blank lines inside $$ blocks
@@ -17,10 +20,13 @@ Handles:
 
 Usage:
     python3 scripts/notion_import.py <zip_or_directory> [--blog-root <path>]
+    python3 scripts/notion_import.py <zip> --as post --slug <Slug> --img-dir <name>
 
 Examples:
     python3 scripts/notion_import.py ~/Downloads/notionexports/
     python3 scripts/notion_import.py ~/Downloads/notionexports/mypage.zip
+    python3 scripts/notion_import.py ~/Downloads/vla.zip --as post \\
+        --slug Foundation-Models-for-Robotics-VLA --img-dir vla --date 2025-09-28
 """
 
 from __future__ import annotations
@@ -34,6 +40,13 @@ import zipfile
 from pathlib import Path
 from typing import Optional
 from urllib.parse import unquote
+
+
+# Markdown image: ![caption](path)
+# - caption may contain one level of [nested](links)
+# - path may contain one level of (parens); Notion page folders often do,
+#   e.g. "Foundation Models for Robotics (VLA) 1e93.../shot.png"
+IMAGE_RE = r"!\[((?:[^\[\]]|\[[^\]]*\])*)\]\(((?:[^()]|\([^()]*\))*)\)"
 
 
 def slugify(text: str) -> str:
@@ -101,8 +114,10 @@ def copy_images(img_dir: Path, dest_dir: Path) -> dict[str, str]:
     return mapping
 
 
-def rewrite_image_refs(content: str, slug: str, mapping: dict[str, str]) -> str:
-    """Replace Notion relative image paths with Jekyll /assets/img/notes/<slug>/ paths.
+def rewrite_image_refs(
+    content: str, slug: str, mapping: dict[str, str], asset_root: str = "notes"
+) -> str:
+    """Replace Notion relative image paths with Jekyll /assets/img/<asset_root>/<slug>/ paths.
 
     The alt text pattern allows nested [brackets] (e.g. '[source](url) caption').
     Only rewrites paths that look like local relative paths (no http/https).
@@ -114,9 +129,64 @@ def rewrite_image_refs(content: str, slug: str, mapping: dict[str, str]) -> str:
             return m.group(0)  # leave external URLs untouched
         filename = Path(raw).name
         new_name = mapping.get(filename, filename.replace(" ", "_"))
-        return f"![{alt}](/assets/img/notes/{slug}/{new_name})"
-    # Allow nested [...]  inside alt text via (?:[^\[\]]|\[[^\]]*\])*
-    return re.sub(r"!\[((?:[^\[\]]|\[[^\]]*\])*)\]\(([^)]+)\)", replace, content)
+        return f"![{alt}](/assets/img/{asset_root}/{slug}/{new_name})"
+    return re.sub(IMAGE_RE, replace, content)
+
+
+def to_figure_includes(content: str) -> str:
+    """Convert markdown images to al-folio figure.liquid includes.
+
+    Notion captions usually carry the citation as a link, e.g.
+        ![[source](https://arxiv.org/abs/1234)](/assets/img/blog/x/y.png)
+        ![Task distribution in [Open X-Embodiment](https://arxiv.org/abs/1234)](...)
+
+    The first link URL in the caption becomes source=; the caption text with
+    links flattened becomes alt=. The first figure loads eagerly (it is usually
+    above the fold and drives LCP); the rest load lazily.
+    """
+    seen = [0]
+
+    def replace(m):
+        caption, path = m.group(1), m.group(2)
+        path = path.lstrip("/")
+        link = re.search(r"\[[^\]]*\]\((https?://[^)]+)\)", caption)
+        source = link.group(1) if link else ""
+        # flatten [text](url) -> text, then drop a bare leading "source" label
+        alt = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", caption).strip()
+        alt = re.sub(r"^\(?source\)?[:\s]*", "", alt, flags=re.IGNORECASE).strip()
+        alt = alt.replace('"', "'").rstrip(" .")
+        if not alt:
+            alt = "TODO describe this figure"
+        seen[0] += 1
+        loading = "eager" if seen[0] == 1 else "lazy"
+        parts = [
+            f'{{% include figure.liquid loading="{loading}"',
+            f'path="{path}"',
+            f'alt="{alt}"',
+            'class="img-fluid mx-auto d-block"',
+            "width=600",
+        ]
+        if source:
+            parts.append(f'source="{source}"')
+        return " ".join(parts) + " %}"
+
+    return re.sub(IMAGE_RE, replace, content)
+
+
+def check_image_refs(content: str, blog_root: Path) -> list[str]:
+    """Return referenced image paths that do not exist on disk.
+
+    Guards against the failure mode where a post ships referencing an image
+    that was never copied, which 404s silently in production.
+    """
+    missing = []
+    for path in re.findall(r'path="([^"]+)"', content):
+        if not (blog_root / path).exists():
+            missing.append(path)
+    for path in re.findall(r"!\[[^\]]*\]\((/assets/[^)]+)\)", content):
+        if not (blog_root / path.lstrip("/")).exists():
+            missing.append(path)
+    return missing
 
 
 def fix_math(content: str) -> str:
@@ -315,6 +385,75 @@ toc:
 ---\n"""
 
 
+def build_post_front_matter(title: str, img_dir: str) -> str:
+    """Front matter for _posts/.
+
+    NOTE: tags must be space-separated. A bare YAML string is split on
+    whitespace, so "a, b" yields the tags "a," and "b" -- the trailing-comma
+    tag then collides with the real one and clobbers its archive page.
+    """
+    return f"""---
+layout: post
+title: "{title}"
+description: "TODO one or two sentences; this is the meta description and shows on /blog/"
+tags: TODO space separated no commas
+thumbnail: assets/img/blog/{img_dir}/TODO.png
+citation: true
+toc:
+  sidebar: left
+---\n"""
+
+
+def process_post_zip(
+    zip_path: Path,
+    blog_root: Path,
+    slug: str | None,
+    img_dir_name: str | None,
+    date: str | None,
+) -> None:
+    """Import a Notion export into _posts/ as a blog post."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmp = Path(tmpdir)
+        extract_nested_zip(zip_path, tmp)
+
+        md_file = find_md_file(tmp)
+        if not md_file:
+            print(f"  WARNING: No .md file found in {zip_path.name}")
+            return
+
+        content = md_file.read_text(encoding="utf-8")
+        title = extract_title(content)
+        if not title:
+            print(f"  WARNING: Could not extract title from {md_file.name}")
+            return
+
+        src_img_dir = find_image_dir(md_file)
+        # Posts keep title case in the filename; the permalink is /blog/:title/
+        post_slug = slug or re.sub(r"[^\w\s-]", "", title).strip().replace(" ", "-")
+        img_name = img_dir_name or slugify(post_slug).replace("-", "_")
+        post_date = date or infer_date(src_img_dir) or "1970-01-01"
+
+        dest_img_dir = blog_root / "assets" / "img" / "blog" / img_name
+        img_mapping = copy_images(src_img_dir, dest_img_dir) if src_img_dir else {}
+
+        body = strip_h1_title(content)
+        body = rewrite_image_refs(body, img_name, img_mapping, asset_root="blog")
+        body = fix_math(body)
+        body = to_figure_includes(body)
+        final = build_post_front_matter(title, img_name) + body.lstrip("\n")
+
+        target = blog_root / "_posts" / f"{post_date}-{post_slug}.md"
+        target.write_text(final, encoding="utf-8")
+
+        print(f"  ✓ {target.relative_to(blog_root)}")
+        if img_mapping:
+            print(f"    {len(img_mapping)} image(s) → assets/img/blog/{img_name}/")
+        missing = check_image_refs(final, blog_root)
+        for p in missing:
+            print(f"    WARNING: referenced image not found on disk: {p}")
+        print("    TODO: fill in description, tags, thumbnail; rename images descriptively")
+
+
 def process_zip(zip_path: Path, blog_root: Path) -> None:
     with tempfile.TemporaryDirectory() as tmpdir:
         tmp = Path(tmpdir)
@@ -368,13 +507,30 @@ def main():
         default=str(Path(__file__).parent.parent),
         help="Path to Jekyll blog root (default: parent of scripts/)",
     )
+    parser.add_argument(
+        "--as",
+        dest="kind",
+        choices=["note", "post"],
+        default="note",
+        help="Import into _notes/ (default) or _posts/",
+    )
+    parser.add_argument(
+        "--slug",
+        help="post only: filename slug after the date, e.g. Foundation-Models-for-Robotics-VLA",
+    )
+    parser.add_argument(
+        "--img-dir",
+        help="post only: short name under assets/img/blog/, e.g. vla",
+    )
+    parser.add_argument("--date", help="post only: YYYY-MM-DD, overrides inference")
     args = parser.parse_args()
 
     blog_root = Path(args.blog_root).expanduser().resolve()
     input_path = Path(args.input).expanduser().resolve()
 
-    if not (blog_root / "_notes").exists():
-        print(f"ERROR: No _notes/ directory found at {blog_root}")
+    required = "_posts" if args.kind == "post" else "_notes"
+    if not (blog_root / required).exists():
+        print(f"ERROR: No {required}/ directory found at {blog_root}")
         sys.exit(1)
 
     zips: list[Path] = []
@@ -390,9 +546,16 @@ def main():
         print(f"No zip files found in {input_path}")
         sys.exit(1)
 
+    if args.kind == "post" and len(zips) > 1 and (args.slug or args.img_dir):
+        print("ERROR: --slug/--img-dir apply to a single export; pass one zip")
+        sys.exit(1)
+
     print(f"Processing {len(zips)} zip(s) → {blog_root}\n")
     for z in zips:
-        process_zip(z, blog_root)
+        if args.kind == "post":
+            process_post_zip(z, blog_root, args.slug, args.img_dir, args.date)
+        else:
+            process_zip(z, blog_root)
     print("\nDone!")
 
 
