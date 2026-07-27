@@ -178,7 +178,7 @@ C: [8, 5, 3, 4]
 <span class="c1"># Same data, different metadata
 </span><span class="n">tensor</span><span class="p">.</span><span class="nf">data_ptr</span><span class="p">()</span> <span class="o">==</span> <span class="n">view</span><span class="p">.</span><span class="nf">data_ptr</span><span class="p">()</span>  <span class="c1"># True - shared memory
 </span>
-<span class="n">tensor</span><span class="p">.</span><span class="nf">stride</span><span class="p">()</span>  <span class="c1"># (2, 1) - row skip 2, col skip 1  
+<span class="n">tensor</span><span class="p">.</span><span class="nf">stride</span><span class="p">()</span>  <span class="c1"># (2, 1) - row skip 2, col skip 1
 </span><span class="n">view</span><span class="p">.</span><span class="nf">stride</span><span class="p">()</span>    <span class="c1"># (2,)   - skip 2 for next element
 </span>
 <span class="n">tensor</span><span class="p">.</span><span class="nf">storage_offset</span><span class="p">()</span>  <span class="c1"># 0 - starts at storage[0]
@@ -196,7 +196,7 @@ C: [8, 5, 3, 4]
 </span><span class="n">tensor</span><span class="p">[</span><span class="n">indices_2d</span><span class="p">,</span> <span class="p">:]</span>  <span class="c1"># shape: (2, 2, 3)
 </span><span class="n">tensor</span><span class="p">[:,</span> <span class="n">indices_2d</span><span class="p">]</span>  <span class="c1"># shape: (3, 2, 2)
 </span>
-<span class="c1"># Higher dimensional indices just specify the shape 
+<span class="c1"># Higher dimensional indices just specify the shape
 # we want the output to be at that dimension
 # Equivalent to flatten -&gt; index -&gt; reshape
 </span><span class="n">tensor</span><span class="p">[</span><span class="n">indices_2d</span><span class="p">.</span><span class="nf">flatten</span><span class="p">(),</span> <span class="p">:].</span><span class="nf">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># Same as tensor[indices_2d, :]
@@ -246,7 +246,7 @@ C: [8, 5, 3, 4]
 </span>
 <span class="c1"># 2D boolean mask - flattens result
 </span><span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">([[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">],</span>
-                      <span class="p">[</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">],</span> 
+                      <span class="p">[</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">],</span>
                       <span class="p">[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span><span class="p">]])</span>
 <span class="n">tensor</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>  <span class="c1"># shape: (5,) - flattened selection
 </span>
@@ -266,8 +266,8 @@ C: [8, 5, 3, 4]
 </span></code></pre></div></div> <p><strong>Mask vs Tensor Indexing</strong></p> <p>We can convert between mask and tensor indexing. When converting a mask to index tensors, we want the length of the index tensor to match the number of True values in the mask. When going the other direction, this may require repeating index values to reconstruct the mask.</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 
 <span class="c1"># Boolean mask to tensor indices
-</span><span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">([[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">],</span> 
-                    <span class="p">[</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">],</span> 
+</span><span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">([[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">],</span>
+                    <span class="p">[</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">],</span>
                     <span class="p">[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span><span class="p">]])</span>
 
 <span class="n">row_idx</span><span class="p">,</span> <span class="n">col_idx</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
@@ -284,7 +284,7 @@ C: [8, 5, 3, 4]
 <span class="n">tensor</span><span class="p">[</span><span class="n">indices_row</span><span class="p">,</span> <span class="n">indices_col</span><span class="p">]</span>    <span class="c1"># tensor indexing: shape (5,)
 </span><span class="n">tensor</span><span class="p">[</span><span class="n">mask_reconstructed</span><span class="p">]</span>          <span class="c1"># boolean indexing: shape (4,) - one less due to duplicated indices
 </span>
-<span class="c1"># These two operations are not identical since the boolean mask loses the order 
+<span class="c1"># These two operations are not identical since the boolean mask loses the order
 # of the indices used in the tensor indexing. We also remove duplicates when using bool
 </span></code></pre></div></div> <p><strong>Gather / Scatter</strong></p> <p>The gather operation allows getting values based on indices. This best suited to get individual values out of a tensor rather than vectors/tensors. This requires an index tensor of the same number of dimensions and a dim argument to specify which dimension to get the values from. The shape of the output is the same as the shape of the index.</p> <p>Scatter is the inverse in that you take indices and values and write the values to a target tensor at the specified indices. The shape of the indices and source tensor are the same.</p> <p>In both gather and scatter, the dim argument specifies the axis along which the actual indexing or writing happens. For all dimensions other than dim, the structure of the index tensor determines how values are aligned and positioned. In gather, values are selected from the input tensor along dim using the indices in the index tensor, while the rest of the dimensions follow the layout of index. In scatter, values from the src tensor are written into the input tensor at positions specified by index along dim, with all other dimensions used to align corresponding values from src and index.</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Gather example
 </span><span class="n">src</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]])</span>
@@ -294,7 +294,7 @@ C: [8, 5, 3, 4]
 </span><span class="n">out</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">gather</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span> <span class="c1"># dim=0 gathers along cols
 # out_dim0: tensor([[1, 5, 3], [4, 2, 6]])
 </span>
-<span class="c1"># Scatter example 
+<span class="c1"># Scatter example
 </span><span class="n">dest</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="n">index</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
 <span class="n">src</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]])</span>
@@ -303,22 +303,22 @@ C: [8, 5, 3, 4]
 </span></code></pre></div></div> <p>To better illustrate this, we can consider how this would work if implemented using for loops:</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">gather_manual</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
     <span class="sh">"""</span><span class="s">Manual implementation of torch.gather using for loops</span><span class="sh">"""</span>
     <span class="n">output</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">zeros_like</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">src</span><span class="p">.</span><span class="n">dtype</span><span class="p">)</span>
-    
+
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">index</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">index</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="c1"># Gather along rows: fix column j, vary row
 </span>                <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">src</span><span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">j</span><span class="p">]</span>
             <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="c1"># Gather along columns: fix row i, vary column  
+                <span class="c1"># Gather along columns: fix row i, vary column
 </span>                <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]]</span>
-    
+
     <span class="k">return</span> <span class="n">output</span>
 
 <span class="k">def</span> <span class="nf">scatter_manual</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">src</span><span class="p">):</span>
     <span class="sh">"""</span><span class="s">Manual implementation of torch.scatter using for loops</span><span class="sh">"""</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">dest</span><span class="p">.</span><span class="nf">clone</span><span class="p">()</span>  <span class="c1"># Don't modify original
-</span>    
+</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">index</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">index</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -327,9 +327,9 @@ C: [8, 5, 3, 4]
             <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="c1"># Scatter along columns: fix row i, vary column
 </span>                <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
-    
+
     <span class="k">return</span> <span class="n">result</span>
-    
+
 <span class="c1"># example of gather returning the original tensor
 </span><span class="nb">input</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">([[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
                       <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">]])</span>  <span class="c1"># shape (2, 3)
@@ -342,12 +342,12 @@ C: [8, 5, 3, 4]
 <span class="n">output</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">gather</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
 </code></pre></div></div> <p>We can also implement similar operations with eye.</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Scatter-add using identity matrix: sum values to target positions
 </span><span class="n">values</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">([</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">,</span> <span class="mf">30.</span><span class="p">])</span>  <span class="c1"># values to scatter
-</span><span class="n">link</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>          <span class="c1"># target positions [0,2,0] 
+</span><span class="n">link</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>          <span class="c1"># target positions [0,2,0]
 </span><span class="n">j</span> <span class="o">=</span> <span class="mi">3</span>                                    <span class="c1"># output size
 </span>
 <span class="c1"># eye(j)[link] creates selection matrix with one-hot rows
 # [[1,0,0],  &lt;- row 0 (link[0]=0)
-#  [0,0,1],  &lt;- row 2 (link[1]=2)  
+#  [0,0,1],  &lt;- row 2 (link[1]=2)
 #  [1,0,0]]  &lt;- row 0 (link[2]=0)
 </span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">values</span> <span class="o">@</span> <span class="n">torch</span><span class="p">.</span><span class="nf">eye</span><span class="p">(</span><span class="n">j</span><span class="p">)[</span><span class="n">link</span><span class="p">]</span>     <span class="c1"># [40, 0, 20] - automatic sum at pos 0
@@ -363,7 +363,7 @@ C: [8, 5, 3, 4]
 <span class="c1"># Key: eye(n)[indices] transforms indexing → matrix multiplication
 </span></code></pre></div></div> <p><strong>Scatter Reduction Operations</strong></p> <p>PyTorch’s scatter operations support various reduction modes when multiple source values are scattered to the same target location.</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dest</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 <span class="n">index</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
-                      <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> 
+                      <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
                       <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>  <span class="c1"># Multiple indices point to same positions
 </span><span class="n">src</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
                     <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
@@ -377,7 +377,7 @@ C: [8, 5, 3, 4]
 </span><span class="n">dest_add</span> <span class="o">=</span> <span class="n">dest</span><span class="p">.</span><span class="nf">clone</span><span class="p">()</span>
 <span class="n">dest_add</span><span class="p">.</span><span class="nf">scatter_add_</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">src</span><span class="p">)</span>  <span class="c1"># Equivalent to scatter_reduce with 'sum'
 </span>
-<span class="n">dest_sum</span> <span class="o">=</span> <span class="n">dest</span><span class="p">.</span><span class="nf">clone</span><span class="p">()</span> 
+<span class="n">dest_sum</span> <span class="o">=</span> <span class="n">dest</span><span class="p">.</span><span class="nf">clone</span><span class="p">()</span>
 <span class="n">dest_sum</span><span class="p">.</span><span class="nf">scatter_reduce_</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="nb">reduce</span><span class="o">=</span><span class="sh">'</span><span class="s">sum</span><span class="sh">'</span><span class="p">)</span>  <span class="c1"># Same as scatter_add_
 </span>
 <span class="n">dest_mean</span> <span class="o">=</span> <span class="n">dest</span><span class="p">.</span><span class="nf">clone</span><span class="p">()</span>
@@ -397,7 +397,7 @@ C: [8, 5, 3, 4]
 
 <span class="c1"># Ellipsis with integer tensor (advanced)
 </span><span class="n">result1</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">indices</span><span class="p">,</span> <span class="p">...]</span>              <span class="c1"># shape: (2, 3, 4, 5, 6)
-</span><span class="n">result2</span> <span class="o">=</span> <span class="n">x</span><span class="p">[...,</span> <span class="n">indices</span><span class="p">]</span>              <span class="c1"># shape: (2, 3, 4, 5, 2) 
+</span><span class="n">result2</span> <span class="o">=</span> <span class="n">x</span><span class="p">[...,</span> <span class="n">indices</span><span class="p">]</span>              <span class="c1"># shape: (2, 3, 4, 5, 2)
 </span><span class="n">result3</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="p">...,</span> <span class="mi">1</span><span class="p">]</span>        <span class="c1"># shape: (2, 4, 5)
 </span>
 <span class="c1"># Ellipsis with boolean mask (advanced)
@@ -407,11 +407,11 @@ C: [8, 5, 3, 4]
 <span class="c1"># Mixed advanced indexing
 </span><span class="n">result6</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">indices</span><span class="p">,</span> <span class="p">...,</span> <span class="n">mask</span><span class="p">]</span>        <span class="c1"># shape: (2, 3, 4, 3)
 </span><span class="n">result7</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="p">...,</span> <span class="n">mask</span><span class="p">]</span>     <span class="c1"># shape: (2, 4, 3)
-</span></code></pre></div></div> <h2 id="assignment"><strong>Assignment</strong></h2> <p>In tensor assignment, the source automatically broadcasts to match the target’s shape.</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>target = tensor[index]  
+</span></code></pre></div></div> <h2 id="assignment"><strong>Assignment</strong></h2> <p>In tensor assignment, the source automatically broadcasts to match the target’s shape.</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>target = tensor[index]
 tensor[index] = source  &lt;- source broadcasts to target's shape
 </code></pre></div></div> <p>We can understand assignment through each type of indexing through this framework. Boolean mask indexing is a bit more complicated because there is a new dimension that is formed by the number of values for which the mask is true. The source tensor must also have this dimension. The values from the target are written to the source in row major order.</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
                   <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="p">.</span><span class="nb">float</span><span class="p">)</span>  <span class="c1"># (2, 3)
-</span>                  
+</span>
 <span class="c1"># () indicates the shape of a scalar tensor
 </span>
 <span class="c1"># Basic indexing
@@ -433,9 +433,9 @@ tensor[index] = source  &lt;- source broadcasts to target's shape
 </span><span class="n">mask</span> <span class="o">=</span> <span class="nf">get_mask</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 <span class="n">num_valid_values</span> <span class="o">=</span> <span class="n">mask</span><span class="p">.</span><span class="nf">sum</span><span class="p">()</span>
 <span class="c1"># target: (4, num_valid_values) -&gt; source: (1, num_valid_values) -&gt; (4, num_valid_values)
-</span><span class="n">tensor</span><span class="p">[:,</span> <span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_valid_values</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="p">.</span><span class="nb">float</span><span class="p">)</span> 
+</span><span class="n">tensor</span><span class="p">[:,</span> <span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_valid_values</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="p">.</span><span class="nb">float</span><span class="p">)</span>
 <span class="c1"># target: (4, num_valid_values) -&gt; source: (4, num_valid_values) -&gt; (4, num_valid_values)
-</span><span class="n">tensor</span><span class="p">[:,</span> <span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_valid_values</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="p">.</span><span class="nb">float</span><span class="p">)</span> 
+</span><span class="n">tensor</span><span class="p">[:,</span> <span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_valid_values</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="p">.</span><span class="nb">float</span><span class="p">)</span>
 </code></pre></div></div> <p><strong>dtype consistency</strong></p> <p>PyTorch requires that the dtype of the source and target to be the same with advanced indexing. However, it is more lenient and casts dtypes when possible.</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]])</span>  <span class="c1"># int64 tensor
 </span>
 <span class="c1"># Basic indexing - dtype conversion allowed
@@ -479,7 +479,7 @@ tensor[index] = source  &lt;- source broadcasts to target's shape
 </span>
 <span class="c1"># Method 1: Use repeat instead of unsqueeze + expand (cleaner)
 </span><span class="n">expanded_index</span> <span class="o">=</span> <span class="n">expert_indices</span><span class="p">.</span><span class="nf">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">).</span><span class="nf">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>
-<span class="n">result1</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">gather</span><span class="p">(</span><span class="n">expert_outputs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+<span class="n">result1</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">gather</span><span class="p">(</span><span class="n">expert_outputs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                       <span class="n">index</span><span class="o">=</span><span class="n">expanded_index</span><span class="p">)</span>
 
 <span class="c1"># Method 2: Use advanced indexing (most readable)
@@ -494,7 +494,7 @@ tensor[index] = source  &lt;- source broadcasts to target's shape
 
 <span class="c1"># Top K with Mask
 </span><span class="n">B</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span>
-<span class="n">scores</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">randn</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>  <span class="c1"># (batch_size, num_items) 
+<span class="n">scores</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">randn</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>  <span class="c1"># (batch_size, num_items)
 </span><span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">N</span><span class="p">)).</span><span class="nf">bool</span><span class="p">()</span>  <span class="c1"># Which items are "active"
 </span><span class="n">k</span> <span class="o">=</span> <span class="mi">3</span>
 
@@ -508,8 +508,8 @@ tensor[index] = source  &lt;- source broadcasts to target's shape
 <span class="n">tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">zeros</span><span class="p">((</span><span class="n">B</span><span class="p">,</span><span class="n">W</span><span class="p">,</span><span class="n">W</span><span class="p">))</span>
 
 <span class="c1"># Method 1: Integer array indexing
-</span><span class="n">tensor</span><span class="p">[</span><span class="n">torch</span><span class="p">.</span><span class="nf">arange</span><span class="p">(</span><span class="n">B</span><span class="p">)[:,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">],</span> 
-       <span class="n">torch</span><span class="p">.</span><span class="nf">arange</span><span class="p">(</span><span class="n">W</span><span class="p">)[</span><span class="bp">None</span><span class="p">,</span> <span class="p">:],</span> 
+</span><span class="n">tensor</span><span class="p">[</span><span class="n">torch</span><span class="p">.</span><span class="nf">arange</span><span class="p">(</span><span class="n">B</span><span class="p">)[:,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">],</span>
+       <span class="n">torch</span><span class="p">.</span><span class="nf">arange</span><span class="p">(</span><span class="n">W</span><span class="p">)[</span><span class="bp">None</span><span class="p">,</span> <span class="p">:],</span>
        <span class="n">torch</span><span class="p">.</span><span class="nf">arange</span><span class="p">(</span><span class="n">W</span><span class="p">)[</span><span class="bp">None</span><span class="p">,</span> <span class="p">:]]</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">arange</span><span class="p">(</span><span class="n">W</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="p">.</span><span class="nb">float</span><span class="p">)</span>
 
 <span class="c1"># Method 2: Boolean mask indexing
@@ -803,7 +803,7 @@ tensor[index] = source  &lt;- source broadcasts to target's shape
 
 <span class="c1"># With Einstein - automatic broadcasting, no explicit expansion needed
 </span><span class="n">scores</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">einsum</span><span class="p">(</span><span class="sh">'</span><span class="s">bshd,bSkd-&gt;bshS</span><span class="sh">'</span><span class="p">,</span> <span class="n">q_reshaped</span><span class="p">,</span> <span class="n">k_reshaped</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="p">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">head_dim</span><span class="p">)</span>
-<span class="c1"># Automatic broadcasting: (batch, seq, q_heads, head_dim) × (batch, seq, kv_heads, head_dim) 
+<span class="c1"># Automatic broadcasting: (batch, seq, q_heads, head_dim) × (batch, seq, kv_heads, head_dim)
 # -&gt; (batch, seq, q_heads, seq) with implicit grouping
 </span><span class="n">attn_weights</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">softmax</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">output</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">einsum</span><span class="p">(</span><span class="sh">'</span><span class="s">bshS,bSkd-&gt;bshd</span><span class="sh">'</span><span class="p">,</span> <span class="n">attn_weights</span><span class="p">,</span> <span class="n">v_reshaped</span><span class="p">)</span>
@@ -901,7 +901,7 @@ tensor[index] = source  &lt;- source broadcasts to target's shape
 </span>
 <span class="c1"># Create inputs in d_model format, then reshape to create heads
 </span><span class="n">query</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">randn</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>     <span class="c1"># [batch, seq, d_model]
-</span><span class="n">key</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">randn</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">kv_seq_len</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>   <span class="c1"># [batch, kv_seq, d_model]  
+</span><span class="n">key</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">randn</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">kv_seq_len</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>   <span class="c1"># [batch, kv_seq, d_model]
 </span><span class="n">value</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">randn</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">kv_seq_len</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span> <span class="c1"># [batch, kv_seq, d_model]
 </span>
 <span class="c1"># PyTorch
@@ -1070,7 +1070,7 @@ tensor[index] = source  &lt;- source broadcasts to target's shape
             <span class="n">self</span><span class="p">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nf">randn</span><span class="p">(</span><span class="n">out_features</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">self</span><span class="p">.</span><span class="nf">register_parameter</span><span class="p">(</span><span class="sh">'</span><span class="s">bias</span><span class="sh">'</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>  <span class="c1"># Explicitly register None
-</span>    
+</span>
     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">F</span><span class="p">.</span><span class="nf">linear</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">bias</span><span class="p">)</span>
 
@@ -1083,7 +1083,7 @@ tensor[index] = source  &lt;- source broadcasts to target's shape
         <span class="n">self</span><span class="p">.</span><span class="n">bn1</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">BatchNorm2d</span><span class="p">(</span><span class="n">channels</span><span class="p">)</span>
         <span class="n">self</span><span class="p">.</span><span class="n">conv2</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Conv2d</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">self</span><span class="p">.</span><span class="n">bn2</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">BatchNorm2d</span><span class="p">(</span><span class="n">channels</span><span class="p">)</span>
-    
+
     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="n">residual</span> <span class="o">=</span> <span class="n">x</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">F</span><span class="p">.</span><span class="nf">relu</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="nf">bn1</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="nf">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
@@ -1105,7 +1105,7 @@ tensor[index] = source  &lt;- source broadcasts to target's shape
             <span class="sh">'</span><span class="s">gelu</span><span class="sh">'</span><span class="p">:</span> <span class="n">nn</span><span class="p">.</span><span class="nc">GELU</span><span class="p">(),</span>
             <span class="sh">'</span><span class="s">tanh</span><span class="sh">'</span><span class="p">:</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Tanh</span><span class="p">()</span>
         <span class="p">})</span>
-    
+
     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="sh">'</span><span class="s">relu</span><span class="sh">'</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">layers</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">activations</span><span class="p">[</span><span class="n">activation</span><span class="p">](</span><span class="nf">layer</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
@@ -1129,18 +1129,18 @@ tensor[index] = source  &lt;- source broadcasts to target's shape
 </span>        <span class="n">self</span><span class="p">.</span><span class="n">qkv</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Linear</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
         <span class="n">self</span><span class="p">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Linear</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
         <span class="n">self</span><span class="p">.</span><span class="n">num_heads</span> <span class="o">=</span> <span class="n">num_heads</span>
-        
+
         <span class="c1"># Register buffers (non-learnable tensors)
 </span>        <span class="n">self</span><span class="p">.</span><span class="nf">register_buffer</span><span class="p">(</span><span class="sh">'</span><span class="s">scale</span><span class="sh">'</span><span class="p">,</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">(</span><span class="n">dim</span> <span class="o">**</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">))</span>
-    
+
     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="n">B</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span>
         <span class="n">qkv</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">qkv</span><span class="p">(</span><span class="n">x</span><span class="p">).</span><span class="nf">reshape</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">C</span> <span class="o">//</span> <span class="n">self</span><span class="p">.</span><span class="n">num_heads</span><span class="p">)</span>
         <span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">qkv</span><span class="p">.</span><span class="nf">permute</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-        
+
         <span class="n">attn</span> <span class="o">=</span> <span class="p">(</span><span class="n">q</span> <span class="o">@</span> <span class="n">k</span><span class="p">.</span><span class="nf">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">scale</span>
         <span class="n">attn</span> <span class="o">=</span> <span class="n">attn</span><span class="p">.</span><span class="nf">softmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-        
+
         <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">attn</span> <span class="o">@</span> <span class="n">v</span><span class="p">).</span><span class="nf">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">).</span><span class="nf">reshape</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="nf">proj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
@@ -1259,49 +1259,49 @@ tensor[index] = source  &lt;- source broadcasts to target's shape
 <span class="c1"># Shared sampling function
 </span><span class="k">def</span> <span class="nf">sample_token</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">top_p</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="n">logits</span> <span class="o">=</span> <span class="n">logits</span> <span class="o">/</span> <span class="n">temperature</span>
-    
+
     <span class="c1"># Top-k filtering
 </span>    <span class="k">if</span> <span class="n">top_k</span><span class="p">:</span>
         <span class="n">logits</span><span class="p">[</span><span class="n">logits</span> <span class="o">&lt;</span> <span class="n">torch</span><span class="p">.</span><span class="nf">topk</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">top_k</span><span class="p">)[</span><span class="mi">0</span><span class="p">][:,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]]</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="sh">'</span><span class="s">-inf</span><span class="sh">'</span><span class="p">)</span>
-    
-    <span class="c1"># Top-p filtering  
+
+    <span class="c1"># Top-p filtering
 </span>    <span class="k">if</span> <span class="n">top_p</span><span class="p">:</span>
         <span class="n">sorted_logits</span><span class="p">,</span> <span class="n">sorted_idx</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">sort</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">descending</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">cumsum</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nf">softmax</span><span class="p">(</span><span class="n">sorted_logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">top_p</span>
         <span class="n">sorted_logits</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="sh">'</span><span class="s">-inf</span><span class="sh">'</span><span class="p">)</span>
         <span class="n">logits</span> <span class="o">=</span> <span class="n">sorted_logits</span><span class="p">.</span><span class="nf">scatter</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">sorted_idx</span><span class="p">,</span> <span class="n">sorted_logits</span><span class="p">)</span>
-    
+
     <span class="c1"># Sample token
 </span>    <span class="k">return</span> <span class="n">logits</span><span class="p">.</span><span class="nf">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">temperature</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> \
            <span class="n">torch</span><span class="p">.</span><span class="nf">multinomial</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nf">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># Autoregressive inference (Transformer-style)
-</span><span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> 
+</span><span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
              <span class="n">top_k</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">top_p</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="sh">'</span><span class="s">cuda</span><span class="sh">'</span><span class="p">):</span>
     <span class="n">model</span><span class="p">.</span><span class="nf">eval</span><span class="p">()</span>
     <span class="n">input_ids</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">.</span><span class="nf">encode</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="sh">'</span><span class="s">pt</span><span class="sh">'</span><span class="p">).</span><span class="nf">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-    
+
     <span class="k">with</span> <span class="n">torch</span><span class="p">.</span><span class="nf">no_grad</span><span class="p">():</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">max_length</span><span class="p">):</span>
             <span class="n">logits</span> <span class="o">=</span> <span class="nf">model</span><span class="p">(</span><span class="n">input_ids</span><span class="p">).</span><span class="n">logits</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
             <span class="n">next_token</span> <span class="o">=</span> <span class="nf">sample_token</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">top_p</span><span class="p">)</span>
             <span class="n">input_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">cat</span><span class="p">([</span><span class="n">input_ids</span><span class="p">,</span> <span class="n">next_token</span><span class="p">],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">next_token</span><span class="p">.</span><span class="nf">item</span><span class="p">()</span> <span class="o">==</span> <span class="n">tokenizer</span><span class="p">.</span><span class="n">eos_token_id</span><span class="p">:</span> <span class="k">break</span>
-    
+
     <span class="k">return</span> <span class="n">tokenizer</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="n">input_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 <span class="c1"># RNN-based generation (uses hidden state)
-</span><span class="k">def</span> <span class="nf">generate_rnn</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> 
+</span><span class="k">def</span> <span class="nf">generate_rnn</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
                  <span class="n">top_k</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">top_p</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="sh">'</span><span class="s">cuda</span><span class="sh">'</span><span class="p">):</span>
     <span class="n">model</span><span class="p">.</span><span class="nf">eval</span><span class="p">()</span>
     <span class="n">input_ids</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">.</span><span class="nf">encode</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="sh">'</span><span class="s">pt</span><span class="sh">'</span><span class="p">).</span><span class="nf">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
     <span class="n">hidden</span> <span class="o">=</span> <span class="bp">None</span>
-    
+
     <span class="k">with</span> <span class="n">torch</span><span class="p">.</span><span class="nf">no_grad</span><span class="p">():</span>
         <span class="c1"># Build hidden state from prompt
 </span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">input_ids</span><span class="p">.</span><span class="nf">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)):</span>
             <span class="n">_</span><span class="p">,</span> <span class="n">hidden</span> <span class="o">=</span> <span class="nf">model</span><span class="p">(</span><span class="n">input_ids</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">hidden</span><span class="p">)</span>
-        
+
         <span class="c1"># Generate tokens using hidden state
 </span>        <span class="n">current_token</span> <span class="o">=</span> <span class="n">input_ids</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:]</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">max_length</span><span class="p">):</span>
@@ -1311,7 +1311,7 @@ tensor[index] = source  &lt;- source broadcasts to target's shape
             <span class="n">input_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">cat</span><span class="p">([</span><span class="n">input_ids</span><span class="p">,</span> <span class="n">next_token</span><span class="p">],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">current_token</span> <span class="o">=</span> <span class="n">next_token</span>
             <span class="k">if</span> <span class="n">next_token</span><span class="p">.</span><span class="nf">item</span><span class="p">()</span> <span class="o">==</span> <span class="n">tokenizer</span><span class="p">.</span><span class="n">eos_token_id</span><span class="p">:</span> <span class="k">break</span>
-    
+
     <span class="k">return</span> <span class="n">tokenizer</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="n">input_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </code></pre></div></div> <hr> <h1 id="data-handling">Data Handling</h1> <h3 id="datasets-and-dataloaders">Datasets and DataLoaders</h3> <p><strong>Dataset:</strong></p> <ul> <li>Abstract class that represents a dataset</li> <li>Must implement <code class="language-plaintext highlighter-rouge">__len__</code> and <code class="language-plaintext highlighter-rouge">__getitem__</code> methods</li> <li>Returns single samples when indexed</li> </ul> <p><strong>DataLoader:</strong></p> <ul> <li>Wraps a Dataset and provides batching, shuffling, and parallel loading</li> <li>Controls batch size, sampling strategy, and worker processes</li> <li>Returns batches of samples as tensors</li> </ul> <h3 id="creating-custom-datasets">Creating Custom Datasets</h3> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">torch.utils.data</span> <span class="kn">import</span> <span class="n">Dataset</span>
 
@@ -1513,7 +1513,7 @@ tensor[index] = source  &lt;- source broadcasts to target's shape
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">total_epochs</span><span class="p">,</span> <span class="n">last_epoch</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="n">self</span><span class="p">.</span><span class="n">total_epochs</span> <span class="o">=</span> <span class="n">total_epochs</span>
         <span class="nf">super</span><span class="p">(</span><span class="n">CustomScheduler</span><span class="p">,</span> <span class="n">self</span><span class="p">).</span><span class="nf">__init__</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">last_epoch</span><span class="p">)</span>
-    
+
     <span class="k">def</span> <span class="nf">get_lr</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
         <span class="c1"># Example: polynomial decay - modify this function for your schedule
 </span>        <span class="n">progress</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">last_epoch</span> <span class="o">/</span> <span class="n">self</span><span class="p">.</span><span class="n">total_epochs</span>
